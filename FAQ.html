@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>سوالات متداول</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(180deg, #052634, #0b4f67, #073a4f);
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .ocean-bg {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(71, 200, 230, 0.25), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(71, 200, 230, 0.15), transparent 40%);
+            z-index: -1;
+        }
+
+        .bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            background: radial-gradient(circle at 30% 30%, rgba(170, 225, 255, 0.7), rgba(60, 160, 210, 0.25));
+            border-radius: 50%;
+            animation: bubbleUp linear infinite;
+            will-change: transform;
+        }
+        @keyframes bubbleUp {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.6;
+            }
+            80% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .footer-iframe {
+            width: 100%;
+            border: none;
+            display: block;
+            background: transparent;
+            min-height: 200px;
+            margin-top: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 40px 20px 30px;
+        }
+        .page-header h1 {
+            font-size: 2.8rem;
+            color: #e8fbff;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        .page-header h1 i {
+            color: #47c8e0;
+            font-size: 2.2rem;
+        }
+        .page-header .ocean-text {
+            background: linear-gradient(135deg, #47c8e0, #1a7a9f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .page-header p {
+            color: #c8eefa;
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .search-faq {
+            max-width: 500px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        .search-faq input {
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            border-radius: 50px;
+            border: 1px solid rgba(71, 200, 230, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .search-faq input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .search-faq input:focus {
+            outline: none;
+            border-color: #47c8e0;
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 20px rgba(71, 200, 230, 0.15);
+        }
+        .search-faq i {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+        }
+        .search-faq .clear-search {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            display: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        .search-faq .clear-search:hover {
+            color: #47c8e0;
+        }
+        .search-faq .clear-search.show {
+            display: block;
+        }
+
+        .faq-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .faq-category-btn {
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(71, 200, 230, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-family: 'Vazirmatn', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .faq-category-btn:hover {
+            border-color: #47c8e0;
+            color: #fff;
+            background: rgba(71, 200, 230, 0.1);
+        }
+        .faq-category-btn.active {
+            border-color: #47c8e0;
+            color: #fff;
+            background: rgba(71, 200, 230, 0.2);
+            box-shadow: 0 0 20px rgba(71, 200, 230, 0.1);
+        }
+        .faq-category-btn i {
+            margin-left: 6px;
+        }
+
+        .faq-item {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .faq-item:hover {
+            border-color: rgba(71, 200, 230, 0.3);
+        }
+        .faq-item.hidden {
+            display: none;
+        }
+
+        .faq-question {
+            padding: 18px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            user-select: none;
+            transition: 0.3s;
+        }
+        .faq-question:hover {
+            background: rgba(71, 200, 230, 0.05);
+        }
+        .faq-question .q-icon {
+            color: #47c8e0;
+            font-weight: 700;
+            font-size: 0.85rem;
+            min-width: 28px;
+        }
+        .faq-question .q-text {
+            flex: 1;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #e8f9ff;
+            line-height: 1.6;
+        }
+        .faq-question .q-toggle {
+            color: rgba(255, 255, 255, 0.4);
+            transition: 0.3s;
+            font-size: 0.9rem;
+            min-width: 20px;
+            text-align: center;
+        }
+        .faq-item.active .faq-question .q-toggle {
+            transform: rotate(180deg);
+            color: #47c8e0;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0 24px;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 24px 20px;
+        }
+        .faq-answer p {
+            color: #c8eefa;
+            line-height: 2;
+            font-size: 0.95rem;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .faq-answer ul {
+            color: #c8eefa;
+            line-height: 2;
+            font-size: 0.95rem;
+            padding-right: 20px;
+            margin-top: 6px;
+        }
+        .faq-answer ul li {
+            margin-bottom: 4px;
+        }
+
+        .no-result {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .no-result i {
+            font-size: 3rem;
+            color: rgba(71, 200, 230, 0.3);
+            margin-bottom: 15px;
+            display: block;
+        }
+        .no-result.hidden {
+            display: none;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #47c8e0;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 20px;
+            transition: 0.3s;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid rgba(71, 200, 230, 0.2);
+        }
+        .back-link:hover {
+            background: rgba(71, 200, 230, 0.1);
+            border-color: #47c8e0;
+            transform: translateX(-4px);
+        }
+
+        .ocean-header {
+            background: linear-gradient(135deg, #1a6d8f, #0e5a7a, #07455e);
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1000;
+        }
+        .header-content {
+            padding: 1rem 1rem 1.2rem;
+        }
+        .main-navbar {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 80px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .desktop-logo-wrapper, .desktop-site-name {
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .desktop-logo-wrapper:hover, .desktop-site-name:hover {
+            transform: scale(1.02);
+        }
+        .brand-logo-img {
+            height: 44px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+            opacity: 1;
+            display: block;
+        }
+        .special-logo {
+            filter: drop-shadow(0 0 8px rgba(71, 200, 224, 0.6));
+            transition: all 0.3s ease;
+        }
+        .special-logo:hover {
+            filter: drop-shadow(0 0 15px rgba(71, 200, 224, 0.9));
+            transform: scale(1.03);
+        }
+        .brand-text-desktop {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.55rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .desktop-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-link-custom {
+            color: white !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: relative;
+            text-decoration: none;
+        }
+        .nav-link-custom::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #47c8e0, #aae0ff);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        .nav-link-custom:hover::after {
+            width: 70%;
+        }
+        .nav-link-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .cart-desktop {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-radius: 50px;
+            padding: 0.5rem 1rem !important;
+        }
+        .cart-desktop i {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .cart-desktop span {
+            display: none;
+        }
+        .cart-desktop:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.05);
+        }
+        .mobile-brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .mobile-brand-group .brand-text-mobile {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .mobile-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .mobile-menu-btn, .mobile-cart-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        .mobile-menu-btn {
+            padding: 0.55rem 1rem;
+            font-size: 1.3rem;
+        }
+        .mobile-cart-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+        }
+        .mobile-menu-btn:hover, .mobile-cart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.03);
+        }
+        @media (min-width: 993px) {
+            .mobile-brand-group, .mobile-buttons {
+                display: none !important;
+            }
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+                display: flex;
+            }
+        }
+        @media (max-width: 992px) {
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+                display: none !important;
+            }
+            .mobile-brand-group, .mobile-buttons {
+                display: flex !important;
+            }
+            .main-navbar {
+                padding: 0.5rem 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .mobile-brand-group .brand-text-mobile {
+                font-size: 1rem;
+            }
+            .mobile-brand-group .brand-logo-img {
+                height: 32px;
+                max-width: 42px;
+            }
+            .mobile-cart-btn {
+                width: 40px;
+                height: 40px;
+            }
+            .mobile-menu-btn {
+                padding: 0.45rem 0.8rem;
+            }
+        }
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+        }
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #043a4f, #0a5a78, #07455e);
+            z-index: 100000;
+            padding: 30px 20px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        .mobile-sidebar.open {
+            right: 0;
+        }
+        .mobile-sidebar .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.8rem;
+            padding: 5px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .mobile-sidebar .close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+        .mobile-sidebar .sidebar-brand {
+            margin-top: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .mobile-sidebar .sidebar-brand img {
+            height: 60px;
+            filter: drop-shadow(0 0 20px rgba(71,200,224,0.3));
+        }
+        .mobile-sidebar .sidebar-brand h2 {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #ffffff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .mobile-sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 16px;
+            transition: 0.3s;
+            margin: 6px 0;
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .mobile-sidebar .menu-item:last-child {
+            border-bottom: none;
+        }
+        .mobile-sidebar .menu-item:hover {
+            background: rgba(71,200,224,0.15);
+            transform: translateX(-5px);
+        }
+        .mobile-sidebar .menu-item i {
+            width: 28px;
+            color: #47c8e0;
+            font-size: 1.2rem;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ocean-header {
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            .page-header h1 i {
+                font-size: 1.6rem;
+            }
+            .faq-question {
+                padding: 14px 18px;
+            }
+            .faq-question .q-text {
+                font-size: 0.9rem;
+            }
+            .faq-answer p {
+                font-size: 0.85rem;
+            }
+            .faq-category-btn {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+            }
+            .footer-iframe {
+                min-height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 1.6rem;
+            }
+            .container {
+                padding: 12px 10px 30px;
+            }
+            .faq-question {
+                padding: 12px 14px;
+            }
+            .faq-question .q-text {
+                font-size: 0.82rem;
+            }
+            .footer-iframe {
+                min-height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ocean-bg"></div>
+    <div class="bubbles" id="bubbleContainer"></div>
+
+    <header class="ocean-header">
+        <div class="header-content">
+            <div class="main-navbar">
+                <div class="navbar-flex">
+                    <div class="desktop-logo-wrapper" onclick="navigateTo('home')">
+                        <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                             onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                    </div>
+                    <div class="desktop-menu">
+                        <a href="#" class="nav-link-custom" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+                        <a href="#" class="nav-link-custom" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+                        <a href="#" class="nav-link-custom" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+                        <a href="#" class="nav-link-custom" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+                        <a href="#" class="nav-link-custom" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+                        <a href="#" class="nav-link-custom" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+                        <a href="#" class="nav-link-custom cart-desktop" id="cartDesktopBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>سبد خرید</span>
+                        </a>
+                    </div>
+                    <div class="desktop-site-name" onclick="navigateTo('home')">
+                        <span class="brand-text-desktop">ocean book</span>
+                    </div>
+                    <div class="mobile-brand-group" onclick="navigateTo('home')">
+                        <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                             onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                        <span class="brand-text-mobile">ocean book</span>
+                    </div>
+                    <div class="mobile-buttons">
+                        <div class="mobile-cart-btn" onclick="goToCart()" title="سبد خرید">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                            <i class="fas fa-bars"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+        <div class="sidebar-brand">
+            <img src="logo.png" alt="لوگو"
+                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+            <h2>ocean book</h2>
+        </div>
+        <a href="#" class="menu-item" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+        <a href="#" class="menu-item" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+        <a href="#" class="menu-item" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+        <a href="#" class="menu-item" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+        <a href="#" class="menu-item" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+        <a href="#" class="menu-item" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+        <a href="#" class="menu-item" onclick="goToCart()"><i class="fas fa-shopping-cart"></i> سبد خرید</a>
+    </div>
+
+    <div class="container">
+
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-question-circle"></i>
+                <span class="ocean-text">Ocean Book</span>
+            </h1>
+            <p style="font-size:0.9rem;color:rgba(255,255,255,0.6);margin-top:-5px;">سوالات متداول</p>
+            <p>پاسخ به رایج‌ترین سوالات شما درباره <strong style="color:#47c8e0;">Ocean Book</strong></p>
+        </div>
+
+        <div class="search-faq">
+            <i class="fas fa-search"></i>
+            <input type="text" id="faqSearch" placeholder="جستجو در سوالات...">
+            <span class="clear-search" id="clearSearch"><i class="fas fa-times-circle"></i></span>
+        </div>
+
+        <div class="faq-categories" id="faqCategories">
+            <button class="faq-category-btn active" data-category="all">
+                <i class="fas fa-th-list"></i> همه
+            </button>
+            <button class="faq-category-btn" data-category="general">
+                <i class="fas fa-info-circle"></i> عمومی
+            </button>
+            <button class="faq-category-btn" data-category="account">
+                <i class="fas fa-user"></i> حساب کاربری
+            </button>
+            <button class="faq-category-btn" data-category="payment">
+                <i class="fas fa-credit-card"></i> خرید و پرداخت
+            </button>
+            <button class="faq-category-btn" data-category="technical">
+                <i class="fas fa-cog"></i> فنی
+            </button>
+        </div>
+
+        <div id="faqList">
+
+            <div class="faq-item" data-category="general">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">Ocean Book چیست و چه خدماتی ارائه می‌دهد؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        <strong style="color:#47c8e0;">Ocean Book</strong> یک پلتفرم جامع برای علاقه‌مندان به مطالعه و محتوای صوتی است. 
+                        ما در سه حوزه اصلی فعالیت می‌کنیم:
+                    </p>
+                    <ul>
+                        <li><strong> کتاب‌ها:</strong> مجموعه‌ای از بهترین کتاب‌های فارسی و ترجمه‌شده</li>
+                        <li><strong> کتاب‌های صوتی:</strong> نسخه‌های شنیداری با کیفیت بالا و راویان حرفه‌ای</li>
+                        <li><strong> پادکست‌ها:</strong> محتوای متنوع در حوزه‌های خودشناسی، ادبیات، روانشناسی و ...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="general">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">آیا استفاده از Ocean Book رایگان است؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        بله، بسیاری از محتواهای ما به صورت رایگان در دسترس هستند. همچنین می‌توانید 
+                        با خرید اشتراک یا محصولات ویژه، به محتوای بیشتری دسترسی پیدا کنید. 
+                        بخشی از کتاب‌های صوتی و پادکست‌ها رایگان هستند و برخی نیاز به خرید دارند.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="general">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">چگونه می‌توانم در Ocean Book عضو شوم؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        برای عضویت در <strong style="color:#47c8e0;">Ocean Book</strong>، کافی است روی دکمه «ورود به حساب» در پایین صفحه کلیک کنید 
+                        و اطلاعات خواسته‌شده را وارد کنید. همچنین می‌توانید با ایمیل یا شماره موبایل 
+                        خود ثبت‌نام کنید. عضویت کاملاً رایگان است.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="account">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">چگونه رمز عبور خود را بازیابی کنم؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        برای بازیابی رمز عبور، در صفحه ورود روی گزینه «فراموشی رمز عبور» کلیک کنید. 
+                        سپس ایمیل یا شماره موبایل خود را وارد کنید تا لینک یا کد بازیابی برای شما ارسال شود. 
+                        پس از دریافت، می‌توانید رمز جدیدی برای حساب خود تنظیم کنید.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="account">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">آیا می‌توانم اطلاعات حساب کاربری خود را تغییر دهم؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        بله. پس از ورود به حساب کاربری، از بخش «پروفایل» یا «تنظیمات حساب» می‌توانید 
+                        اطلاعات خود مانند نام، ایمیل، شماره تماس و رمز عبور را ویرایش کنید. 
+                        تغییرات به‌سرعت در حساب شما اعمال می‌شوند.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="payment">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">چگونه می‌توانم یک کتاب یا پادکست را خریداری کنم؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        برای خرید هر محصول، کافی است روی دکمه «مشاهده» یا «خرید» در کارت محصول کلیک کنید. 
+                        سپس به صفحه پرداخت هدایت می‌شوید. روش‌های پرداخت ما شامل:
+                    </p>
+                    <ul>
+                        <li> کارت‌های بانکی (شتاب)</li>
+                        <li> کیف پول دیجیتال</li>
+                        <li> پرداخت از طریق درگاه بانکی امن</li>
+                    </ul>
+                    <p>
+                        پس از پرداخت، محصول به کتابخانه شما اضافه می‌شود.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="payment">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">آیا امکان بازگشت وجه وجود دارد؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        بله، در صورتی که محصول خریداری‌شده به هر دلیل با مشکل مواجه شود یا از کیفیت آن 
+                        راضی نباشید، می‌توانید ظرف ۷ روز پس از خرید درخواست بازگشت وجه دهید. 
+                        برای این کار با پشتیبانی تماس بگیرید یا از فرم تماس استفاده کنید.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="technical">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">چگونه می‌توانم کتاب‌های صوتی را دانلود کنم؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        پس از خرید یا دریافت رایگان یک کتاب صوتی، در صفحه کتاب، دکمه «دانلود» فعال می‌شود. 
+                        با کلیک روی آن، فایل صوتی به صورت MP3 با کیفیت بالا دانلود می‌شود. 
+                        همچنین می‌توانید از طریق اپلیکیشن موبایل به صورت آفلاین به کتاب‌های خود دسترسی داشته باشید.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="technical">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">آیا Ocean Book اپلیکیشن موبایل دارد؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        بله، اپلیکیشن موبایل <strong style="color:#47c8e0;">Ocean Book</strong> برای سیستم‌عامل‌های اندروید و iOS در دسترس است. 
+                        با اپلیکیشن می‌توانید:
+                    </p>
+                    <ul>
+                        <li> به کتابخانه خود دسترسی آفلاین داشته باشید</li>
+                        <li> کتاب‌های صوتی را با کیفیت بالا گوش دهید</li>
+                        <li> پیشرفت مطالعه خود را پیگیری کنید</li>
+                        <li> از جدیدترین محتواها مطلع شوید</li>
+                    </ul>
+                    <p>
+                        لینک دانلود اپلیکیشن در بخش «دانلودها» قرار دارد.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="technical">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">چگونه با پشتیبانی Ocean Book تماس بگیرم؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        شما می‌توانید از راه‌های زیر با پشتیبانی ما در ارتباط باشید:
+                    </p>
+                    <ul>
+                        <li> ایمیل: OceanBook@gmail.com</li>
+                        <li> تلفن: 09122537290</li>
+                        <li> پیام در شبکه‌های اجتماعی (اینستاگرام، تلگرام)</li>
+                        <li> فرم تماس در بخش «تماس با ما»</li>
+                    </ul>
+                    <p>
+                        تیم پشتیبانی ما ۷ روز هفته پاسخگوی شماست.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-category="general">
+                <div class="faq-question">
+                    <span class="q-icon">?</span>
+                    <span class="q-text">چگونه کتاب یا پادکست جدید پیشنهاد دهم؟</span>
+                    <span class="q-toggle"><i class="fas fa-chevron-down"></i></span>
+                </div>
+                <div class="faq-answer">
+                    <p>
+                        ما همیشه از پیشنهادات شما استقبال می‌کنیم! شما می‌توانید از طریق:
+                    </p>
+                    <ul>
+                        <li> ارسال ایمیل به OceanBook@gmail.com</li>
+                        <li> پیام در شبکه‌های اجتماعی</li>
+                        <li> فرم پیشنهاد محتوا در حساب کاربری</li>
+                    </ul>
+                    <p>
+                        پیشنهادات شما توسط تیم محتوا بررسی می‌شود و در صورت تأیید، به کتابخانه اضافه خواهد شد.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="no-result hidden" id="noResult">
+            <i class="fas fa-search"></i>
+            <p>هیچ سوالی با این کلمات پیدا نشد.</p>
+            <p style="font-size:0.85rem;margin-top:5px;">سعی کنید با کلمات دیگری جستجو کنید.</p>
+        </div>
+
+        <div style="text-align:center;">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-right"></i>
+                بازگشت به صفحه اصلی
+            </a>
+        </div>
+
+    </div>
+
+    <iframe src="footer.html" id="footerIframe" class="footer-iframe" scrolling="no"></iframe>
+
+    <script>
+        function navigateTo(target, section) {
+            const pageMap = {
+                'home': 'index.html',
+                'all-products': 'all-products.html',
+                'meditation': 'meditation.html',
+                'dashboard': 'dashboard.html',
+                'faq': 'FAQ.html',
+                'rules': 'Rules.html',
+                'about': 'aboutUs.html'
+            };
+            let url = pageMap[target] || 'index.html';
+            if (target === 'all-products' && section) {
+                url = url + '#' + section;
+            }
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'navigate', target: target, section: section }, '*');
+            }
+            window.location.href = url;
+        }
+
+        function goToCart() {
+            window.location.href = 'sabad.html';
+        }
+
+        function toggleMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const sidebar = document.getElementById('mobileSidebar');
+            if (sidebar.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        }
+
+        function openMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const sidebar = document.getElementById('mobileSidebar');
+            overlay.classList.add('active');
+            sidebar.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const sidebar = document.getElementById('mobileSidebar');
+            overlay.classList.remove('active');
+            sidebar.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.desktop-menu .nav-link-custom').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const navType = this.getAttribute('data-nav');
+                    if (navType === 'dashboard') {
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                    if (this.id === 'cartDesktopBtn') {
+                        goToCart();
+                        return;
+                    }
+                    if (navType === 'home') navigateTo('home');
+                    else if (navType === 'books') navigateTo('all-products', 'books');
+                    else if (navType === 'podcasts') navigateTo('all-products', 'podcasts');
+                    else if (navType === 'audiobooks') navigateTo('all-products', 'audiobooks');
+                    else if (navType === 'meditation') navigateTo('meditation');
+                });
+            });
+
+            document.querySelectorAll('.mobile-sidebar .menu-item').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    const navType = this.getAttribute('data-nav');
+                    if (navType) {
+                        e.preventDefault();
+                        closeMobileMenu();
+                        if (navType === 'dashboard') {
+                            setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
+                            return;
+                        }
+                        setTimeout(() => {
+                            if (navType === 'home') navigateTo('home');
+                            else if (navType === 'books') navigateTo('all-products', 'books');
+                            else if (navType === 'podcasts') navigateTo('all-products', 'podcasts');
+                            else if (navType === 'audiobooks') navigateTo('all-products', 'audiobooks');
+                            else if (navType === 'meditation') navigateTo('meditation');
+                        }, 300);
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') { closeMobileMenu(); }
+            });
+        });
+
+        function createBubbles() {
+            const container = document.getElementById('bubbleContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            const count = window.innerWidth < 768 ? 20 : 35;
+            for (let i = 0; i < count; i++) {
+                const b = document.createElement('div');
+                b.classList.add('bubble');
+                const size = 4 + Math.random() * 30;
+                b.style.cssText = `
+                            width: ${size}px;
+                            height: ${size}px;
+                            left: ${5 + Math.random() * 90}%;
+                            animation-duration: ${7 + Math.random() * 15}s;
+                            animation-delay: ${Math.random() * 12}s;
+                            opacity: ${0.3 + Math.random() * 0.5};
+                        `;
+                container.appendChild(b);
+            }
+        }
+
+        function updateFooterHeight(height) {
+            const iframe = document.getElementById('footerIframe');
+            if (iframe && height) {
+                const finalHeight = Math.max(height, 200);
+                iframe.style.height = finalHeight + 'px';
+                iframe.style.minHeight = finalHeight + 'px';
+            }
+        }
+
+        window.addEventListener('message', function(e) {
+            const data = e.data;
+
+            if ((data.type === 'footerResize' || data.type === 'resize') && data.height) {
+                updateFooterHeight(data.height);
+            }
+
+            if (data.type === 'navigate') {
+                if (data.target === 'home') {
+                    window.location.href = 'index.html';
+                } else if (data.target === 'all-products' || data.target === 'books' ||
+                    data.target === 'podcasts' || data.target === 'audiobooks') {
+                    const section = data.section || data.target;
+                    window.location.href = 'all-products.html' + (section !== 'all' ? '#' + section : '');
+                } else if (data.target === 'meditation') {
+                    window.location.href = 'meditation.html';
+                } else if (data.target === 'faq') {
+                    window.location.href = 'FAQ.html';
+                } else if (data.target === 'rules') {
+                    window.location.href = 'Rules.html';
+                } else if (data.target === 'about') {
+                    window.location.href = 'aboutUs.html';
+                }
+            }
+
+            if (data.type === 'openMobileMenu') {
+                openMobileMenu();
+            }
+            if (data.type === 'closeMobileMenu') {
+                closeMobileMenu();
+            }
+        });
+
+        function requestFooterHeight() {
+            const iframe = document.getElementById('footerIframe');
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ type: 'requestHeight' }, '*');
+            }
+        }
+
+        const searchInput = document.getElementById('faqSearch');
+        const clearSearch = document.getElementById('clearSearch');
+        const faqItems = document.querySelectorAll('.faq-item');
+        const noResult = document.getElementById('noResult');
+        const categoryBtns = document.querySelectorAll('.faq-category-btn');
+        let currentCategory = 'all';
+
+        function filterFAQs() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            let hasVisible = false;
+
+            clearSearch.classList.toggle('show', searchTerm.length > 0);
+
+            faqItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                const category = item.dataset.category;
+                const matchCategory = currentCategory === 'all' || category === currentCategory;
+                const matchSearch = searchTerm === '' || text.includes(searchTerm);
+
+                if (matchCategory && matchSearch) {
+                    item.classList.remove('hidden');
+                    hasVisible = true;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+
+            noResult.classList.toggle('hidden', hasVisible);
+        }
+
+        searchInput.addEventListener('input', filterFAQs);
+
+        clearSearch.addEventListener('click', function() {
+            searchInput.value = '';
+            filterFAQs();
+            searchInput.focus();
+        });
+
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentCategory = this.dataset.category;
+                filterFAQs();
+            });
+        });
+
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const item = this.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+
+        window.addEventListener('load', function() {
+            createBubbles();
+
+            setTimeout(() => {
+                requestFooterHeight();
+            }, 500);
+            setTimeout(() => {
+                requestFooterHeight();
+            }, 1500);
+            setTimeout(() => {
+                requestFooterHeight();
+            }, 3000);
+
+            const firstItem = document.querySelector('.faq-item');
+            if (firstItem) {
+                setTimeout(() => {
+                    firstItem.classList.add('active');
+                }, 300);
+            }
+        });
+
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            createBubbles();
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                requestFooterHeight();
+            }, 300);
+        });
+
+        console.log(' صفحه سوالات متداول Ocean Book بارگذاری شد');
+    </script>
+
+</body>
+</html>

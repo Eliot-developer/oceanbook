@@ -1,0 +1,2710 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>مشخصات محصول</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #47c8e0;
+            --primary-dark: #1a7a9f;
+            --primary-light: #7dd3fc;
+            --secondary: #f59e0b;
+            --text-primary: #ffffff;
+            --text-secondary: #bae6fd;
+            --text-muted: #8ab8c8;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --radius: 28px;
+            --radius-sm: 14px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Vazirmatn', 'Segoe UI', system-ui, sans-serif;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background: #0a2f3a;
+        }
+
+        .footer-iframe {
+            width: 100%;
+            border: none;
+            display: block;
+            background: transparent;
+            min-height: 200px;
+            margin-top: 2rem;
+        }
+
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            background: 
+                radial-gradient(ellipse at 20% 50%, #0d4f6a 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 30%, #0a3a4a 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, #063544 0%, transparent 40%),
+                linear-gradient(180deg, #02161f 0%, #07405c 50%, #0a2f3a 100%);
+        }
+
+        .light-waves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .light-wave {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(71, 200, 230, 0.06), transparent 70%);
+            animation: lightWaveAnim 15s ease-in-out infinite alternate;
+        }
+        .light-wave:nth-child(1) {
+            width: 80%;
+            height: 80%;
+            top: -20%;
+            left: -20%;
+            animation-delay: 0s;
+        }
+        .light-wave:nth-child(2) {
+            width: 60%;
+            height: 60%;
+            bottom: -10%;
+            right: -10%;
+            animation-delay: -5s;
+            background: radial-gradient(circle, rgba(130, 210, 240, 0.05), transparent 70%);
+        }
+        .light-wave:nth-child(3) {
+            width: 40%;
+            height: 40%;
+            top: 30%;
+            left: 30%;
+            animation-delay: -10s;
+            background: radial-gradient(circle, rgba(71, 200, 230, 0.04), transparent 70%);
+        }
+        @keyframes lightWaveAnim {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            33% { transform: translate(5%, 5%) scale(1.1) rotate(5deg); }
+            66% { transform: translate(-3%, 8%) scale(0.9) rotate(-3deg); }
+            100% { transform: translate(4%, -5%) scale(1.05) rotate(4deg); }
+        }
+
+        .sparkles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(71, 200, 230, 0.3);
+            border-radius: 50%;
+            animation: sparkleAnim 8s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(71, 200, 230, 0.1);
+        }
+        .sparkle:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 30%; left: 85%; animation-delay: -2s; width: 6px; height: 6px; }
+        .sparkle:nth-child(3) { top: 60%; left: 20%; animation-delay: -4s; }
+        .sparkle:nth-child(4) { top: 75%; left: 90%; animation-delay: -6s; width: 8px; height: 8px; }
+        .sparkle:nth-child(5) { top: 10%; left: 50%; animation-delay: -1s; }
+        .sparkle:nth-child(6) { top: 85%; left: 40%; animation-delay: -3s; width: 5px; height: 5px; }
+        .sparkle:nth-child(7) { top: 45%; left: 60%; animation-delay: -5s; }
+        .sparkle:nth-child(8) { top: 50%; left: 5%; animation-delay: -7s; width: 7px; height: 7px; }
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0.1; transform: scale(0.5); }
+            50% { opacity: 0.8; transform: scale(1.5); }
+        }
+
+        .bubbles-new {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .bubble-new {
+            position: absolute;
+            bottom: -80px;
+            border-radius: 50%;
+            animation: bubbleNewUp linear infinite;
+            background: radial-gradient(circle at 30% 30%, rgba(130, 210, 240, 0.15), rgba(60, 160, 210, 0.05));
+            border: 1px solid rgba(71, 200, 230, 0.05);
+        }
+        @keyframes bubbleNewUp {
+            0% { transform: translateY(0) scale(0.3) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-110vh) scale(1) rotate(180deg); opacity: 0; }
+        }
+
+        #oceanCanvas {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 140px;
+            z-index: 0;
+            pointer-events: none;
+            display: block;
+            opacity: 0.6;
+        }
+
+        .ocean-header {
+            background: linear-gradient(135deg, #1a6d8f, #0e5a7a, #07455e);
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1000;
+        }
+        .header-content {
+            padding: 1rem 1rem 1.2rem;
+        }
+        .main-navbar {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 80px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .desktop-logo-wrapper, .desktop-site-name {
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .desktop-logo-wrapper:hover, .desktop-site-name:hover { transform: scale(1.02); }
+        .brand-logo-img {
+            height: 44px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+            display: block;
+        }
+        .special-logo {
+            filter: drop-shadow(0 0 8px rgba(71, 200, 224, 0.6));
+            transition: all 0.3s ease;
+        }
+        .special-logo:hover {
+            filter: drop-shadow(0 0 15px rgba(71, 200, 224, 0.9));
+            transform: scale(1.03);
+        }
+        .brand-text-desktop {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.55rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .desktop-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-wrap: nowrap;
+            justify-content: center;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0.2rem 0;
+        }
+        .nav-link-custom {
+            color: white !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: relative;
+            text-decoration: none !important;
+        }
+        .nav-link-custom::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #47c8e0, #aae0ff);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        .nav-link-custom:hover::after {
+            width: 70%;
+        }
+        .nav-link-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .nav-link-custom.active::after {
+            width: 70%;
+        }
+        .cart-desktop {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-radius: 50px;
+            padding: 0.5rem 1rem !important;
+        }
+        .cart-desktop i { margin: 0; font-size: 1rem; }
+        .cart-desktop span { display: none; }
+        .cart-desktop:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.05);
+        }
+        .mobile-brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .mobile-brand-group .brand-text-mobile {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .mobile-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .mobile-menu-btn, .mobile-cart-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        .mobile-menu-btn { padding: 0.55rem 1rem; font-size: 1.3rem; }
+        .mobile-cart-btn { width: 44px; height: 44px; font-size: 1.2rem; }
+        .mobile-menu-btn:hover, .mobile-cart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.03);
+        }
+        @media (min-width: 993px) {
+            .mobile-brand-group, .mobile-buttons { display: none !important; }
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu { display: flex; }
+        }
+        @media (max-width: 992px) {
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu { display: none !important; }
+            .mobile-brand-group, .mobile-buttons { display: flex !important; }
+            .main-navbar { padding: 0.5rem 1rem; }
+        }
+        @media (max-width: 1200px) {
+            .desktop-menu { gap: 0.1rem; }
+            .nav-link-custom { padding: 0.4rem 0.7rem !important; font-size: 0.8rem; }
+        }
+        @media (max-width: 480px) {
+            .mobile-brand-group .brand-text-mobile { font-size: 1rem; }
+            .mobile-brand-group .brand-logo-img { height: 32px; max-width: 42px; }
+            .mobile-cart-btn { width: 40px; height: 40px; }
+            .mobile-menu-btn { padding: 0.45rem 0.8rem; }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ocean-header { animation: fadeInDown 0.6s ease-out; }
+
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+        }
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #043a4f, #0a5a78, #07455e);
+            z-index: 100000;
+            padding: 30px 20px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        .mobile-sidebar.open {
+            right: 0;
+        }
+        .mobile-sidebar .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.8rem;
+            padding: 5px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .mobile-sidebar .close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+        .mobile-sidebar .sidebar-brand {
+            margin-top: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .mobile-sidebar .sidebar-brand img {
+            height: 60px;
+            filter: drop-shadow(0 0 20px rgba(71,200,224,0.3));
+        }
+        .mobile-sidebar .sidebar-brand h2 {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #ffffff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .mobile-sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 16px;
+            transition: 0.3s;
+            margin: 6px 0;
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .mobile-sidebar .menu-item:last-child {
+            border-bottom: none;
+        }
+        .mobile-sidebar .menu-item:hover {
+            background: rgba(71,200,224,0.15);
+            transform: translateX(-5px);
+        }
+        .mobile-sidebar .menu-item i {
+            width: 28px;
+            color: #47c8e0;
+            font-size: 1.2rem;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 30, 40, 0.97);
+            backdrop-filter: blur(16px);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .loading-screen.hide { opacity: 0; visibility: hidden; }
+
+        .loader-ring {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: var(--primary);
+            border-bottom-color: var(--primary-dark);
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+        .loader-ring::after {
+            content: '📚';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .loader-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            font-weight: 500;
+            animation: pulseText 1.5s ease-in-out infinite;
+        }
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .app-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 16px 16px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 50px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+        .back-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-color: var(--primary);
+            transform: translateX(-4px);
+            box-shadow: 0 8px 25px rgba(71, 200, 230, 0.2);
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .top-action-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.03);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .top-action-btn:hover {
+            background: rgba(71, 200, 230, 0.12);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .error-box {
+            text-align: center;
+            padding: 50px 24px;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(16px);
+            border-radius: var(--radius);
+            border: 1px solid rgba(71, 200, 230, 0.1);
+        }
+        .error-box i {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+            animation: floatAnim 3s ease-in-out infinite;
+        }
+        @keyframes floatAnim {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .product-card {
+            background: rgba(12, 45, 58, 0.7);
+            backdrop-filter: blur(24px);
+            border-radius: var(--radius);
+            border: 1px solid rgba(80, 200, 230, 0.08);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            animation: cardIn 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition);
+        }
+        .product-card:hover {
+            border-color: rgba(71, 200, 230, 0.15);
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .cover-wrapper {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: var(--transition);
+            max-width: 280px;
+            margin: 0 auto;
+        }
+        .cover-wrapper:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        .cover-img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s;
+        }
+        .cover-wrapper:hover .cover-img {
+            transform: scale(1.04);
+        }
+
+        .cover-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            box-shadow: 0 4px 15px rgba(71, 200, 230, 0.3);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .cover-badge-free {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.25);
+        }
+
+        .preview-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            opacity: 0;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+        }
+        .cover-wrapper:hover .preview-overlay {
+            opacity: 1;
+        }
+
+        .preview-btn {
+            padding: 6px 20px;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .preview-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            transform: scale(1.05);
+            border-color: var(--primary);
+        }
+
+        .product-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            line-height: 1.3;
+            background: linear-gradient(135deg, #fff, var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+        @media (max-width: 768px) {
+            .product-title { font-size: 1.3rem; }
+        }
+
+        .product-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 6px 0 10px;
+        }
+        .meta-tag {
+            padding: 3px 14px;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        .meta-tag i {
+            color: var(--primary);
+            margin-left: 4px;
+            font-size: 0.65rem;
+        }
+
+        .rating-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .stars {
+            color: var(--secondary);
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+        }
+        .rating-label {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .summary-box {
+            background: rgba(0, 30, 40, 0.3);
+            border-right: 3px solid var(--primary);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            margin: 12px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .summary-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 30%;
+            background: linear-gradient(135deg, rgba(71, 200, 230, 0.04), transparent);
+            pointer-events: none;
+        }
+        .summary-box .summary-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+        .summary-box .summary-label i {
+            color: var(--primary);
+            animation: pulseIcon 2s ease-in-out infinite;
+        }
+        @keyframes pulseIcon {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .summary-box p {
+            margin: 0;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: #d4edf5;
+        }
+
+        .price-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .price-tag {
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--primary-light);
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+        }
+        .price-tag .currency {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        @media (max-width: 576px) {
+            .price-tag { font-size: 1.3rem; }
+        }
+
+        .actions-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary-custom {
+            padding: 8px 22px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(71, 200, 230, 0.2);
+        }
+        .btn-primary-custom:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(71, 200, 230, 0.3);
+        }
+        .btn-primary-custom:active { transform: scale(0.96); }
+
+        .btn-secondary-custom {
+            padding: 8px 18px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 50px;
+            background: rgba(255,255,255,0.03);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+        }
+        .btn-secondary-custom:hover {
+            background: rgba(71, 200, 230, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .btn-secondary-custom.active {
+            background: rgba(71, 200, 230, 0.12);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .btn-secondary-custom.active i { font-weight: 900; }
+
+        .features-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0 0;
+        }
+        .feature-badge {
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.04);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .feature-badge i { color: var(--primary); font-size: 0.6rem; }
+
+        .tabs-nav {
+            display: flex;
+            gap: 2px;
+            border-bottom: 2px solid rgba(71, 200, 230, 0.06);
+            margin: 20px 0 12px;
+            padding-bottom: 2px;
+            overflow-x: auto;
+        }
+        .tab-btn-custom {
+            padding: 8px 18px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            white-space: nowrap;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        .tab-btn-custom:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.03);
+        }
+        .tab-btn-custom.active {
+            color: var(--primary);
+            background: rgba(71, 200, 230, 0.06);
+        }
+        .tab-btn-custom.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        .tab-btn-custom .tab-badge {
+            padding: 1px 8px;
+            border-radius: 50px;
+            font-size: 0.6rem;
+            background: rgba(71, 200, 230, 0.1);
+            color: var(--text-secondary);
+            margin-right: 4px;
+        }
+
+        .tab-pane-custom {
+            display: none;
+            animation: fadeTab 0.35s ease;
+        }
+        .tab-pane-custom.active { display: block; }
+        @keyframes fadeTab {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .comments-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .sort-group {
+            display: flex;
+            gap: 4px;
+        }
+        .sort-btn-custom {
+            padding: 4px 14px;
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 50px;
+            background: rgba(255,255,255,0.02);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .sort-btn-custom:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        .sort-btn-custom.active {
+            background: rgba(71, 200, 230, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-write {
+            padding: 5px 16px;
+            border: 1px solid rgba(71, 200, 230, 0.15);
+            border-radius: 50px;
+            background: rgba(71, 200, 230, 0.04);
+            color: var(--primary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-write:hover {
+            background: rgba(71, 200, 230, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .comment-form-box {
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,0.04);
+            display: none;
+        }
+        .comment-form-box.show { display: block; }
+
+        .rating-picker {
+            display: flex;
+            gap: 3px;
+            margin: 6px 0;
+        }
+        .rating-picker i {
+            color: #4a7a8a;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .rating-picker i:hover { transform: scale(1.15); }
+        .rating-picker i.active { color: var(--secondary); }
+
+        .comment-item {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.03);
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+        .comment-item:hover {
+            background: rgba(255,255,255,0.05);
+            transform: translateX(-3px);
+        }
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .comment-avatar {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #fff;
+        }
+        .comment-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .comment-date {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+        .comment-text {
+            margin: 6px 0 0 44px;
+            font-size: 0.8rem;
+            color: #d4edf5;
+            line-height: 1.7;
+        }
+        .comment-actions {
+            display: flex;
+            gap: 12px;
+            margin: 6px 0 0 44px;
+        }
+        .like-btn-custom {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+        .like-btn-custom:hover {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.06);
+        }
+        .like-btn-custom.liked { color: #ff6b6b; }
+        .like-btn-custom.liked i { font-weight: 900; }
+
+        .empty-comments {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-muted);
+        }
+        .empty-comments i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            opacity: 0.3;
+        }
+
+        .similar-wrapper {
+            position: relative;
+        }
+        .similar-slider {
+            overflow-x: auto;
+            padding: 8px 2px 16px;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(71, 200, 230, 0.15) transparent;
+        }
+        .similar-slider::-webkit-scrollbar {
+            height: 3px;
+        }
+        .similar-slider::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+        }
+        .similar-slider::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+        }
+
+        .similar-grid {
+            display: flex;
+            gap: 12px;
+        }
+
+        .similar-item {
+            flex: 0 0 140px;
+            padding: 10px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.04);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .similar-item:hover {
+            transform: translateY(-6px);
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(71, 200, 230, 0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .similar-item img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 6px;
+        }
+        .similar-item .s-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .similar-item .s-rating {
+            font-size: 0.6rem;
+            color: var(--secondary);
+        }
+        .similar-item .s-price {
+            font-size: 0.65rem;
+            color: var(--primary-light);
+            font-weight: 600;
+        }
+        .similar-item .s-btn {
+            margin-top: 4px;
+            padding: 3px 14px;
+            border: 1px solid rgba(71, 200, 230, 0.1);
+            border-radius: 50px;
+            background: rgba(71, 200, 230, 0.04);
+            color: var(--primary);
+            font-size: 0.55rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+        }
+        .similar-item .s-btn:hover {
+            background: rgba(71, 200, 230, 0.1);
+        }
+
+        .scroll-nav-custom {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            color: #fff;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            font-size: 0.7rem;
+        }
+        .scroll-nav-custom:hover {
+            background: var(--primary);
+            transform: translateY(-50%) scale(1.08);
+            border-color: var(--primary);
+        }
+        .scroll-prev { left: -2px; }
+        .scroll-next { right: -2px; }
+
+        @media (max-width: 768px) {
+            .similar-item { flex: 0 0 110px; padding: 6px; }
+            .similar-item .s-title { font-size: 0.6rem; }
+            .scroll-nav-custom { width: 24px; height: 24px; font-size: 0.6rem; }
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 24px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .details-grid .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .details-grid .item .label { color: var(--text-muted); }
+        .details-grid .item .value { color: #fff; font-weight: 500; }
+
+        @media (max-width: 576px) {
+            .details-grid { grid-template-columns: 1fr; gap: 2px; }
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .toast {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: #fff;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.4s ease;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.3);
+        }
+        .toast.success { border-color: #22c55e; }
+        .toast.success i { color: #22c55e; }
+        .toast.error { border-color: #ef4444; }
+        .toast.error i { color: #ef4444; }
+        .toast.info { border-color: var(--primary); }
+        .toast.info i { color: var(--primary); }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @media (max-width: 768px) {
+            .product-card { padding: 16px; border-radius: 22px; }
+            .top-bar { flex-direction: column; align-items: stretch; }
+            .back-btn { justify-content: center; }
+            .top-actions { justify-content: center; }
+            .price-section { flex-direction: column; align-items: stretch; }
+            .actions-group { width: 100%; }
+            .actions-group .btn-primary-custom,
+            .actions-group .btn-secondary-custom {
+                flex: 1;
+                justify-content: center;
+            }
+            .cover-wrapper { max-width: 200px; }
+            .comment-text { margin-right: 0; }
+            .comment-actions { margin-right: 0; }
+            .footer-iframe { min-height: 300px; }
+        }
+
+        @media (max-width: 576px) {
+            .app-container { padding: 10px 8px 24px; }
+            .product-card { padding: 12px; border-radius: 18px; }
+            .product-title { font-size: 1.1rem; }
+            .meta-tag { font-size: 0.65rem; padding: 2px 10px; }
+            .price-tag { font-size: 1.1rem; }
+            .btn-primary-custom { padding: 6px 16px; font-size: 0.75rem; }
+            .btn-secondary-custom { padding: 6px 14px; font-size: 0.7rem; }
+            .cover-wrapper { max-width: 160px; }
+            .summary-box p { font-size: 0.75rem; }
+            .tab-btn-custom { padding: 6px 12px; font-size: 0.75rem; }
+            .footer-iframe { min-height: 350px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="light-waves">
+    <div class="light-wave"></div>
+    <div class="light-wave"></div>
+    <div class="light-wave"></div>
+</div>
+<div class="sparkles">
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+</div>
+<div class="bubbles-new" id="bubblesNew"></div>
+<canvas id="oceanCanvas"></canvas>
+
+<header class="ocean-header">
+    <div class="header-content">
+        <div class="main-navbar">
+            <div class="navbar-flex">
+                <div class="desktop-logo-wrapper" onclick="sendNavigation('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                </div>
+                <div class="desktop-menu">
+                    <a href="#" class="nav-link-custom" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+                    <a href="#" class="nav-link-custom" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+                    <a href="#" class="nav-link-custom" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+                    <a href="#" class="nav-link-custom" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+                    <a href="#" class="nav-link-custom cart-desktop" id="cartDesktopBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>سبد خرید</span>
+                    </a>
+                </div>
+                <div class="desktop-site-name" onclick="sendNavigation('home')">
+                    <span class="brand-text-desktop">ocean book</span>
+                </div>
+                <div class="mobile-brand-group" onclick="sendNavigation('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                    <span class="brand-text-mobile">ocean book</span>
+                </div>
+                <div class="mobile-buttons">
+                    <div class="mobile-cart-btn" onclick="goToCart()" title="سبد خرید">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-sidebar" id="mobileSidebar">
+    <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+    <div class="sidebar-brand">
+        <img src="logo.png" alt="لوگو"
+             onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+        <h2>ocean book</h2>
+    </div>
+    <a href="#" class="menu-item" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+    <a href="#" class="menu-item" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+    <a href="#" class="menu-item" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+    <a href="#" class="menu-item" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+    <a href="#" class="menu-item" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+    <a href="#" class="menu-item" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+    <a href="#" class="menu-item" onclick="goToCart()"><i class="fas fa-shopping-cart"></i> سبد خرید</a>
+</div>
+
+<div class="loading-screen" id="loadingScreen">
+    <div class="loader-ring"></div>
+    <div class="loader-text">در حال بارگذاری</div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="app-container">
+
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-right"></i>
+            بازگشت
+        </a>
+        <div class="top-actions">
+            <button class="top-action-btn" id="shareBtn" title="اشتراک‌گذاری">
+                <i class="fas fa-share-alt"></i>
+            </button>
+            <button class="top-action-btn" id="reportBtn" title="گزارش مشکل">
+                <i class="fas fa-flag"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="errorSection" class="error-box" style="display: none;">
+        <i class="fas fa-book-open"></i>
+        <h4 class="mt-2">محصول مورد نظر یافت نشد!</h4>
+        <p class="text-muted" style="font-size:0.9rem;">لطفاً از صفحه اصلی به محصولات دسترسی پیدا کنید.</p>
+        <a href="index.html" class="btn-primary-custom mt-3" style="display:inline-flex; padding:8px 28px; width:auto;">
+            <i class="fas fa-home"></i> بازگشت به خانه
+        </a>
+    </div>
+
+    <div id="productContent" style="display: none;">
+        <div class="product-card">
+
+            <div class="row g-3 align-items-start">
+                <div class="col-12 col-md-4 col-lg-3">
+                    <div class="cover-wrapper">
+                        <img id="productCover" class="cover-img" alt="کاور محصول" src="">
+                        <div class="cover-badge" id="coverBadge">📖 کتاب</div>
+                        <div class="cover-badge-free" id="freeBadge" style="display:none;">🎁 رایگان</div>
+                        <div class="preview-overlay">
+                            <button class="preview-btn" id="previewBtn">
+                                <i class="fas fa-play-circle"></i> پیش‌نمایش
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-8 col-lg-9">
+                    <h1 class="product-title" id="productTitle">عنوان محصول</h1>
+
+                    <div class="product-meta" id="productMeta">
+                        <span class="meta-tag"><i class="fas fa-user"></i> <span id="productAuthor">نویسنده</span></span>
+                        <span class="meta-tag"><i class="fas fa-tag"></i> <span id="productGenre">ژانر</span></span>
+                        <span class="meta-tag"><i class="fas fa-calendar"></i> <span id="productYear">سال</span></span>
+                        <span class="meta-tag" id="narratorTag" style="display:none;">
+                            <i class="fas fa-microphone-alt"></i> راوی: <span id="productNarrator"></span>
+                        </span>
+                    </div>
+
+                    <div class="rating-area" id="ratingArea">
+                        <span class="stars" id="starsDisplay"></span>
+                        <span class="rating-label" id="ratingLabel">۰ از ۵ (۰ نظر)</span>
+                    </div>
+
+                    <div class="summary-box">
+                        <div class="summary-label">
+                            <i class="fas fa-robot"></i>
+                            <span>خلاصه هوشمند</span>
+                        </div>
+                        <p id="productSummary"></p>
+                    </div>
+
+                    <div class="price-section">
+                        <div class="price-tag" id="priceDisplay">
+                            <span class="currency">تومان</span>
+                        </div>
+                        <div class="actions-group">
+                            <button class="btn-primary-custom" id="buyBtn">
+                                <i class="fas fa-shopping-cart"></i> خرید
+                            </button>
+                            <button class="btn-secondary-custom" id="bookmarkBtn">
+                                <i class="far fa-bookmark"></i> نشانه
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="features-row" id="featuresRow">
+                        <span class="feature-badge"><i class="fas fa-check-circle"></i> ضمانت بازگشت</span>
+                        <span class="feature-badge"><i class="fas fa-download"></i> دانلود فوری</span>
+                        <span class="feature-badge"><i class="fas fa-shield-alt"></i> امنیت بالا</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs-nav" id="tabsNav">
+                <button class="tab-btn-custom active" data-tab="comments">
+                    <i class="fas fa-comments"></i> نظرات
+                    <span class="tab-badge" id="commentsBadge">۰</span>
+                </button>
+                <button class="tab-btn-custom" data-tab="similar">
+                    <i class="fas fa-lightbulb"></i> پیشنهادها
+                </button>
+                <button class="tab-btn-custom" data-tab="details">
+                    <i class="fas fa-info-circle"></i> جزئیات
+                </button>
+            </div>
+
+            <div class="tab-pane-custom active" id="commentsTab">
+                <div class="comments-toolbar">
+                    <div class="sort-group">
+                        <button class="sort-btn-custom active" data-sort="useful">
+                            <i class="fas fa-thumbs-up"></i> مفیدترین
+                        </button>
+                        <button class="sort-btn-custom" data-sort="newest">
+                            <i class="fas fa-clock"></i> جدیدترین
+                        </button>
+                    </div>
+                    <button class="btn-write" id="toggleCommentBtn">
+                        <i class="fas fa-plus"></i> نوشتن نظر
+                    </button>
+                </div>
+
+                <div class="comment-form-box" id="commentForm">
+                    <div class="mb-1">
+                        <label class="small text-muted">امتیاز شما:</label>
+                        <div class="rating-picker" id="ratingPicker">
+                            <i class="far fa-star" data-rate="1"></i>
+                            <i class="far fa-star" data-rate="2"></i>
+                            <i class="far fa-star" data-rate="3"></i>
+                            <i class="far fa-star" data-rate="4"></i>
+                            <i class="far fa-star" data-rate="5"></i>
+                        </div>
+                    </div>
+                    <textarea class="form-control" id="commentText" rows="2" 
+                              placeholder="نظر خود را بنویسید..." 
+                              style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); color:#fff; border-radius:10px; resize:vertical; font-size:0.85rem;"></textarea>
+                    <div class="d-flex gap-2 justify-content-end mt-2">
+                        <button class="btn-secondary-custom" id="cancelCommentBtn" style="padding:4px 16px; font-size:0.7rem;">لغو</button>
+                        <button class="btn-primary-custom" id="submitCommentBtn" style="padding:4px 18px; font-size:0.75rem;">
+                            <i class="fas fa-paper-plane"></i> ارسال
+                        </button>
+                    </div>
+                </div>
+
+                <div id="commentsList"></div>
+            </div>
+
+            <div class="tab-pane-custom" id="similarTab">
+                <div class="similar-wrapper">
+                    <div class="similar-slider" id="similarSlider">
+                        <div class="similar-grid" id="similarGrid"></div>
+                    </div>
+                    <button class="scroll-nav-custom scroll-prev" onclick="scrollSimilar(-1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <button class="scroll-nav-custom scroll-next" onclick="scrollSimilar(1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="tab-pane-custom" id="detailsTab">
+                <div class="details-grid">
+                    <div class="item"><span class="label">عنوان</span><span class="value" id="detailTitle">-</span></div>
+                    <div class="item"><span class="label">نویسنده</span><span class="value" id="detailAuthor">-</span></div>
+                    <div class="item"><span class="label">ژانر</span><span class="value" id="detailGenre">-</span></div>
+                    <div class="item"><span class="label">سال انتشار</span><span class="value" id="detailYear">-</span></div>
+                    <div class="item"><span class="label">امتیاز</span><span class="value" id="detailRating">-</span></div>
+                    <div class="item"><span class="label">قیمت</span><span class="value" id="detailPrice">-</span></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<iframe src="footer.html" id="footerIframe" class="footer-iframe" scrolling="no"></iframe>
+
+<script>
+    function sendNavigation(target, section) {
+        const pageMap = {
+            'home': 'index.html',
+            'all-products': 'all-products.html',
+            'meditation': 'meditation.html',
+            'dashboard': 'dashboard.html',
+            'faq': 'FAQ.html',
+            'rules': 'Rules.html',
+            'about': 'aboutUs.html'
+        };
+        let url = pageMap[target] || 'index.html';
+        if (target === 'all-products' && section) {
+            url = url + '#' + section;
+        }
+        if (window.parent !== window) {
+            window.parent.postMessage({ type: 'navigate', target: target, section: section }, '*');
+        }
+        window.location.href = url;
+    }
+
+    function goToCart() {
+        window.location.href = 'sabad.html';
+    }
+
+    function toggleMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        if (sidebar.classList.contains('open')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    }
+
+    function openMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        overlay.classList.add('active');
+        sidebar.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        overlay.classList.remove('active');
+        sidebar.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.desktop-menu .nav-link-custom').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navType = this.getAttribute('data-nav');
+                if (navType === 'dashboard') {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                if (this.id === 'cartDesktopBtn') {
+                    goToCart();
+                    return;
+                }
+                if (navType === 'home') sendNavigation('home');
+                else if (navType === 'books') sendNavigation('all-products', 'books');
+                else if (navType === 'podcasts') sendNavigation('all-products', 'podcasts');
+                else if (navType === 'audiobooks') sendNavigation('all-products', 'audiobooks');
+                else if (navType === 'meditation') sendNavigation('meditation');
+            });
+        });
+
+        document.querySelectorAll('.mobile-sidebar .menu-item').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const navType = this.getAttribute('data-nav');
+                if (navType) {
+                    e.preventDefault();
+                    closeMobileMenu();
+                    if (navType === 'dashboard') {
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
+                        return;
+                    }
+                    setTimeout(() => {
+                        if (navType === 'home') sendNavigation('home');
+                        else if (navType === 'books') sendNavigation('all-products', 'books');
+                        else if (navType === 'podcasts') sendNavigation('all-products', 'podcasts');
+                        else if (navType === 'audiobooks') sendNavigation('all-products', 'audiobooks');
+                        else if (navType === 'meditation') sendNavigation('meditation');
+                    }, 300);
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { closeMobileMenu(); }
+        });
+    });
+
+    function updateFooterHeight(height) {
+        const iframe = document.getElementById('footerIframe');
+        if (iframe && height) {
+            const finalHeight = Math.max(height, 200);
+            iframe.style.height = finalHeight + 'px';
+            iframe.style.minHeight = finalHeight + 'px';
+        }
+    }
+
+    function requestFooterHeight() {
+        const iframe = document.getElementById('footerIframe');
+        if (iframe && iframe.contentWindow) {
+            try {
+                iframe.contentWindow.postMessage({ type: 'requestHeight' }, '*');
+            } catch(e) {}
+        }
+    }
+
+    window.addEventListener('message', function(event) {
+        if ((event.data.type === 'footerResize' || event.data.type === 'resize') && event.data.height) {
+            updateFooterHeight(event.data.height);
+        }
+        if (event.data.type === 'navigate') {
+            const target = event.data.target;
+            const section = event.data.section;
+            if (target === 'home') {
+                window.location.href = 'index.html';
+            } else if (target === 'all-products' || target === 'books' || target === 'podcasts' || target === 'audiobooks') {
+                let hash = '';
+                if (section === 'books' || target === 'books') hash = '#books';
+                else if (section === 'podcasts' || target === 'podcasts') hash = '#podcasts';
+                else if (section === 'audiobooks' || target === 'audiobooks') hash = '#audiobooks';
+                window.location.href = 'all-products.html' + hash;
+            } else if (target === 'meditation') {
+                window.location.href = 'meditation.html';
+            } else if (target === 'dashboard') {
+                window.location.href = 'dashboard.html';
+            } else if (target === 'faq') {
+                window.location.href = 'FAQ.html';
+            } else if (target === 'rules') {
+                window.location.href = 'Rules.html';
+            } else if (target === 'about') {
+                window.location.href = 'aboutUs.html';
+            }
+        }
+        if (event.data.type === 'openMobileMenu') {
+            openMobileMenu();
+        }
+        if (event.data.type === 'closeMobileMenu') {
+            closeMobileMenu();
+        }
+    });
+
+    const productsDB = {
+        book: {
+            1: { 
+                title: "صد سال تنهایی", 
+                author: "گابریل گارسیا مارکز", 
+                genre: "رئالیسم جادویی", 
+                year: 1967, 
+                price: 120000, 
+                rating: 4.7, 
+                cover: "cover/OneHundredYearsOfSolitude.jpg", 
+                type: "کتاب",
+                summary: "سرگذشت چندنسلی خانواده بوئندیا در شهر خیالی ماکوندو. داستانی پر از عجایب، عشق، جنگ و تقدیر.", 
+                comments: [
+                    { name: "مهدی کریمی", text: "کتاب فوق‌العاده‌ای بود. یکی از بهترین رمان‌هایی که خوندم.", likes: 45, date: "۱۴۰۳/۰۱/۱۵", avatar: "م" },
+                    { name: "سارا احمدی", text: "بخش سوم عالی بود. ترجمه روانی داره.", likes: 32, date: "۱۴۰۳/۰۱/۱۰", avatar: "س" },
+                    { name: "علی رضایی", text: "داستانی عمیق و پر از نماد. پیشنهاد میکنم حتما بخونید.", likes: 28, date: "۱۴۰۳/۰۱/۰۵", avatar: "ع" },
+                    { name: "نرگس محمدی", text: "شخصیت‌پردازی بی‌نظیر. مارکز واقعاً نابغه است.", likes: 19, date: "۱۴۰۲/۱۲/۲۸", avatar: "ن" },
+                    { name: "رضا کریمی", text: "کمی سنگین بود ولی ارزش خوندن داره.", likes: 15, date: "۱۴۰۲/۱۲/۲۰", avatar: "ر" }
+                ] 
+            },
+            2: { 
+                title: "هری پاتر و سنگ جادو", 
+                author: "جی.کی. رولینگ", 
+                genre: "فانتزی", 
+                year: 1997, 
+                price: 150000, 
+                rating: 4.9, 
+                cover: "cover/HarryPotterSorcerersStone.jpg", 
+                type: "کتاب",
+                summary: "پسری جادوگر وارد مدرسه هاگوارتز می‌شود و با لرد ولدمورت روبه‌رو می‌گردد.",
+                comments: [
+                    { name: "علیرضا نوری", text: "دنیای جادویی رولینگ فوق‌العاده است!", likes: 67, date: "۱۴۰۳/۰۱/۰۵", avatar: "ع" },
+                    { name: "زهرا حسینی", text: "از بچگی عاشق این کتاب بودم. هنوز هم لذت میبرم.", likes: 42, date: "۱۴۰۲/۱۲/۳۰", avatar: "ز" },
+                    { name: "محمد امینی", text: "ورود به دنیای هاگوارتز بهترین تجربه‌ی زندگیم بود.", likes: 38, date: "۱۴۰۲/۱۲/۲۵", avatar: "م" }
+                ] 
+            },
+            3: { 
+                title: "بوف کور", 
+                author: "صادق هدایت", 
+                genre: "ادبیات", 
+                year: 1936, 
+                price: 90000, 
+                rating: 4.5, 
+                cover: "cover/Bof_e_Koor.jpg", 
+                type: "کتاب",
+                summary: "روایت سوررئال و سیاه از تنهایی انسان.",
+                comments: [
+                    { name: "احمد پوررضا", text: "کتابی عمیق و پر از نماد.", likes: 22, date: "۱۴۰۳/۰۱/۰۸", avatar: "ا" },
+                    { name: "مریم نوری", text: "سبک نگارش هدایت بی‌نظیره.", likes: 18, date: "۱۴۰۲/۱۲/۲۹", avatar: "م" }
+                ] 
+            },
+            4: { 
+                title: "شازده کوچولو", 
+                author: "آنتوان دو سنت‌اگزوپری", 
+                genre: "کلاسیک", 
+                year: 1943, 
+                price: 80000, 
+                rating: 4.8, 
+                cover: "cover/TheLittlePrince.jpg", 
+                type: "کتاب",
+                summary: "شاهزاده‌ای فضایی معنای عشق و دوستی را می‌آموزد.",
+                comments: [
+                    { name: "سارا محمدی", text: "همیشه می‌تونم دوباره بخونمش.", likes: 55, date: "۱۴۰۳/۰۱/۱۲", avatar: "س" },
+                    { name: "رضا کریمی", text: "درس بزرگی برای زندگی.", likes: 40, date: "۱۴۰۲/۱۲/۲۵", avatar: "ر" }
+                ] 
+            },
+            5: { 
+                title: "سه‌جسم", 
+                author: "لیو سیسین", 
+                genre: "علمی-تخیلی", 
+                year: 2008, 
+                price: 180000, 
+                rating: 4.4, 
+                cover: "cover/ThreeBodyProblem.jpg", 
+                type: "کتاب",
+                summary: "تماس با تمدنی بیگانه و چالش‌های بشریت.",
+                comments: [
+                    { name: "علی رضایی", text: "علمی-تخیلی فوق‌العاده!", likes: 34, date: "۱۴۰۳/۰۱/۰۵", avatar: "ع" },
+                    { name: "نرگس محمدی", text: "ترجمه خوبی داره.", likes: 12, date: "۱۴۰۲/۱۲/۲۰", avatar: "ن" }
+                ] 
+            },
+            6: { 
+                title: "کلیدر", 
+                author: "محمود دولت‌آبادی", 
+                genre: "رمان اجتماعی", 
+                year: 1984, 
+                price: 220000, 
+                rating: 4.7, 
+                cover: "cover/Kelidar.jpg", 
+                type: "کتاب",
+                summary: "حماسه زندگی روستاییان خراسان.",
+                comments: [
+                    { name: "رضا کریمی", text: "دولت‌آبادی استاد داستان‌نویسی است.", likes: 28, date: "۱۴۰۳/۰۱/۰۳", avatar: "ر" },
+                    { name: "مریم سادات", text: "کتاب سنگینی بود ولی ارزش داشت.", likes: 19, date: "۱۴۰۲/۱۲/۲۸", avatar: "م" }
+                ] 
+            },
+            7: { 
+                title: "معمای داوینچی", 
+                author: "دن براون", 
+                genre: "دلهره‌آور", 
+                year: 2003, 
+                price: 95000, 
+                rating: 4.2, 
+                cover: "cover/DaVinciCode.jpg", 
+                type: "کتاب",
+                summary: "استاد نمادشناسی رازهایی را در موزه لوور کشف می‌کند.",
+                comments: [
+                    { name: "علیرضا نوری", text: "پر از تعلیق و هیجان.", likes: 45, date: "۱۴۰۳/۰۱/۱۰", avatar: "ع" },
+                    { name: "زهرا حسینی", text: "یک نفس خوندمش.", likes: 30, date: "۱۴۰۲/۱۲/۲۲", avatar: "ز" }
+                ] 
+            },
+            8: { 
+                title: "هنر ظریف بی‌اهمیت‌انگاری", 
+                author: "مارک منسون", 
+                genre: "خودیاری", 
+                year: 2016, 
+                price: 105000, 
+                rating: 4.3, 
+                cover: "cover/SubtleArtOfNotGivingFck.jpg", 
+                type: "کتاب",
+                summary: "با پذیرش محدودیت‌ها و تمرکز بر ارزش‌های واقعی زندگی بهتری بسازید.",
+                comments: [
+                    { name: "مریم سادات", text: "کتابی که طرز فکر من رو عوض کرد.", likes: 52, date: "۱۴۰۳/۰۱/۱۲", avatar: "م" },
+                    { name: "احمد پوررضا", text: "نسبت به کتاب‌های مشابه خیلی روان‌تر و کاربردی‌تره.", likes: 34, date: "۱۴۰۳/۰۱/۰۸", avatar: "ا" },
+                    { name: "سعید کریمی", text: "بخش آخر کتاب فوق‌العاده بود. حتما بخونید.", likes: 27, date: "۱۴۰۲/۱۲/۲۹", avatar: "س" },
+                    { name: "لیلا محمدی", text: "ترجمه خوبی داره و نکات جالبی داره.", likes: 18, date: "۱۴۰۲/۱۲/۲۲", avatar: "ل" },
+                    { name: "حسین رضایی", text: "توی زندگی روزمره خیلی به کارم اومد.", likes: 14, date: "۱۴۰۲/۱۲/۱۵", avatar: "ح" }
+                ] 
+            },
+            9: { 
+                title: "جنایت و مکافات", 
+                author: "فئودور داستایفسکی", 
+                genre: "روانشناسی", 
+                year: 1866, 
+                price: 130000, 
+                rating: 4.8, 
+                cover: "cover/CrimeAndPunishment.jpg", 
+                type: "کتاب",
+                summary: "دانشجویی فقیر پس از قتل یک گروبان، گرفتار عذاب وجدان می‌شود.",
+                comments: [
+                    { name: "پویا فرهادی", text: "شاهکار بی‌نظیر داستایفسکی. حتما بخونید.", likes: 89, date: "۱۴۰۳/۰۱/۰۲", avatar: "پ" },
+                    { name: "نگار زمانی", text: "کتاب سنگینی بود ولی عمق روانشناختی فوق‌العاده‌ای داره.", likes: 56, date: "۱۴۰۲/۱۲/۲۸", avatar: "ن" },
+                    { name: "امیرحسین نوری", text: "ترجمه خوبی داره. پیشنهاد میکنم.", likes: 41, date: "۱۴۰۲/۱۲/۲۳", avatar: "ا" },
+                    { name: "فاطمه کریمی", text: "بعد از خوندن این کتاب، به عمق وجود انسان فکر میکنم.", likes: 33, date: "۱۴۰۲/۱۲/۱۸", avatar: "ف" },
+                    { name: "مصطفی رضایی", text: "کلاسیک بی‌نظیر. ارزش وقت گذاشتن رو داره.", likes: 27, date: "۱۴۰۲/۱۲/۱۰", avatar: "م" }
+                ] 
+            },
+            10: { 
+                title: "کوری", 
+                author: "ژوزه ساراماگو", 
+                genre: "ادبیات", 
+                year: 1995, 
+                price: 140000, 
+                rating: 4.6, 
+                cover: "cover/Blindness.jpg", 
+                type: "کتاب",
+                summary: "یک بیماری مرموز همه را کور می‌کند.",
+                comments: [
+                    { name: "سعید رضایی", text: "داستانی پر از نماد.", likes: 30, date: "۱۴۰۳/۰۱/۰۵", avatar: "س" },
+                    { name: "نرگس محمدی", text: "ساراماگو فوق‌العاده است.", likes: 22, date: "۱۴۰۲/۱۲/۳۰", avatar: "ن" }
+                ] 
+            },
+            11: { 
+                title: "داستان دو شهر", 
+                author: "چارلز دیکنز", 
+                genre: "کلاسیک", 
+                year: 1859, 
+                price: 110000, 
+                rating: 4.7, 
+                cover: "cover/dastan_do shahr.jpg", 
+                type: "کتاب",
+                summary: "داستانی از عشق و فداکاری در انقلاب فرانسه.",
+                comments: [
+                    { name: "محمد امینی", text: "دیکنز نابغه است.", likes: 40, date: "۱۴۰۳/۰۱/۰۱", avatar: "م" },
+                    { name: "زهرا حسینی", text: "ترجمه خوبی داره.", likes: 25, date: "۱۴۰۲/۱۲/۲۵", avatar: "ز" }
+                ] 
+            },
+            12: { 
+                title: "پیش از آنکه قهوه سرد شود", 
+                author: "توشیکازو کاواگوچی", 
+                genre: "رئالیسم جادویی", 
+                year: 2015, 
+                price: 85000, 
+                rating: 4.4, 
+                cover: "cover/pishazanke.jpg", 
+                type: "کتاب",
+                summary: "کافه‌ای که مشتریانش می‌توانند به گذشته سفر کنند.",
+                comments: [
+                    { name: "نرگس سادات", text: "داستانی تامل‌برانگیز.", likes: 33, date: "۱۴۰۳/۰۱/۰۷", avatar: "ن" },
+                    { name: "علی پوررضا", text: "کتابی آرام و عمیق.", likes: 20, date: "۱۴۰۲/۱۲/۳۰", avatar: "ع" }
+                ] 
+            },
+            13: { 
+                title: "راز", 
+                author: "روندا برن", 
+                genre: "خودیاری", 
+                year: 2006, 
+                price: 75000, 
+                rating: 3.9, 
+                cover: "cover/raz.jpg", 
+                type: "کتاب",
+                summary: "قانون جذب و قدرتی که در درون شماست.",
+                comments: [
+                    { name: "مریم کریمی", text: "کتابی که تغییر ایجاد کرد.", likes: 45, date: "۱۴۰۳/۰۱/۱۰", avatar: "م" },
+                    { name: "سارا احمدی", text: "بسیار الهام‌بخش.", likes: 30, date: "۱۴۰۲/۱۲/۲۸", avatar: "س" }
+                ] 
+            },
+            14: { 
+                title: "مردی به نام اوه", 
+                author: "فردریک بکمن", 
+                genre: "رمان اجتماعی", 
+                year: 2012, 
+                price: 98000, 
+                rating: 4.5, 
+                cover: "cover/mardibenamoh.jpg", 
+                type: "کتاب",
+                summary: "مردی بدخلق که داستان زندگی‌اش دل همه را می‌برد.",
+                comments: [
+                    { name: "علیرضا نوری", text: "داستان دلنشین و پر از احساس.", likes: 50, date: "۱۴۰۳/۰۱/۱۲", avatar: "ع" },
+                    { name: "زهرا حسینی", text: "بکمن استاد شخصیت‌پردازی است.", likes: 35, date: "۱۴۰۳/۰۱/۰۵", avatar: "ز" }
+                ] 
+            },
+            15: { 
+                title: "بیداری", 
+                author: "کیت شوپن", 
+                genre: "ادبیات", 
+                year: 1899, 
+                price: 68000, 
+                rating: 4.2, 
+                cover: "cover/bidari.jpg", 
+                type: "کتاب",
+                summary: "زنی در جستجوی هویت و آزادی در قرن نوزدهم.",
+                comments: [
+                    { name: "نگار زمانی", text: "کتابی پیشرو و جسور.", likes: 28, date: "۱۴۰۳/۰۱/۰۳", avatar: "ن" },
+                    { name: "احمد پوررضا", text: "نگاهی نو به نقش زن.", likes: 18, date: "۱۴۰۲/۱۲/۲۵", avatar: "ا" }
+                ] 
+            },
+            16: { 
+                title: "خشم و هیاهو", 
+                author: "ویلیام فاکنر", 
+                genre: "ادبیات", 
+                year: 1929, 
+                price: 160000, 
+                rating: 4.4, 
+                cover: "cover/SoundAndTheFury.jpg", 
+                type: "کتاب",
+                summary: "روایت سقوط یک خانواده جنوبی.",
+                comments: [
+                    { name: "سعید رضایی", text: "فاکنر استاد جریان سیال ذهن است.", likes: 35, date: "۱۴۰۳/۰۱/۰۸", avatar: "س" },
+                    { name: "مریم سادات", text: "کتابی چالش‌برانگیز ولی ارزشمند.", likes: 22, date: "۱۴۰۲/۱۲/۲۸", avatar: "م" }
+                ] 
+            },
+            17: { 
+                title: "کتاب‌فروشی در پاریس", 
+                author: "نینا جورج", 
+                genre: "رمان اجتماعی", 
+                year: 2019, 
+                price: 115000, 
+                rating: 4.3, 
+                cover: "cover/darparis.jpeg", 
+                type: "کتاب",
+                summary: "کتابفروشی روی کشتی در رود سن.",
+                comments: [
+                    { name: "زهرا کریمی", text: "فضای کتاب فوق‌العاده است.", likes: 30, date: "۱۴۰۳/۰۱/۰۶", avatar: "ز" },
+                    { name: "علیرضا نوری", text: "داستانی پر از عشق به کتاب.", likes: 25, date: "۱۴۰۲/۱۲/۲۹", avatar: "ع" }
+                ] 
+            },
+            18: { 
+                title: "اتاق", 
+                author: "اما دونوگو", 
+                genre: "دلهره‌آور", 
+                year: 2010, 
+                price: 92000, 
+                rating: 4.1, 
+                cover: "cover/otagh.jpg", 
+                type: "کتاب",
+                summary: "پسری در یک اتاق کوچک با مادرش زندگی می‌کند.",
+                comments: [
+                    { name: "محمد امینی", text: "داستانی پر از تعلیق و امید.", likes: 40, date: "۱۴۰۳/۰۱/۰۴", avatar: "م" },
+                    { name: "نرگس محمدی", text: "کتابی که نمی‌توان زمین گذاشت.", likes: 28, date: "۱۴۰۲/۱۲/۲۷", avatar: "ن" }
+                ] 
+            }
+        },
+        podcast: {
+            101: { 
+                title: "خانه سنایی", 
+                author: "احسان عبدی پور", 
+                narrator: "مهرناز فخرایی", 
+                genre: "خودیاری", 
+                year: 2023, 
+                price: "رایگان", 
+                rating: 4.5, 
+                cover: "podcast cover/1.jpeg", 
+                type: "پادکست",
+                summary: "ایده‌های نوآورانه برای زندگی بهتر. هر هفته با مهمانان ویژه.",
+                comments: [
+                    { name: "ساحل رضایی", text: "بهترین پادکست انگیزشی که گوش دادم.", likes: 34, date: "۱۴۰۳/۰۱/۰۷", avatar: "س" }
+                ] 
+            },
+            102: { 
+                title: "از بهانه هات قوی تر باش", 
+                author: "این نقطه", 
+                narrator: "سحر ولدبیگی", 
+                genre: "روانشناسی", 
+                year: 2024, 
+                price: "رایگان", 
+                rating: 4.3, 
+                cover: "podcast cover/2.jpeg", 
+                type: "پادکست",
+                summary: "پادکست خودشناسی و رشد فردی با رویکردی عمیق.",
+                comments: [
+                    { name: "مریم کریمی", text: "هر هفته منتظرم.", likes: 28, date: "۱۴۰۳/۰۱/۰۹", avatar: "م" }
+                ] 
+            },
+            103: { 
+                title: "کتاب‌باز", 
+                author: "محمد رضا شعبانعلی", 
+                narrator: "نیلوفر سادات", 
+                genre: "ادبیات", 
+                year: 2023, 
+                price: "رایگان", 
+                rating: 4.7, 
+                cover: "podcast cover/3.jpeg", 
+                type: "پادکست",
+                summary: "بررسی کتاب‌های تاثیرگذار تاریخ با نگاهی تازه.",
+                comments: [
+                    { name: "احمد پوررضا", text: "هر قسمت از این پادکست یک کلاس درس است.", likes: 52, date: "۱۴۰۳/۰۱/۱۰", avatar: "ا" },
+                    { name: "زهرا حسینی", text: "بهترین پادکست ادبی.", likes: 38, date: "۱۴۰۳/۰۱/۰۵", avatar: "ز" }
+                ] 
+            },
+            104: { 
+                title: "لذت کتاب", 
+                author: "سارا امینی", 
+                narrator: "سارا امینی", 
+                genre: "کتابخوانی", 
+                year: 2024, 
+                price: "رایگان", 
+                rating: 4.4, 
+                cover: "podcast cover/4.jpeg", 
+                type: "پادکست",
+                summary: "با کتاب‌ها و نویسندگان بزرگ آشنا شوید.",
+                comments: [
+                    { name: "نرگس محمدی", text: "صدای گرم و جذاب.", likes: 30, date: "۱۴۰۳/۰۱/۰۳", avatar: "ن" }
+                ] 
+            },
+            105: { 
+                title: "چالش‌های ذهنی", 
+                author: "دکتر علی محمدی", 
+                narrator: "مریم نوری", 
+                genre: "روانشناسی", 
+                year: 2023, 
+                price: "رایگان", 
+                rating: 4.6, 
+                cover: "podcast cover/5.jpeg", 
+                type: "پادکست",
+                summary: "راهکارهای عملی برای مدیریت استرس و بهبود سلامت روان.",
+                comments: [
+                    { name: "سعید رضایی", text: "راهکارهای بسیار کاربردی.", likes: 42, date: "۱۴۰۳/۰۱/۰۸", avatar: "س" },
+                    { name: "مریم سادات", text: "تغییر بزرگی در زندگی من ایجاد کرد.", likes: 35, date: "۱۴۰۳/۰۱/۰۲", avatar: "م" }
+                ] 
+            },
+            106: { 
+                title: "قصه‌های شب", 
+                author: "رضا کریمی", 
+                narrator: "احسان عبدی", 
+                genre: "داستان صوتی", 
+                year: 2024, 
+                price: "رایگان", 
+                rating: 4.2, 
+                cover: "podcast cover/6.jpeg", 
+                type: "پادکست",
+                summary: "قصه‌های کوتاه برای شب‌های آرام.",
+                comments: [
+                    { name: "زهرا کریمی", text: "صدای آرامش‌بخش.", likes: 25, date: "۱۴۰۳/۰۱/۰۶", avatar: "ز" }
+                ] 
+            },
+            107: { 
+                title: "فلسفه برای زندگی", 
+                author: "حمیدرضا میرزایی", 
+                narrator: "حمیدرضا میرزایی", 
+                genre: "فلسفه", 
+                year: 2023, 
+                price: "رایگان", 
+                rating: 4.8, 
+                cover: "podcast cover/7.jpeg", 
+                type: "پادکست",
+                summary: "اندیشه‌های فلسفی برای زندگی روزمره.",
+                comments: [
+                    { name: "علیرضا نوری", text: "فلسفه را برای همه قابل فهم کرده.", likes: 58, date: "۱۴۰۳/۰۱/۱۱", avatar: "ع" },
+                    { name: "محمد امینی", text: "هر قسمت یک جهان تازه.", likes: 42, date: "۱۴۰۳/۰۱/۰۷", avatar: "م" }
+                ] 
+            }
+        },
+        audiobook: {
+            201: { 
+                title: "دایی جان ناپلئون (صوتی)", 
+                author: "ایرج پزشکزاد", 
+                narrator: "محمدرضا علی‌محمدی", 
+                genre: "طنز", 
+                year: 1390, 
+                price: 65000, 
+                rating: 4.9, 
+                cover: "cover voice/1.jpg", 
+                type: "کتاب صوتی",
+                summary: "طنز کلاسیک ایرانی با اجرای بی‌نظیر محمدرضا علی‌محمدی.",
+                comments: [
+                    { name: "کامران محمدی", text: "اجرای بی‌نظیر، خیلی لذت بردم.", likes: 78, date: "۱۴۰۳/۰۱/۰۴", avatar: "ک" },
+                    { name: "سعید رضایی", text: "بارها گوش دادم، هنوز هم می‌خندم.", likes: 62, date: "۱۴۰۳/۰۱/۰۱", avatar: "س" }
+                ] 
+            },
+            202: { 
+                title: "قتل‌های خیابان مورگ (صوتی)", 
+                author: "ادگار آلن پو", 
+                narrator: "علی رضایی اصل", 
+                genre: "دلهره‌آور", 
+                year: 2010, 
+                price: 97000, 
+                rating: 4.6, 
+                cover: "cover voice/2.jpg", 
+                type: "کتاب صوتی",
+                summary: "داستان معمایی ترسناک از ادگار آلن پو.",
+                comments: [
+                    { name: "علیرضا نوری", text: "فضای ترسناک و جذاب.", likes: 35, date: "۱۴۰۳/۰۱/۰۷", avatar: "ع" },
+                    { name: "مریم سادات", text: "اجرای عالی.", likes: 28, date: "۱۴۰۳/۰۱/۰۲", avatar: "م" }
+                ] 
+            },
+            203: { 
+                title: "چه کسی پنیر مرا جابجا کرد (صوتی)", 
+                author: "اسپنسر جانسون", 
+                narrator: "فریدون اسماعیلی", 
+                genre: "خودیاری", 
+                year: 2015, 
+                price: 112000, 
+                rating: 4.8, 
+                cover: "cover voice/3.jpg", 
+                type: "کتاب صوتی",
+                summary: "مدیریت تغییر در زندگی و کار.",
+                comments: [
+                    { name: "احمد پوررضا", text: "کتابی که هر مدیر و کارمندی باید بشنوه.", likes: 55, date: "۱۴۰۳/۰۱/۰۹", avatar: "ا" },
+                    { name: "زهرا حسینی", text: "ساده ولی عمیق.", likes: 42, date: "۱۴۰۳/۰۱/۰۵", avatar: "ز" }
+                ] 
+            },
+            204: { 
+                title: "قصه های امیرعلی (صوتی)", 
+                author: "امیرعلی نبویان", 
+                narrator: "امیرعلی نبویان", 
+                genre: "روانشناسی", 
+                year: 2018, 
+                price: 85000, 
+                rating: 4.5, 
+                cover: "cover voice/6.jpg", 
+                type: "کتاب صوتی",
+                summary: "رهایی از استرس با جریان زندگی.",
+                comments: [
+                    { name: "نرگس محمدی", text: "صدای آرام و تاثیرگذار.", likes: 32, date: "۱۴۰۳/۰۱/۰۶", avatar: "ن" }
+                ] 
+            },
+            205: { 
+                title: "تنگنا (صوتی)", 
+                author: "لئانیدآندریف", 
+                narrator: "هوتن شکیبا", 
+                genre: "ادبیات", 
+                year: 1869, 
+                price: 180000, 
+                rating: 4.9, 
+                cover: "cover voice/8.jpg", 
+                type: "کتاب صوتی",
+                summary: "داستانی فلسفی، جنایی و با درون‌مایه‌ی روان‌شناختی. اعترافات پزشک قاتلی را روایت می‌کند.",
+                comments: [
+                    { name: "محمد امینی", text: "یکی از بهترین کتاب‌های صوتی که تا حالا شنیدم.", likes: 88, date: "۱۴۰۳/۰۱/۱۲", avatar: "م" },
+                    { name: "سعید رضایی", text: "اجرای هوتن شکیبا فوق‌العاده است.", likes: 65, date: "۱۴۰۳/۰۱/۰۸", avatar: "س" }
+                ] 
+            },
+            206: { 
+                title: "هست یا نیست؟ (صوتی)", 
+                author: "سارا سالار", 
+                narrator: "اناهیتا درگاهی", 
+                genre: "کلاسیک", 
+                year: 1943, 
+                price: 55000, 
+                rating: 4.7, 
+                cover: "cover voice/7.jpg", 
+                type: "کتاب صوتی",
+                summary: "از زاویه‌ی دید زنی ۳۹ ساله، به زندگی در قالب خانواده‌ی ایرانی نگاه می‌کند.",
+                comments: [
+                    { name: "زهرا کریمی", text: "داستانی واقعی و ملموس.", likes: 38, date: "۱۴۰۳/۰۱/۰۴", avatar: "ز" },
+                    { name: "مریم سادات", text: "اجرای عالی اناهیتا درگاهی.", likes: 29, date: "۱۴۰۲/۱۲/۳۰", avatar: "م" }
+                ] 
+            },
+            207: { 
+                title: "سگ ولگرد (صوتی)", 
+                author: "صادق هدایت", 
+                narrator: "رضا عمرانی", 
+                genre: "روانشناسی", 
+                year: 1946, 
+                price: 78000, 
+                rating: 4.8, 
+                cover: "cover voice/5.jpg", 
+                type: "کتاب صوتی",
+                summary: "معنای زندگی در سخت‌ترین شرایط.",
+                comments: [
+                    { name: "علیرضا نوری", text: "هدایت همیشه عمیق است.", likes: 52, date: "۱۴۰۳/۰۱/۰۵", avatar: "ع" },
+                    { name: "نرگس محمدی", text: "کتابی برای تفکر.", likes: 38, date: "۱۴۰۲/۱۲/۲۸", avatar: "ن" }
+                ] 
+            },
+            208: { 
+                title: "کشتن گربه (صوتی)", 
+                author: "اوکتای اکبال", 
+                narrator: "رضا بهبودی", 
+                genre: "کلاسیک", 
+                year: 1850, 
+                price: 125000, 
+                rating: 4.4, 
+                cover: "cover voice/4.jpg", 
+                type: "کتاب صوتی",
+                summary: "داستانی از امید و رستگاری.",
+                comments: [
+                    { name: "احمد پوررضا", text: "داستانی پر از امید.", likes: 30, date: "۱۴۰۳/۰۱/۰۳", avatar: "ا" },
+                    { name: "مریم کریمی", text: "اجرای تاثیرگذار.", likes: 22, date: "۱۴۰۲/۱۲/۲۶", avatar: "م" }
+                ] 
+            }
+        }
+    };
+
+    const similarProductsList = [
+        { id: 8, type: "book", title: "هنر ظریف بی‌اهمیت‌انگاری", price: "۱۰۵٬۰۰۰", rating: 4.3, cover: "cover/SubtleArtOfNotGivingFck.jpg" },
+        { id: 9, type: "book", title: "جنایت و مکافات", price: "۱۳۰٬۰۰۰", rating: 4.8, cover: "cover/CrimeAndPunishment.jpg" },
+        { id: 3, type: "book", title: "بوف کور", price: "۹۰٬۰۰۰", rating: 4.5, cover: "cover/Bof_e_Koor.jpg" },
+        { id: 4, type: "book", title: "شازده کوچولو", price: "۸۰٬۰۰۰", rating: 4.8, cover: "cover/TheLittlePrince.jpg" },
+        { id: 10, type: "book", title: "کوری", price: "۱۴۰٬۰۰۰", rating: 4.6, cover: "cover/Blindness.jpg" },
+        { id: 102, type: "podcast", title: "از بهانه هات قوی تر باش", price: "رایگان", rating: 4.3, cover: "podcast cover/2.jpeg" },
+        { id: 103, type: "podcast", title: "کتاب‌باز", price: "رایگان", rating: 4.7, cover: "podcast cover/3.jpeg" },
+        { id: 107, type: "podcast", title: "فلسفه برای زندگی", price: "رایگان", rating: 4.8, cover: "podcast cover/7.jpeg" },
+        { id: 203, type: "audiobook", title: "چه کسی پنیر مرا جابجا کرد", price: "۱۱۲٬۰۰۰", rating: 4.8, cover: "cover voice/3.jpg" },
+        { id: 207, type: "audiobook", title: "سگ ولگرد (صوتی)", price: "۷۸٬۰۰۰", rating: 4.8, cover: "cover voice/5.jpg" }
+    ];
+
+    let currentProduct = null;
+    let currentType = null;
+    let currentId = null;
+    let selectedRating = 0;
+    let currentSort = 'useful';
+    let isBookmarked = false;
+
+    function getUrlParam(name) {
+        return new URLSearchParams(window.location.search).get(name);
+    }
+
+    function formatPrice(price) {
+        if (price === 'رایگان' || price === 0) return 'رایگان';
+        return price.toLocaleString() + ' تومان';
+    }
+
+    function getBadgeIcon(type) {
+        const map = { 'کتاب': '📖', 'پادکست': '🎙️', 'کتاب صوتی': '🎧' };
+        return map[type] || '📚';
+    }
+
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `<i class="fas ${icons[type]}"></i> ${message}`;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(-30px)';
+            setTimeout(() => toast.remove(), 400);
+        }, 3000);
+    }
+
+    function getCommentCount() {
+        return currentProduct?.comments?.length || 0;
+    }
+
+    function renderStars(rating) {
+        let html = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= rating) html += '<i class="fas fa-star"></i>';
+            else if (i - 0.5 <= rating) html += '<i class="fas fa-star-half-alt"></i>';
+            else html += '<i class="far fa-star"></i>';
+        }
+        return html;
+    }
+
+    function renderComments(sort = 'useful') {
+        const container = document.getElementById('commentsList');
+        const comments = currentProduct?.comments || [];
+        
+        if (comments.length === 0) {
+            container.innerHTML = `
+                <div class="empty-comments">
+                    <i class="fas fa-comment-dots"></i>
+                    <p>هنوز نظری ثبت نشده است.</p>
+                    <p class="small text-muted">اولین نفری باشید که نظر می‌دهید!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        let sorted = [...comments];
+        if (sort === 'useful') sorted.sort((a, b) => b.likes - a.likes);
+        else sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        container.innerHTML = sorted.map(c => `
+            <div class="comment-item">
+                <div class="comment-header">
+                    <div class="comment-avatar">${c.avatar}</div>
+                    <div>
+                        <div class="comment-name">${c.name}</div>
+                        <div class="comment-date">${c.date}</div>
+                    </div>
+                </div>
+                <div class="comment-text">${c.text}</div>
+                <div class="comment-actions">
+                    <button class="like-btn-custom" data-comment="${c.name}">
+                        <i class="far fa-heart"></i> <span>${c.likes}</span>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+        
+        document.querySelectorAll('.like-btn-custom').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const name = this.dataset.comment;
+                const comment = currentProduct.comments.find(c => c.name === name);
+                if (comment) {
+                    comment.likes++;
+                    renderComments(currentSort);
+                }
+            });
+        });
+    }
+
+    function renderSimilar() {
+        const grid = document.getElementById('similarGrid');
+        grid.innerHTML = similarProductsList.map(p => `
+            <div class="similar-item" onclick="window.location.href='product.html?type=${p.type}&id=${p.id}'">
+                <img src="${p.cover}" alt="${p.title}" loading="lazy" onerror="this.src='https://picsum.photos/150/200'">
+                <div class="s-title">${p.title}</div>
+                <div class="s-rating"><i class="fas fa-star"></i> ${p.rating}</div>
+                <div class="s-price">${p.price}</div>
+                <button class="s-btn">مشاهده</button>
+            </div>
+        `).join('');
+    }
+
+    function renderDetails() {
+        if (!currentProduct) return;
+        document.getElementById('detailTitle').textContent = currentProduct.title;
+        document.getElementById('detailAuthor').textContent = currentProduct.author;
+        document.getElementById('detailGenre').textContent = currentProduct.genre;
+        document.getElementById('detailYear').textContent = currentProduct.year;
+        document.getElementById('detailRating').textContent = `${currentProduct.rating} از ۵`;
+        document.getElementById('detailPrice').textContent = formatPrice(currentProduct.price);
+    }
+
+    function updateUI() {
+        if (!currentProduct) return;
+        
+        document.getElementById('productCover').src = currentProduct.cover;
+        document.getElementById('productCover').onerror = function() { this.src = 'https://picsum.photos/300/400'; };
+        
+        document.getElementById('coverBadge').textContent = `${getBadgeIcon(currentProduct.type)} ${currentProduct.type}`;
+        
+        const freeBadge = document.getElementById('freeBadge');
+        if (currentProduct.price === 'رایگان' || currentProduct.price === 0) {
+            freeBadge.style.display = 'block';
+        } else {
+            freeBadge.style.display = 'none';
+        }
+        
+        document.getElementById('productTitle').textContent = currentProduct.title;
+        document.getElementById('productAuthor').textContent = currentProduct.author;
+        document.getElementById('productGenre').textContent = currentProduct.genre;
+        document.getElementById('productYear').textContent = currentProduct.year;
+        
+        const narratorTag = document.getElementById('narratorTag');
+        if (currentProduct.narrator) {
+            narratorTag.style.display = 'inline';
+            document.getElementById('productNarrator').textContent = currentProduct.narrator;
+        } else {
+            narratorTag.style.display = 'none';
+        }
+        
+        document.getElementById('starsDisplay').innerHTML = renderStars(currentProduct.rating);
+        document.getElementById('ratingLabel').textContent = `${currentProduct.rating} از ۵ (${getCommentCount()} نظر)`;
+        document.getElementById('productSummary').textContent = currentProduct.summary;
+        
+        const priceDisplay = formatPrice(currentProduct.price);
+        document.getElementById('priceDisplay').innerHTML = `
+            ${priceDisplay}
+            ${priceDisplay !== 'رایگان' ? '<span class="currency">تومان</span>' : ''}
+        `;
+        
+        document.getElementById('commentsBadge').textContent = getCommentCount();
+        
+        renderComments(currentSort);
+        renderSimilar();
+        renderDetails();
+        
+        const bookmarkBtn = document.getElementById('bookmarkBtn');
+        if (isBookmarked) {
+            bookmarkBtn.classList.add('active');
+            bookmarkBtn.innerHTML = '<i class="fas fa-bookmark"></i> ذخیره شده';
+        } else {
+            bookmarkBtn.classList.remove('active');
+            bookmarkBtn.innerHTML = '<i class="far fa-bookmark"></i> نشانه';
+        }
+    }
+
+    function loadProduct() {
+        const type = getUrlParam('type');
+        const id = getUrlParam('id');
+        
+        if (!type || !id || !productsDB[type] || !productsDB[type][id]) {
+            document.getElementById('loadingScreen').classList.add('hide');
+            document.getElementById('errorSection').style.display = 'block';
+            return;
+        }
+        
+        currentType = type;
+        currentId = id;
+        currentProduct = productsDB[type][id];
+        document.title = `${currentProduct.title} | دریاچه کتاب`;
+        
+        const bookmarks = JSON.parse(localStorage.getItem('sea_bookmarks') || '[]');
+        isBookmarked = bookmarks.some(b => b.id == id && b.type == type);
+        
+        updateUI();
+        document.getElementById('loadingScreen').classList.add('hide');
+        document.getElementById('productContent').style.display = 'block';
+    }
+
+    function initTabs() {
+        const tabs = document.querySelectorAll('.tab-btn-custom');
+        const panes = {
+            comments: document.getElementById('commentsTab'),
+            similar: document.getElementById('similarTab'),
+            details: document.getElementById('detailsTab')
+        };
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                Object.values(panes).forEach(p => p.classList.remove('active'));
+                const target = this.dataset.tab;
+                if (panes[target]) panes[target].classList.add('active');
+            });
+        });
+    }
+
+    function initCommentSystem() {
+        const form = document.getElementById('commentForm');
+        const toggleBtn = document.getElementById('toggleCommentBtn');
+        const cancelBtn = document.getElementById('cancelCommentBtn');
+        const submitBtn = document.getElementById('submitCommentBtn');
+        const textarea = document.getElementById('commentText');
+        const stars = document.querySelectorAll('#ratingPicker i');
+        
+        toggleBtn.addEventListener('click', () => {
+            form.classList.toggle('show');
+            if (form.classList.contains('show')) textarea.focus();
+        });
+        
+        cancelBtn.addEventListener('click', () => {
+            form.classList.remove('show');
+            textarea.value = '';
+            resetRating();
+        });
+        
+        stars.forEach(s => {
+            s.addEventListener('click', function() {
+                selectedRating = parseInt(this.dataset.rate);
+                updateRatingStars();
+            });
+            s.addEventListener('mouseenter', function() {
+                const rate = parseInt(this.dataset.rate);
+                stars.forEach((st, i) => {
+                    if (i < rate) st.classList.replace('far', 'fas');
+                    else st.classList.replace('fas', 'far');
+                });
+            });
+            s.addEventListener('mouseleave', updateRatingStars);
+        });
+        
+        function updateRatingStars() {
+            stars.forEach((st, i) => {
+                if (i < selectedRating) st.classList.replace('far', 'fas');
+                else st.classList.replace('fas', 'far');
+            });
+        }
+        
+        function resetRating() {
+            selectedRating = 0;
+            stars.forEach(s => {
+                s.classList.remove('fas');
+                s.classList.add('far');
+            });
+        }
+        
+        submitBtn.addEventListener('click', function() {
+            const text = textarea.value.trim();
+            if (!text) {
+                showToast('لطفاً متن نظر را وارد کنید.', 'error');
+                return;
+            }
+            
+            const newComment = {
+                name: 'کاربر مهمان',
+                text: text,
+                likes: 0,
+                date: new Date().toLocaleDateString('fa-IR'),
+                avatar: 'ک'
+            };
+            
+            if (!currentProduct.comments) currentProduct.comments = [];
+            currentProduct.comments.unshift(newComment);
+            
+            textarea.value = '';
+            resetRating();
+            form.classList.remove('show');
+            updateUI();
+            showToast('نظر شما با موفقیت ثبت شد!', 'success');
+        });
+    }
+
+    function initSortButtons() {
+        document.querySelectorAll('.sort-btn-custom').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.sort-btn-custom').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentSort = this.dataset.sort;
+                renderComments(currentSort);
+            });
+        });
+    }
+
+    function scrollSimilar(direction) {
+        const slider = document.getElementById('similarSlider');
+        if (slider) {
+            const scrollAmount = 180;
+            slider.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+    }
+
+    function initActions() {
+        document.getElementById('previewBtn').addEventListener('click', () => {
+            showToast(`🎧 پیش‌نمایش ۳۰ ثانیه‌ای: ${currentProduct.title}`, 'info');
+        });
+        
+        document.getElementById('buyBtn').addEventListener('click', function() {
+            if (!currentProduct) return;
+            const data = {
+                id: currentId,
+                type: currentType,
+                title: currentProduct.title,
+                category: currentProduct.genre || 'محصول',
+                price: typeof currentProduct.price === 'number' ? currentProduct.price : 0,
+                cover: currentProduct.cover || null
+            };
+            let cart = JSON.parse(localStorage.getItem('sea_cart_items') || '[]');
+            const idx = cart.findIndex(item => item.id == data.id && item.type == data.type);
+            if (idx !== -1) cart[idx].quantity += 1;
+            else cart.push({ ...data, quantity: 1 });
+            localStorage.setItem('sea_cart_items', JSON.stringify(cart));
+            
+            const original = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-check"></i> اضافه شد!';
+            this.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+            setTimeout(() => {
+                this.innerHTML = original;
+                this.style.background = '';
+            }, 2000);
+            showToast(`✅ "${currentProduct.title}" به سبد خرید اضافه شد.`, 'success');
+        });
+        
+        document.getElementById('bookmarkBtn').addEventListener('click', function() {
+            const bookmarks = JSON.parse(localStorage.getItem('sea_bookmarks') || '[]');
+            const idx = bookmarks.findIndex(b => b.id == currentId && b.type == currentType);
+            if (idx !== -1) {
+                bookmarks.splice(idx, 1);
+                isBookmarked = false;
+                showToast(`🔖 "${currentProduct.title}" از نشانه‌ها حذف شد.`, 'info');
+            } else {
+                bookmarks.push({ id: currentId, type: currentType, title: currentProduct.title, cover: currentProduct.cover });
+                isBookmarked = true;
+                showToast(`🔖 "${currentProduct.title}" به نشانه‌ها اضافه شد.`, 'success');
+            }
+            localStorage.setItem('sea_bookmarks', JSON.stringify(bookmarks));
+            updateUI();
+        });
+        
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({ title: currentProduct.title, text: `📚 ${currentProduct.title} - ${currentProduct.author}`, url: window.location.href }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showToast('🔗 لینک محصول کپی شد!', 'success');
+                }).catch(() => {
+                    showToast('لطفاً لینک را کپی کنید: ' + window.location.href, 'info');
+                });
+            }
+        });
+        
+        document.getElementById('reportBtn').addEventListener('click', () => {
+            showToast('گزارش شما ثبت شد. با تشکر از شما!', 'info');
+        });
+    }
+
+    const canvas = document.getElementById('oceanCanvas');
+    let ctx = canvas.getContext('2d');
+    let w, h, t = 0;
+
+    function resizeCanvas() {
+        w = window.innerWidth;
+        h = 140;
+        canvas.width = w;
+        canvas.height = h;
+        drawWaves();
+    }
+
+    function drawWaves() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, w, h);
+        
+        ctx.beginPath();
+        for (let x = 0; x <= w; x += 8) {
+            let y = h * 0.4 + Math.sin(x * 0.008 + t) * 12;
+            x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.fillStyle = 'rgba(11, 95, 122, 0.6)';
+        ctx.fill();
+        
+        ctx.beginPath();
+        for (let x = 0; x <= w; x += 8) {
+            let y = h * 0.55 + Math.sin(x * 0.012 + t * 1.2) * 8;
+            x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.fillStyle = 'rgba(25, 120, 155, 0.5)';
+        ctx.fill();
+        
+        ctx.beginPath();
+        for (let x = 0; x <= w; x += 10) {
+            let y = h * 0.68 + Math.sin(x * 0.018 + t * 1.8) * 5;
+            x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.fillStyle = 'rgba(71, 200, 230, 0.25)';
+        ctx.fill();
+    }
+
+    function animateWaves() {
+        t += 0.005;
+        drawWaves();
+        requestAnimationFrame(animateWaves);
+    }
+
+    function createBubblesNew() {
+        const container = document.getElementById('bubblesNew');
+        if (!container) return;
+        container.innerHTML = '';
+        const count = window.innerWidth <= 768 ? 15 : 30;
+        for (let i = 0; i < count; i++) {
+            const b = document.createElement('div');
+            b.className = 'bubble-new';
+            const size = (window.innerWidth <= 768 ? 3 : 5) + Math.random() * 18;
+            b.style.cssText = `
+                width: ${size}px;
+                height: ${size}px;
+                left: ${Math.random() * 100}%;
+                animation-duration: ${6 + Math.random() * 14}s;
+                animation-delay: ${Math.random() * 18}s;
+                background: radial-gradient(circle at 30% 30%, rgba(130, 210, 240, ${0.1 + Math.random() * 0.15}), rgba(60, 160, 210, 0.03));
+                border: 1px solid rgba(71, 200, 230, ${0.02 + Math.random() * 0.04});
+            `;
+            container.appendChild(b);
+        }
+    }
+
+    window.addEventListener('load', () => {
+        loadProduct();
+        initTabs();
+        initSortButtons();
+        initCommentSystem();
+        initActions();
+        createBubblesNew();
+        resizeCanvas();
+        animateWaves();
+        setTimeout(requestFooterHeight, 500);
+        setTimeout(requestFooterHeight, 1500);
+        setTimeout(requestFooterHeight, 3000);
+    });
+
+    window.addEventListener('resize', () => {
+        createBubblesNew();
+        resizeCanvas();
+    });
+
+    window.scrollSimilar = scrollSimilar;
+</script>
+
+</body>
+</html>

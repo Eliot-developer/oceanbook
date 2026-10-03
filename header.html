@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>هدر</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: transparent;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        .glass-ocean-header {
+            background: linear-gradient(135deg, #1a6d8f, #0e5a7a, #07455e);
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 10;
+        }
+        .header-content {
+            padding: 1rem 1rem 1.2rem;
+        }
+        .main-navbar {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 80px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .desktop-logo-wrapper, .desktop-site-name {
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .desktop-logo-wrapper:hover, .desktop-site-name:hover {
+            transform: scale(1.02);
+        }
+        .brand-logo-img {
+            height: 44px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+            opacity: 1;
+            display: block;
+        }
+        .special-logo {
+            filter: drop-shadow(0 0 8px rgba(71, 200, 224, 0.6));
+            transition: all 0.3s ease;
+        }
+        .special-logo:hover {
+            filter: drop-shadow(0 0 15px rgba(71, 200, 224, 0.9));
+            transform: scale(1.03);
+        }
+        .brand-text-desktop {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.55rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .desktop-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-link-custom {
+            color: white !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: relative;
+        }
+        .nav-link-custom::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #47c8e0, #aae0ff);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        .nav-link-custom:hover::after {
+            width: 70%;
+        }
+        .nav-link-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .cart-desktop {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-radius: 50px;
+            padding: 0.5rem 1rem !important;
+        }
+        .cart-desktop i {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .cart-desktop span {
+            display: none;
+        }
+        .cart-desktop:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.05);
+        }
+        .mobile-brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .mobile-brand-group .brand-text-mobile {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .mobile-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .mobile-menu-btn, .mobile-cart-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        .mobile-menu-btn {
+            padding: 0.55rem 1rem;
+            font-size: 1.3rem;
+        }
+        .mobile-cart-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+        }
+        .mobile-menu-btn:hover, .mobile-cart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.03);
+        }
+        
+        /* استایل‌های منوی موبایل */
+        .mobile-menu-dropdown {
+            display: none !important;
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            left: 0;
+            background: rgba(7, 69, 94, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .mobile-menu-dropdown.active {
+            display: flex !important;
+        }
+        .mobile-menu-dropdown .nav-link-custom {
+            padding: 0.8rem 1.2rem !important;
+            width: 100%;
+            justify-content: flex-start;
+        }
+        .mobile-menu-dropdown .nav-link-custom::after {
+            display: none;
+        }
+        .mobile-menu-dropdown .nav-link-custom:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: none;
+        }
+
+        @media (min-width: 993px) {
+            .mobile-brand-group, .mobile-buttons {
+                display: none !important;
+            }
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+                display: flex;
+            }
+            .mobile-menu-dropdown {
+                display: none !important;
+            }
+        }
+        @media (max-width: 992px) {
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+                display: none !important;
+            }
+            .mobile-brand-group, .mobile-buttons {
+                display: flex !important;
+            }
+            .main-navbar {
+                padding: 0.5rem 1rem;
+                position: relative;
+            }
+        }
+        @media (max-width: 480px) {
+            .mobile-brand-group .brand-text-mobile {
+                font-size: 1rem;
+            }
+            .mobile-brand-group .brand-logo-img {
+                height: 32px;
+                max-width: 42px;
+            }
+            .mobile-cart-btn {
+                width: 40px;
+                height: 40px;
+            }
+            .mobile-menu-btn {
+                padding: 0.45rem 0.8rem;
+            }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .glass-ocean-header {
+            animation: fadeInDown 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+<div class="glass-ocean-header">
+    <div class="header-content">
+        <div class="main-navbar">
+            <div class="navbar-flex">
+                <div class="desktop-logo-wrapper" id="desktopLogo">
+                    <img id="desktopLogoImg" class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                </div>
+                <div class="desktop-menu">
+                    <div class="nav-link-custom" data-nav="home"><i class="fas fa-home"></i> خانه</div>
+                    <div class="nav-link-custom" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</div>
+                    <div class="nav-link-custom" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</div>
+                    <div class="nav-link-custom" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</div>
+                    <div class="nav-link-custom" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</div>
+                    <div class="nav-link-custom" data-nav="dashboard" id="dashboardBtn"><i class="fas fa-chart-line"></i> داشبورد</div>
+                    <div class="nav-link-custom cart-desktop" id="cartDesktopBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>سبد خرید</span>
+                    </div>
+                </div>
+                <div class="desktop-site-name" id="desktopSiteName">
+                    <span class="brand-text-desktop">ocean book</span>
+                </div>
+
+                <div class="mobile-brand-group" id="mobileBrandGroup">
+                    <img id="mobileLogoImg" class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                    <span class="brand-text-mobile">ocean book</span>
+                </div>
+                <div class="mobile-buttons">
+                    <div class="mobile-cart-btn" id="mobileCartBtn" title="سبد خرید">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- منوی موبایل به صورت dropdown -->
+            <div class="mobile-menu-dropdown" id="mobileMenuDropdown">
+                <div class="nav-link-custom" data-nav="home"><i class="fas fa-home"></i> خانه</div>
+                <div class="nav-link-custom" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</div>
+                <div class="nav-link-custom" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</div>
+                <div class="nav-link-custom" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</div>
+                <div class="nav-link-custom" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</div>
+                <div class="nav-link-custom" data-nav="dashboard" id="dashboardBtnMobile"><i class="fas fa-chart-line"></i> داشبورد</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============================================
+    // تنظیمات اصلی
+    // ============================================
+    const CONFIG = {
+        isInIframe: window.parent !== window,
+        baseUrl: window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1)
+    };
+
+    // ============================================
+    // توابع اصلی ناوبری
+    // ============================================
+    function sendNavigation(target, section = null) {
+        try {
+            if (CONFIG.isInIframe) {
+                window.parent.postMessage({ 
+                    type: 'navigate', 
+                    target: target, 
+                    section: section 
+                }, '*');
+            } else {
+                handleDirectNavigation(target, section);
+            }
+        } catch (e) {
+            console.warn('خطا در ارسال پیام به والد:', e);
+            handleDirectNavigation(target, section);
+        }
+    }
+
+    function handleDirectNavigation(target, section) {
+        const pageMap = {
+            'home': 'index.html',
+            'all-products': 'products.html',
+            'meditation': 'meditation.html',
+            'dashboard': 'dashboard.html'
+        };
+
+        let url = pageMap[target] || 'index.html';
+        
+        if (section && target === 'all-products') {
+            url = url + '?section=' + encodeURIComponent(section);
+        }
+        
+        // اگر در iframe هستیم ولی والد پاسخ نداد، در همان iframe تغییر مسیر بده
+        if (CONFIG.isInIframe) {
+            window.location.href = url;
+        } else {
+            window.location.href = url;
+        }
+    }
+
+    function goToCart() {
+        try {
+            // اول بررسی کنیم که آیا سبد خرید در والد وجود دارد
+            if (CONFIG.isInIframe) {
+                // سعی می‌کنیم به والد بفرستیم
+                window.parent.postMessage({ type: 'navigate', target: 'cart' }, '*');
+                
+                // اگر والد پاسخ نداد، خودمان اقدام کنیم
+                setTimeout(() => {
+                    window.location.href = 'sabad.html';
+                }, 300);
+            } else {
+                window.location.href = 'sabad.html';
+            }
+        } catch (e) {
+            console.warn('خطا در رفتن به سبد خرید:', e);
+            window.location.href = 'sabad.html';
+        }
+    }
+
+    function openMobileMenu() {
+        const dropdown = document.getElementById('mobileMenuDropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('active');
+            
+            // بستن منو با کلیک خارج از آن
+            if (dropdown.classList.contains('active')) {
+                document.addEventListener('click', closeMobileMenuOnOutside);
+            } else {
+                document.removeEventListener('click', closeMobileMenuOnOutside);
+            }
+        }
+    }
+
+    function closeMobileMenuOnOutside(e) {
+        const dropdown = document.getElementById('mobileMenuDropdown');
+        const btn = document.getElementById('mobileMenuBtn');
+        if (dropdown && btn) {
+            if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                dropdown.classList.remove('active');
+                document.removeEventListener('click', closeMobileMenuOnOutside);
+            }
+        }
+    }
+
+    // ============================================
+    // تنظیم رویدادها
+    // ============================================
+    function setupEventListeners() {
+        // منوی دسکتاپ
+        document.querySelectorAll('.desktop-menu .nav-link-custom').forEach(el => {
+            const navType = el.getAttribute('data-nav');
+            
+            if (navType === 'dashboard') {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    sendNavigation('dashboard');
+                });
+                return;
+            }
+            
+            if (el.id === 'cartDesktopBtn') {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    goToCart();
+                });
+                return;
+            }
+            
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navType = this.getAttribute('data-nav');
+                handleNavClick(navType);
+            });
+        });
+
+        // منوی موبایل
+        document.querySelectorAll('#mobileMenuDropdown .nav-link-custom').forEach(el => {
+            const navType = el.getAttribute('data-nav');
+            
+            if (navType === 'dashboard') {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    sendNavigation('dashboard');
+                    closeMobileMenu();
+                });
+                return;
+            }
+            
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navType = this.getAttribute('data-nav');
+                handleNavClick(navType);
+                closeMobileMenu();
+            });
+        });
+
+        // دکمه‌های هدر
+        document.getElementById('desktopLogo')?.addEventListener('click', () => sendNavigation('home'));
+        document.getElementById('desktopSiteName')?.addEventListener('click', () => sendNavigation('home'));
+        document.getElementById('mobileBrandGroup')?.addEventListener('click', () => sendNavigation('home'));
+        
+        document.getElementById('mobileCartBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            goToCart();
+        });
+        
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openMobileMenu();
+        });
+    }
+
+    function handleNavClick(navType) {
+        switch(navType) {
+            case 'home':
+                sendNavigation('home');
+                break;
+            case 'books':
+                sendNavigation('all-products', 'books');
+                break;
+            case 'podcasts':
+                sendNavigation('all-products', 'podcasts');
+                break;
+            case 'audiobooks':
+                sendNavigation('all-products', 'audiobooks');
+                break;
+            case 'meditation':
+                sendNavigation('meditation');
+                break;
+            default:
+                console.warn('مسیر ناشناخته:', navType);
+        }
+    }
+
+    function closeMobileMenu() {
+        const dropdown = document.getElementById('mobileMenuDropdown');
+        if (dropdown) {
+            dropdown.classList.remove('active');
+            document.removeEventListener('click', closeMobileMenuOnOutside);
+        }
+    }
+
+    // ============================================
+    // تنظیم ارتفاع برای iframe
+    // ============================================
+    function sendHeight() {
+        try {
+            const height = document.body.scrollHeight + 15;
+            if (CONFIG.isInIframe) {
+                window.parent.postMessage({ type: 'resize', height: height }, '*');
+            }
+        } catch (e) {
+            // خطا را نادیده بگیر
+        }
+    }
+
+    // ============================================
+    // مدیریت خطاهای کلی
+    // ============================================
+    window.addEventListener('error', function(e) {
+        console.warn('خطا در هدر:', e.message);
+        return true;
+    });
+
+    // ============================================
+    // مقداردهی اولیه
+    // ============================================
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        sendHeight();
+        
+        // اگر در iframe نیستیم، نمایش منوی موبایل را به صورت خودکار تنظیم کن
+        if (!CONFIG.isInIframe) {
+            // اطمینان از اینکه منوی موبایل در صفحات مستقل کار کند
+            const dropdown = document.getElementById('mobileMenuDropdown');
+            if (dropdown) {
+                dropdown.style.display = 'none';
+            }
+        }
+    });
+
+    // ارسال ارتفاع هنگام تغییر اندازه
+    window.addEventListener('resize', sendHeight);
+    
+    // مانیتور تغییرات DOM
+    try {
+        const observer = new MutationObserver(sendHeight);
+        observer.observe(document.body, { 
+            childList: true, 
+            subtree: true, 
+            attributes: true,
+            attributeFilter: ['style', 'class']
+        });
+    } catch (e) {
+        // خطا را نادیده بگیر
+    }
+
+    // ============================================
+    // پشتیبانی از رویدادهای پیام از والد
+    // ============================================
+    window.addEventListener('message', function(event) {
+        try {
+            const data = event.data;
+            if (data && data.type === 'closeMobileMenu') {
+                closeMobileMenu();
+            }
+        } catch (e) {
+            // خطا را نادیده بگیر
+        }
+    });
+
+    // ============================================
+    // نمایش لوگوها
+    // ============================================
+    document.querySelectorAll('.brand-logo-img').forEach(img => { 
+        img.style.opacity = '1'; 
+        img.classList.add('special-logo'); 
+    });
+
+    console.log('✅ هدر با موفقیت بارگذاری شد');
+    console.log('📱 حالت iframe:', CONFIG.isInIframe ? 'بله' : 'خیر');
+</script>
+</body>
+</html>

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title> تمام محصولات</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; overflow-x: hidden; background: #0a2f3a; }
+        body { font-family: 'Vazirmatn', sans-serif; background: #036280; color: #fff; overflow-x: hidden; }
+        html, body { scrollbar-width: none; -ms-overflow-style: none; }
+        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+        .tabs-container::-webkit-scrollbar { display: none; }
+        .tabs-container { -ms-overflow-style: none; scrollbar-width: none; }
+        .modal-content::-webkit-scrollbar { display: none; }
+        .modal-content { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .ocean-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; background: radial-gradient(circle at 30% 20%, #136b8f, #07405c, #02161f); }
+        .sun-rays { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(ellipse at 30% 20%, rgba(130,210,240,0.12) 0%, rgba(70,150,200,0) 70%); pointer-events: none; animation: raysMove 22s infinite alternate; }
+        @keyframes raysMove { 0% { opacity: 0.2; transform: scale(1); } 100% { opacity: 0.45; transform: scale(1.08); } }
+        .bubbles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow-x: hidden; }
+        .bubble { position: absolute; bottom: -50px; background: radial-gradient(circle at 30% 30%, rgba(170,225,255,0.7), rgba(60,160,210,0.25)); border-radius: 50%; animation: bubbleUp linear infinite; will-change: transform; }
+        @keyframes bubbleUp { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 20% { opacity: 0.6; } 80% { opacity: 0.7; } 100% { transform: translateY(-100vh) scale(1.2); opacity: 0; } }
+        #oceanCanvas { position: fixed; bottom: 0; left: 0; width: 100%; height: 160px; z-index: -1; pointer-events: none; display: block; opacity: 0.85; }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,30,40,0.95); backdrop-filter: blur(8px); z-index: 10000; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 20px; transition: opacity 0.4s ease; }
+        .loading-overlay.hide { opacity: 0; visibility: hidden; }
+        .wave-loader { display: flex; gap: 8px; align-items: center; justify-content: center; height: 80px; }
+        .wave-bar { width: 8px; height: 25px; background: linear-gradient(180deg, #3b82f6, #0ea5e9); border-radius: 6px; animation: wave-animation 1.2s ease-in-out infinite; }
+        .wave-bar:nth-child(1) { animation-delay: 0s; }
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; height: 35px; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; height: 45px; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; height: 35px; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+        @keyframes wave-animation { 0%,100%{transform:scaleY(1);opacity:0.6} 50%{transform:scaleY(1.8);opacity:1} }
+        .loading-text { color: #bae6fd; font-size: 0.9rem; letter-spacing: 2px; font-weight: 500; }
+        .scroll-top-btn { position: fixed; bottom: 30px; right: 20px; width: 48px; height: 48px; background: linear-gradient(135deg, #47c8e0, #1a7a9f); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; z-index: 99; opacity: 0; visibility: hidden; transition: all 0.3s; }
+        .scroll-top-btn.show { opacity: 1; visibility: visible; }
+        .footer-iframe { width: 100%; border: none; display: block; background: transparent; min-height: 200px; margin-top: 2rem; }
+        .container-custom { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+        .tabs-container { display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 10px; margin: 1.5rem 0 1rem; border-bottom: 1px solid rgba(71,200,230,0.3); white-space: nowrap; }
+        .tab-button { background: transparent; border: none; color: #cceef5; font-size: 1rem; font-weight: 600; padding: 0.6rem 1.5rem; cursor: pointer; transition: all 0.3s; border-radius: 30px 30px 0 0; font-family: 'Vazirmatn', sans-serif; white-space: nowrap; }
+        .tab-button i { margin-left: 8px; }
+        .tab-button.active { color: #47c8e0; background: rgba(71,200,230,0.1); border-bottom: 2px solid #47c8e0; }
+        .tab-button:hover:not(.active) { color: #aae0ff; background: rgba(71,200,230,0.05); }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1.5rem; margin: 1.5rem 0 2rem; }
+        .product-card { background: rgba(16, 55, 70, 0.85); backdrop-filter: blur(10px); border-radius: 24px; border: 1px solid rgba(80, 180, 210, 0.4); transition: all 0.4s; width: 100%; max-width: 220px; margin: 0 auto; overflow: hidden; }
+        .product-card:hover { transform: translateY(-10px); background: rgba(20, 75, 92, 0.96); border-color: #47c8e0; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .product-card a { text-decoration: none; color: inherit; display: block; }
+        .card-cover { height: 200px; background: #0a4b64; position: relative; overflow: hidden; border-radius: 20px 20px 12px 12px; }
+        .card-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .product-card:hover .card-cover img { transform: scale(1.1); }
+        .card-hover-summary { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,35,48,0.95); backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; text-align: center; padding: 12px; font-size: 0.7rem; opacity: 0; transition: 0.3s; color: #e0f7ff; border-radius: 20px 20px 12px 12px; line-height: 1.5; }
+        .product-card:hover .card-hover-summary { opacity: 1; }
+        .card-info { padding: 10px; display: flex; flex-direction: column; height: 140px;}
+        .card-title { font-size: 0.85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-author { font-size: 0.65rem; color: #c0e7f2; }
+        .card-narrator { font-size: 0.6rem; color: #b0e0f0; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-price { font-size: 0.75rem; font-weight: 800; margin: 5px 0; }
+        .card-btn { background: #1a7a9f;margin-top: auto; border-radius: 25px; padding: 6px 0; font-size: 0.7rem; width: 100%; color: white; text-align: center; display: block; transition: all 0.3s; }
+        .card-btn:hover { background: #259fcb; transform: scale(0.98); }
+        @media (max-width: 768px) { .products-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; } .product-card { max-width: 180px; } .card-cover { height: 150px; } }
+        @media (max-width: 480px) { .products-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.8rem; } .product-card { max-width: 150px; } .card-cover { height: 130px; } }
+        .search-section { padding: 0.5rem 0 1.2rem; }
+        .search-container { display: flex; align-items: center; justify-content: center; gap: 10px; max-width: 560px; margin: 0 auto; }
+        .search-wrapper { position: relative; flex: 1; }
+        .search-input { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.35); border-radius: 50px; padding: 0.6rem 1rem 0.6rem 2.8rem; color: white; width: 100%; }
+        .search-input:focus { background: rgba(255,255,255,0.25); outline: none; box-shadow: 0 0 0 3px rgba(71,200,230,0.4); }
+        .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.8); cursor: pointer; }
+        .advanced-search-icon { background: rgba(71,230,255,0.2); border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid rgba(71,187,255,0.5); }
+        .cancel-search-btn { background: rgba(71,200,230,0.2); border: 1px solid #47c8e0; color: #47c8e0; padding: 5px 16px; border-radius: 30px; cursor: pointer; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(25px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: linear-gradient(145deg,#0d4a5e,#063544); max-width: 800px; width: 92%; border-radius: 32px; padding: 0; border: 1px solid rgba(71,200,230,0.5); max-height: 85vh; overflow-y: auto; }
+        .modal-header-custom { background: linear-gradient(135deg,#0a3a48,#052630); padding: 1.5rem 2rem; border-radius: 32px 32px 0 0; border-bottom: 2px solid #47c8e0; display: flex; justify-content: space-between; }
+        .close-modal-new { background: rgba(71,200,230,0.15); border: 1px solid rgba(71,200,230,0.4); border-radius: 50%; width: 42px; height: 42px; color: #47c8e0; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .modal-body-custom { padding: 1.8rem 2rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-field { margin-bottom: 1.2rem; }
+        .form-field label { display: block; font-size: 0.75rem; color: #bae6fd; margin-bottom: 6px; }
+        .form-field input, .form-field select { width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(71,200,230,0.3); border-radius: 20px; color: white; }
+        select option {
+            background: #0d4a5e;
+            color: #fff;
+        }
+        .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 1.5rem; }
+        .btn-reset { background: rgba(71,200,230,0.15); border: 1px solid rgba(71,200,230,0.4); padding: 10px 24px; border-radius: 40px; color: #bae6fd; cursor: pointer; }
+        .btn-search-new { background: linear-gradient(135deg,#47c8e0,#1a7a9f); border: none; padding: 10px 32px; border-radius: 40px; color: white; font-weight: 700; cursor: pointer; }
+        @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; gap: 0; } .modal-body-custom { padding: 1rem; } .modal-header-custom { padding: 1rem 1.2rem; } }
+        .no-results { text-align: center; padding: 40px; background: rgba(0,0,0,0.3); border-radius: 30px; margin: 20px 0; }
+        .scroll-hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 8px 18px; border-radius: 40px; font-size: 0.75rem; color: #47c8e0; z-index: 98; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+        .scroll-hint.show { opacity: 1; }
+
+        .ocean-header {
+            background: linear-gradient(135deg, #1a6d8f, #0e5a7a, #07455e);
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1000;
+        }
+        .header-content {
+            padding: 1rem 1rem 1.2rem;
+        }
+        .main-navbar {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 80px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .desktop-logo-wrapper, .desktop-site-name {
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .desktop-logo-wrapper:hover, .desktop-site-name:hover {
+            transform: scale(1.02);
+        }
+        .brand-logo-img {
+            height: 44px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+            opacity: 1;
+            display: block;
+        }
+        .special-logo {
+            filter: drop-shadow(0 0 8px rgba(71, 200, 224, 0.6));
+            transition: all 0.3s ease;
+        }
+        .special-logo:hover {
+            filter: drop-shadow(0 0 15px rgba(71, 200, 224, 0.9));
+            transform: scale(1.03);
+        }
+        .brand-text-desktop {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.55rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .desktop-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-link-custom {
+            color: white !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: relative;
+            text-decoration: none;
+        }
+        .nav-link-custom::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #47c8e0, #aae0ff);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        .nav-link-custom:hover::after {
+            width: 70%;
+        }
+        .nav-link-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .cart-desktop {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-radius: 50px;
+            padding: 0.5rem 1rem !important;
+        }
+        .cart-desktop i {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .cart-desktop span {
+            display: none;
+        }
+        .cart-desktop:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.05);
+        }
+        .mobile-brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .mobile-brand-group .brand-text-mobile {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .mobile-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .mobile-menu-btn, .mobile-cart-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        .mobile-menu-btn {
+            padding: 0.55rem 1rem;
+            font-size: 1.3rem;
+        }
+        .mobile-cart-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+        }
+        .mobile-menu-btn:hover, .mobile-cart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.03);
+        }
+        @media (min-width: 993px) {
+            .mobile-brand-group, .mobile-buttons {
+                display: none !important;
+            }
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+                display: flex;
+            }
+        }
+        @media (max-width: 992px) {
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+                display: none !important;
+            }
+            .mobile-brand-group, .mobile-buttons {
+                display: flex !important;
+            }
+            .main-navbar {
+                padding: 0.5rem 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .mobile-brand-group .brand-text-mobile {
+                font-size: 1rem;
+            }
+            .mobile-brand-group .brand-logo-img {
+                height: 32px;
+                max-width: 42px;
+            }
+            .mobile-cart-btn {
+                width: 40px;
+                height: 40px;
+            }
+            .mobile-menu-btn {
+                padding: 0.45rem 0.8rem;
+            }
+        }
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+        }
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #043a4f, #0a5a78, #07455e);
+            z-index: 100000;
+            padding: 30px 20px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        .mobile-sidebar.open {
+            right: 0;
+        }
+        .mobile-sidebar .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.8rem;
+            padding: 5px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .mobile-sidebar .close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+        .mobile-sidebar .sidebar-brand {
+            margin-top: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .mobile-sidebar .sidebar-brand img {
+            height: 60px;
+            filter: drop-shadow(0 0 20px rgba(71,200,224,0.3));
+        }
+        .mobile-sidebar .sidebar-brand h2 {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #ffffff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .mobile-sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 16px;
+            transition: 0.3s;
+            margin: 6px 0;
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .mobile-sidebar .menu-item:last-child {
+            border-bottom: none;
+        }
+        .mobile-sidebar .menu-item:hover {
+            background: rgba(71,200,224,0.15);
+            transform: translateX(-5px);
+        }
+        .mobile-sidebar .menu-item i {
+            width: 28px;
+            color: #47c8e0;
+            font-size: 1.2rem;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ocean-header {
+            animation: fadeInDown 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+<div class="loading-overlay" id="loadingOverlay"><div class="wave-loader"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div><div class="loading-text">در حال بارگذاری...</div></div>
+<a href="#" id="scrollTopBtn" class="scroll-top-btn"><i class="fas fa-chevron-up"></i></a>
+<div class="ocean-bg"></div><div class="sun-rays"></div><canvas id="oceanCanvas"></canvas><div class="bubbles" id="bubbleContainer"></div>
+
+<header class="ocean-header">
+    <div class="header-content">
+        <div class="main-navbar">
+            <div class="navbar-flex">
+                <div class="desktop-logo-wrapper" onclick="navigateTo('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                </div>
+                <div class="desktop-menu">
+                    <a href="#" class="nav-link-custom" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+                    <a href="#" class="nav-link-custom" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+                    <a href="#" class="nav-link-custom" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+                    <a href="#" class="nav-link-custom" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+                    <a href="#" class="nav-link-custom cart-desktop" id="cartDesktopBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>سبد خرید</span>
+                    </a>
+                </div>
+                <div class="desktop-site-name" onclick="navigateTo('home')">
+                    <span class="brand-text-desktop">ocean book</span>
+                </div>
+                <div class="mobile-brand-group" onclick="navigateTo('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                    <span class="brand-text-mobile">ocean book</span>
+                </div>
+                <div class="mobile-buttons">
+                    <div class="mobile-cart-btn" onclick="goToCart()" title="سبد خرید">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-sidebar" id="mobileSidebar">
+    <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+    <div class="sidebar-brand">
+        <img src="logo.png" alt="لوگو"
+             onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+        <h2>ocean book</h2>
+    </div>
+    <a href="#" class="menu-item" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+    <a href="#" class="menu-item" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+    <a href="#" class="menu-item" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+    <a href="#" class="menu-item" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+    <a href="#" class="menu-item" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+    <a href="#" class="menu-item" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+    <a href="#" class="menu-item" onclick="goToCart()"><i class="fas fa-shopping-cart"></i> سبد خرید</a>
+</div>
+
+<div class="search-section"><div class="container-custom"><div class="search-container"><div class="search-wrapper"><input type="text" class="search-input" id="mainSearch" placeholder="جستجوی عنوان، نویسنده، راوی..."><i class="fas fa-search search-icon" id="mainSearchIcon"></i></div><div class="advanced-search-icon" id="advancedSearchIcon"><i class="fas fa-sliders-h"></i></div></div><div class="cancel-search-container" id="cancelSearchContainer" style="display: none; text-align:center; margin-top:12px;"><button class="cancel-search-btn" id="cancelSearchBtn"><i class="fas fa-times-circle"></i> لغو جستجو</button></div></div></div>
+
+<div id="searchModal" class="modal"><div class="modal-content"><div class="modal-header-custom"><h3 style="color:#e0f7ff;"><i class="fas fa-compass"></i> جستجوی پیشرفته</h3><button class="close-modal-new" id="closeModalBtn"><i class="fas fa-times"></i></button></div><div class="modal-body-custom">
+    <div class="form-row">
+        <div class="form-field"><label>عنوان</label><input type="text" id="advTitle" placeholder="عنوان کتاب، پادکست..."></div>
+        <div class="form-field"><label>نویسنده</label><input type="text" id="advAuthor" placeholder="نام نویسنده"></div>
+    </div>
+    <div class="form-field"><label>راوی</label><input type="text" id="advNarrator" placeholder="نام راوی (برای کتاب صوتی و پادکست)"></div>
+    <div class="form-row">
+        <div class="form-field"><label>ژانر</label><select id="advGenre"><option value="">همه ژانرها</option><option>رئالیسم جادویی</option><option>فانتزی</option><option>ادبیات</option><option>کلاسیک</option><option>علمی-تخیلی</option><option>رمان اجتماعی</option><option>خودیاری</option><option>دلهره‌آور</option><option>داستان صوتی</option><option>تاریخی</option><option>روانشناسی</option></select></div>
+        <div class="form-field"><label>حداقل امتیاز</label><select id="advRating"><option value="0">هر امتیازی</option><option value="3">بالای ۳ ★</option><option value="4">بالای ۴ ★</option></select></div>
+    </div>
+    <div class="form-row">
+        <div class="form-field"><label>سال انتشار (عدد)</label><input type="number" id="advYear" placeholder="مثال: ۱۳۹۰ یا ۲۰۰۸"></div>
+        <div class="form-field"><label>فقط رایگان</label><select id="advFreeOnly"><option value="0">خیر</option><option value="1">بله</option></select></div>
+    </div>
+    <div class="form-row">
+        <div class="form-field"><label>قیمت از (تومان)</label><input type="number" id="priceMin" placeholder="حداقل قیمت"></div>
+        <div class="form-field"><label>قیمت تا (تومان)</label><input type="number" id="priceMax" placeholder="حداکثر قیمت"></div>
+    </div>
+    <div class="modal-actions"><button class="btn-reset" id="resetSearchBtn">بازنشانی فیلترها</button><button class="btn-search-new" id="submitSearchBtn">اعمال جستجو</button></div>
+</div></div></div>
+
+<div class="container-custom"><div class="tabs-container"><button class="tab-button active" data-tab="all"><i class="fas fa-layer-group"></i> همه</button><button class="tab-button" data-tab="books"><i class="fas fa-book"></i> کتاب‌ها</button><button class="tab-button" data-tab="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</button><button class="tab-button" data-tab="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</button></div>
+<div id="tab-all" class="tab-content active"><div id="resultCount" style="margin-bottom:10px;">در حال بارگذاری...</div><div id="allProductsGrid" class="products-grid"></div></div>
+<div id="tab-books" class="tab-content"><div id="booksCount" style="margin-bottom:10px;">0 عنوان</div><div id="booksGrid" class="products-grid"></div></div>
+<div id="tab-podcasts" class="tab-content"><div id="podcastsCount" style="margin-bottom:10px;">0 عنوان</div><div id="podcastsGrid" class="products-grid"></div></div>
+<div id="tab-audiobooks" class="tab-content"><div id="audiobooksCount" style="margin-bottom:10px;">0 عنوان</div><div id="audiobooksGrid" class="products-grid"></div></div></div>
+
+<iframe src="footer.html" id="footerIframe" class="footer-iframe" scrolling="no" style="width:100%;border:none;display:block;background:transparent;min-height:200px;margin-top:2rem;"></iframe>
+
+<script>
+    function navigateTo(target, section) {
+        const pageMap = {
+            'home': 'index.html',
+            'all-products': 'all-products.html',
+            'meditation': 'meditation.html',
+            'dashboard': 'dashboard.html',
+            'faq': 'FAQ.html',
+            'rules': 'Rules.html',
+            'about': 'aboutUs.html'
+        };
+        let url = pageMap[target] || 'index.html';
+        if (target === 'all-products' && section) {
+            url = url + '#' + section;
+        }
+        if (window.parent !== window) {
+            window.parent.postMessage({ type: 'navigate', target: target, section: section }, '*');
+        }
+        window.location.href = url;
+    }
+
+    function goToCart() {
+        window.location.href = 'sabad.html';
+    }
+
+    function toggleMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        if (sidebar.classList.contains('open')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    }
+
+    function openMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        overlay.classList.add('active');
+        sidebar.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        overlay.classList.remove('active');
+        sidebar.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.desktop-menu .nav-link-custom').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navType = this.getAttribute('data-nav');
+                if (navType === 'dashboard') {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                if (this.id === 'cartDesktopBtn') {
+                    goToCart();
+                    return;
+                }
+                if (navType === 'home') navigateTo('home');
+                else if (navType === 'books') navigateTo('all-products', 'books');
+                else if (navType === 'podcasts') navigateTo('all-products', 'podcasts');
+                else if (navType === 'audiobooks') navigateTo('all-products', 'audiobooks');
+                else if (navType === 'meditation') navigateTo('meditation');
+            });
+        });
+
+        document.querySelectorAll('.mobile-sidebar .menu-item').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const navType = this.getAttribute('data-nav');
+                if (navType) {
+                    e.preventDefault();
+                    closeMobileMenu();
+                    if (navType === 'dashboard') {
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
+                        return;
+                    }
+                    setTimeout(() => {
+                        if (navType === 'home') navigateTo('home');
+                        else if (navType === 'books') navigateTo('all-products', 'books');
+                        else if (navType === 'podcasts') navigateTo('all-products', 'podcasts');
+                        else if (navType === 'audiobooks') navigateTo('all-products', 'audiobooks');
+                        else if (navType === 'meditation') navigateTo('meditation');
+                    }, 300);
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { closeMobileMenu(); }
+        });
+    });
+
+    const allProducts = [
+        { id:1, title:"صد سال تنهایی", author:"گابریل گارسیا مارکز", genre:"رئالیسم جادویی", year:1967, price:120000, rating:4.7, type:"book", cover:"cover/OneHundredYearsOfSolitude.jpg", summary:"سرگذشت چندنسلی خانواده بوئندیا." },
+        { id:2, title:"هری پاتر و سنگ جادو", author:"جی.کی. رولینگ", genre:"فانتزی", year:1997, price:150000, rating:4.9, type:"book", cover:"cover/HarryPotterSorcerersStone.jpg", summary:"پسری جادوگر وارد مدرسه هاگوارتز می‌شود." },
+        { id:3, title:"بوف کور", author:"صادق هدایت", genre:"ادبیات", year:1936, price:90000, rating:4.5, type:"book", cover:"cover/Bof_e_Koor.jpg", summary:"روایت سوررئال و سیاه." },
+        { id:4, title:"شازده کوچولو", author:"آنتوان دو سنت‌اگزوپری", genre:"کلاسیک", year:1943, price:80000, rating:4.8, type:"book", cover:"cover/TheLittlePrince.jpg", summary:"شاهزاده‌ای فضایی معنای عشق را می‌آموزد." },
+        { id:5, title:"سه‌جسم", author:"لیو سیسین", genre:"علمی-تخیلی", year:2008, price:180000, rating:4.4, type:"book", cover:"cover/ThreeBodyProblem.jpg", summary:"تماس با تمدنی بیگانه." },
+        { id:6, title:"کلیدر", author:"محمود دولت‌آبادی", genre:"رمان اجتماعی", year:1984, price:220000, rating:4.7, type:"book", cover:"cover/Kelidar.jpg ", summary:"حماسه زندگی روستاییان." },
+        { id:8, title:"هنر ظریف بی‌اهمیت‌انگاری", author:"مارک منسون", genre:"خودیاری", year:2016, price:105000, rating:4.3, type:"book", cover:"cover/SubtleArtOfNotGivingFck.jpg", summary:"زندگی بهتر با پذیرش محدودیت‌ها." },
+        { id:7, title:"معمای داوینچی", author:"دن براون", genre:"دلهره‌آور", year:2003, price:95000, rating:4.2, type:"book", cover:"cover/DaVinciCode.jpg", summary:"استاد نمادشناسی رازهایی را کشف می‌کند." },
+        { id:101, title:"خانه سنایی", author:"احسان عبدی پور", narrator:"مهرناز فخرایی", price:"رایگان", cover:"podcast cover/1.jpeg", summary:"ایده‌های نوآورانه درباره ادبیات", type:"podcast", genre:"خودیاری", year:2023, rating:4.5 },
+        { id:102, title:"از بهانه هات قوی تر باش", author:"این نقطه", narrator:"سحر ولدبیگی", price:"رایگان", cover:"podcast cover/2.jpeg", summary:"پادکست خودشناسی و رشد فردی", type:"podcast", genre:"روانشناسی", year:2024, rating:4.3 },
+        { id:201, title:"دایی جان ناپلئون (صوتی)", author:"ایرج پزشکزاد", narrator:"محمدرضا علی‌محمدی", price:65000, cover:"cover voice/1.jpg", summary:"قصه‌های ماندگار", type:"audiobook", genre:"داستان صوتی", year:1390, rating:4.9 },
+        { id:202, title:"قتل‌های خیابان مورگ (صوتی)", author:"ادگار آلن پو", narrator:"علی رضایی اصل", price:97000, cover:"cover voice/2.jpg", summary:"داستان معمایی ترسناک", type:"audiobook", genre:"دلهره‌آور", year:2010, rating:4.6 },
+        { id:203, title:"چه کسی پنیر مرا جابجا کرد (صوتی)", author:"اسپنسر جانسون", narrator:"فریدون اسماعیلی", price:112000, cover:"cover voice/3.jpg", summary:"روایت تاریخی شنیدنی", type:"audiobook", genre:"تاریخی", year:2015, rating:4.8 }
+    ];
+
+    let filters = { text: "", title: "", author: "", narrator: "", genre: "", minRating: 0, year: null, freeOnly: false, priceMin: null, priceMax: null };
+
+    function formatPrice(p) { if(p === 'رایگان' || p === 0) return 'رایگان'; if(typeof p === 'number') return (p/10).toLocaleString()+' تومان'; return p; }
+
+    function getNumericPrice(product) {
+        if (product.price === 'رایگان' || product.price === 0) return 0;
+        return typeof product.price === 'number' ? product.price : 0;
+    }
+
+    function filterProducts(products) {
+        return products.filter(p => {
+            if (filters.text && !(p.title?.toLowerCase().includes(filters.text) || p.author?.toLowerCase().includes(filters.text) || p.narrator?.toLowerCase().includes(filters.text))) return false;
+            if (filters.title && !p.title?.toLowerCase().includes(filters.title.toLowerCase())) return false;
+            if (filters.author && !p.author?.toLowerCase().includes(filters.author.toLowerCase())) return false;
+            if (filters.narrator && !p.narrator?.toLowerCase().includes(filters.narrator.toLowerCase())) return false;
+            if (filters.genre && p.genre !== filters.genre) return false;
+            if (filters.minRating && (!p.rating || p.rating < filters.minRating)) return false;
+            if (filters.year && p.year !== filters.year) return false;
+            if (filters.freeOnly && !(p.price === 'رایگان' || p.price === 0)) return false;
+            const priceVal = getNumericPrice(p);
+            if (filters.priceMin !== null && priceVal < filters.priceMin) return false;
+            if (filters.priceMax !== null && priceVal > filters.priceMax) return false;
+            return true;
+        });
+    }
+
+        function renderCard(p) {
+        let productType = 'book'; 
+        if (p.type === 'podcast') productType = 'podcast';
+        else if (p.type === 'audiobook') productType = 'audiobook';
+
+        const productLink = `product.html?type=${productType}&id=${p.id}`;
+
+        return `<div class="product-card">
+            <a href="${productLink}"> 
+                <div class="card-cover">
+                    <img src="${p.cover}" onerror="this.src='https://picsum.photos/id/20/200/300'">
+                    <div class="card-hover-summary">${p.summary||'...'}</div>
+                </div>
+                <div class="card-info">
+                    <div class="card-title">${p.title}</div>
+                    <div class="card-author">${p.author}</div>
+                    ${p.narrator?`<div class="card-narrator"><i class="fas fa-microphone-alt"></i> راوی: ${p.narrator}</div>`:''}
+                    ${p.rating?`<div style="font-size:0.6rem; color:#ffd700;"><i class="fas fa-star"></i> ${p.rating}</div>`:''}
+                    <div class="card-price">${formatPrice(p.price)}</div>
+                    <span class="card-btn">${formatPrice(p.price) === 'رایگان' ? 'دانلود' : 'مشاهده'}</span>
+                </div>
+            </a>
+        </div>`;
+    }
+
+    function updateUI() {
+        const all = filterProducts(allProducts);
+        const books = filterProducts(allProducts.filter(p=>p.type==='book'));
+        const podcasts = filterProducts(allProducts.filter(p=>p.type==='podcast'));
+        const audiobooks = filterProducts(allProducts.filter(p=>p.type==='audiobook'));
+        document.getElementById('allProductsGrid').innerHTML = all.map(renderCard).join('')||'<div class="no-results">هیچ محصولی یافت نشد</div>';
+        document.getElementById('booksGrid').innerHTML = books.map(renderCard).join('')||'<div class="no-results">هیچ کتابی یافت نشد</div>';
+        document.getElementById('podcastsGrid').innerHTML = podcasts.map(renderCard).join('')||'<div class="no-results">هیچ پادکستی یافت نشد</div>';
+        document.getElementById('audiobooksGrid').innerHTML = audiobooks.map(renderCard).join('')||'<div class="no-results">هیچ کتاب صوتی یافت نشد</div>';
+        document.getElementById('resultCount').innerHTML = all.length+' محصول';
+        document.getElementById('booksCount').innerHTML = books.length+' عنوان';
+        document.getElementById('podcastsCount').innerHTML = podcasts.length+' عنوان';
+        document.getElementById('audiobooksCount').innerHTML = audiobooks.length+' عنوان';
+        const hasFilter = filters.text || filters.title || filters.author || filters.narrator || filters.genre || filters.minRating || filters.year || filters.freeOnly || filters.priceMin || filters.priceMax;
+        document.getElementById('cancelSearchContainer').style.display = hasFilter ? 'block' : 'none';
+    }
+
+    function applyAdvanced() {
+        filters.title = document.getElementById('advTitle').value.trim();
+        filters.author = document.getElementById('advAuthor').value.trim();
+        filters.narrator = document.getElementById('advNarrator').value.trim();
+        filters.genre = document.getElementById('advGenre').value;
+        filters.minRating = parseInt(document.getElementById('advRating').value) || 0;
+        const y = document.getElementById('advYear').value;
+        filters.year = y ? parseInt(y) : null;
+        filters.freeOnly = document.getElementById('advFreeOnly').value === '1';
+        const priceMinVal = document.getElementById('priceMin').value;
+        const priceMaxVal = document.getElementById('priceMax').value;
+        filters.priceMin = priceMinVal ? parseInt(priceMinVal) : null;
+        filters.priceMax = priceMaxVal ? parseInt(priceMaxVal) : null;
+        updateUI();
+    }
+
+    function resetFilters() {
+        filters = { text: "", title: "", author: "", narrator: "", genre: "", minRating: 0, year: null, freeOnly: false, priceMin: null, priceMax: null };
+        document.getElementById('mainSearch').value = '';
+        document.getElementById('advTitle').value = '';
+        document.getElementById('advAuthor').value = '';
+        document.getElementById('advNarrator').value = '';
+        document.getElementById('advGenre').value = '';
+        document.getElementById('advRating').value = '0';
+        document.getElementById('advYear').value = '';
+        document.getElementById('advFreeOnly').value = '0';
+        document.getElementById('priceMin').value = '';
+        document.getElementById('priceMax').value = '';
+        updateUI();
+    }
+
+    document.getElementById('mainSearch').addEventListener('input', (e)=>{ filters.text = e.target.value.toLowerCase(); updateUI(); });
+    document.getElementById('mainSearchIcon').addEventListener('click', ()=>{ filters.text = document.getElementById('mainSearch').value.toLowerCase(); updateUI(); });
+    document.getElementById('cancelSearchBtn').addEventListener('click', resetFilters);
+    const modal = document.getElementById('searchModal'); const advIcon = document.getElementById('advancedSearchIcon'); const closeModal = document.getElementById('closeModalBtn'); const resetBtn = document.getElementById('resetSearchBtn'); const submitBtn = document.getElementById('submitSearchBtn');
+    advIcon.onclick = ()=>{ modal.style.display='flex'; document.body.style.overflow='hidden'; };
+    closeModal.onclick = ()=>{ modal.style.display='none'; document.body.style.overflow=''; };
+    resetBtn.onclick = ()=>{ resetFilters(); modal.style.display='none'; document.body.style.overflow=''; };
+    submitBtn.onclick = ()=>{ applyAdvanced(); modal.style.display='none'; document.body.style.overflow=''; };
+    window.onclick = (e)=>{ if(e.target === modal) { modal.style.display='none'; document.body.style.overflow=''; } };
+
+    function activateTab(tabId){ document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active')); document.getElementById('tab-'+tabId)?.classList.add('active'); document.querySelectorAll('.tab-button').forEach(btn=>{ btn.classList.remove('active'); if(btn.dataset.tab===tabId) btn.classList.add('active'); }); let hash = tabId==='all'?'':`#${tabId}`; history.pushState(null,'',window.location.pathname+hash); document.getElementById('scrollHint')?.classList.add('show'); setTimeout(()=>document.getElementById('scrollHint')?.classList.remove('show'),1000); }
+    document.querySelectorAll('.tab-button').forEach(btn=>btn.addEventListener('click',()=>activateTab(btn.dataset.tab)));
+    (function handleHash(){ let h=window.location.hash.slice(1); if(['books','podcasts','audiobooks'].includes(h)) activateTab(h); else activateTab('all'); })();
+
+    function updateFooterHeight(height) {
+        const iframe = document.getElementById('footerIframe');
+        if (iframe && height) {
+            const finalHeight = Math.max(height, 200);
+            iframe.style.height = finalHeight + 'px';
+            iframe.style.minHeight = finalHeight + 'px';
+        }
+    }
+
+    window.addEventListener('message', function(e) {
+        const data = e.data;
+        if ((data.type === 'footerResize' || data.type === 'resize') && data.height) {
+            updateFooterHeight(data.height);
+        }
+        if (data.type === 'navigate') {
+            if (data.target === 'home') {
+                window.location.href = 'index.html';
+            } else if (data.target === 'all-products' || data.target === 'books' || data.target === 'podcasts' || data.target === 'audiobooks') {
+                const section = data.section || data.target;
+                if (section === 'all') {
+                    activateTab('all');
+                } else {
+                    activateTab(section);
+                }
+            } else if (data.target === 'meditation') {
+                window.location.href = 'meditation.html';
+            } else if (data.target === 'faq') {
+                window.location.href = 'FAQ.html';
+            } else if (data.target === 'rules') {
+                window.location.href = 'Rules.html';
+            } else if (data.target === 'about') {
+                window.location.href = 'aboutUs.html';
+            }
+        }
+        if (data.type === 'openMobileMenu') {
+            openMobileMenu();
+        }
+        if (data.type === 'closeMobileMenu') {
+            closeMobileMenu();
+        }
+    });
+
+    function requestFooterHeight() {
+        const iframe = document.getElementById('footerIframe');
+        if (iframe && iframe.contentWindow) {
+            try {
+                iframe.contentWindow.postMessage({ type: 'requestHeight' }, '*');
+            } catch(e) {}
+        }
+    }
+
+    let scrollBtnTop = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll',()=>scrollBtnTop.classList.toggle('show',window.scrollY>300));
+    scrollBtnTop.addEventListener('click',(e)=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});});
+    
+    function createBubbles(){ let c=document.getElementById('bubbleContainer'); if(!c) return; c.innerHTML=''; let cnt=window.innerWidth<768?25:45; for(let i=0;i<cnt;i++){ let b=document.createElement('div'); b.classList.add('bubble'); let s=5+Math.random()*35; b.style.cssText=`width:${s}px;height:${s}px;left:${5+Math.random()*90}%;animation-duration:${6+Math.random()*16}s;animation-delay:${Math.random()*15}s;opacity:${0.3+Math.random()*0.5};`; c.appendChild(b); } }
+    
+    let canv=document.getElementById('oceanCanvas'), ctx=canv.getContext('2d'), w,h,to=0;
+    function resizeCanvas(){ w=window.innerWidth; h=160; canv.width=w; canv.height=h; drawWaves(); }
+    function drawWaves(){ if(!ctx)return; ctx.clearRect(0,0,w,h); ctx.beginPath(); for(let x=0;x<=w;x+=8){ let y=h*0.45+Math.sin(x*0.008+to)*14; if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.fillStyle='#0b5f7a'; ctx.fill(); ctx.beginPath(); for(let x=0;x<=w;x+=8){ let y=h*0.6+Math.sin(x*0.012+to*1.2)*10; if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.fillStyle='rgba(25,120,155,0.9)'; ctx.fill(); ctx.beginPath(); for(let x=0;x<=w;x+=10){ let y=h*0.72+Math.sin(x*0.018+to*1.8)*6; if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.fillStyle='rgba(71,200,230,0.4)'; ctx.fill(); }
+    function animateWaves(){ to+=0.006; drawWaves(); requestAnimationFrame(animateWaves); }
+
+    window.addEventListener('load',()=>{
+        createBubbles();
+        resizeCanvas();
+        animateWaves();
+        updateUI();
+        setTimeout(()=>document.getElementById('loadingOverlay')?.classList.add('hide'),500);
+        setTimeout(requestFooterHeight, 500);
+        setTimeout(requestFooterHeight, 1500);
+        setTimeout(requestFooterHeight, 3000);
+    });
+    
+    window.addEventListener('resize',()=>{ createBubbles(); resizeCanvas(); });
+</script>
+</body>
+</html>

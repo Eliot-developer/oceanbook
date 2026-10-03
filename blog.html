@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>وبلاگ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Vazirmatn', 'Segoe UI', system-ui, sans-serif; 
+            background: #0a2f3a; 
+            color: #fff; 
+            overflow-x: hidden; 
+        }
+        
+        body.sidebar-open {
+            overflow: hidden;
+        }
+        
+        .ocean-bg { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: -3; 
+            background: radial-gradient(circle at 30% 20%, #136b8f, #07405c, #02161f); 
+        }
+        
+        .sun-rays { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: -2; 
+            background: radial-gradient(ellipse at 30% 20%, rgba(130, 210, 240, 0.12) 0%, rgba(70, 150, 200, 0) 70%); 
+            pointer-events: none; 
+            animation: raysMove 22s infinite alternate; 
+        }
+        
+        @keyframes raysMove { 
+            0% { opacity: 0.2; transform: scale(1); } 
+            100% { opacity: 0.45; transform: scale(1.08); } 
+        }
+        
+        .bubbles { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: -1; 
+            pointer-events: none; 
+            overflow: hidden; 
+        }
+        
+        .bubble { 
+            position: absolute; 
+            bottom: -50px; 
+            background: radial-gradient(circle at 30% 30%, rgba(170, 225, 255, 0.7), rgba(60, 160, 210, 0.25)); 
+            border-radius: 50%; 
+            animation: bubbleUp linear infinite; 
+        }
+        
+        @keyframes bubbleUp { 
+            0% { transform: translateY(0) scale(0.5); opacity: 0; } 
+            20% { opacity: 0.6; } 
+            80% { opacity: 0.7; } 
+            100% { transform: translateY(-100vh) scale(1.2); opacity: 0; } 
+        }
+        
+        #oceanCanvas { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 160px; 
+            z-index: -1; 
+            pointer-events: none; 
+            display: block; 
+            opacity: 0.85;
+        }
+        
+        .footer-iframe {
+            width: 100%;
+            border: none;
+            display: block;
+            background: transparent;
+            min-height: 200px;
+            margin-top: 2rem;
+        }
+        
+        .container-blog {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .blog-header {
+            text-align: center;
+            padding: 2rem 0 1.5rem;
+            position: relative;
+        }
+        .blog-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #7bc8e0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .blog-header p {
+            color: #b8dfef;
+            font-size: 1rem;
+        }
+        .blog-header .wave-decoration {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #47c8e0, #47c8e0, transparent);
+            border-radius: 2px;
+        }
+        
+        .blog-categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 1.5rem 0 2rem;
+        }
+        .category-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(71, 200, 230, 0.4);
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-size: 0.85rem;
+            color: #d4f0f8;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        .category-btn:hover, .category-btn.active {
+            background: linear-gradient(135deg, #47c8e0, #1a7a9f);
+            border-color: transparent;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 28px;
+            margin: 2rem 0;
+        }
+        
+        .blog-card {
+            background: rgba(16, 55, 70, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid rgba(80, 180, 210, 0.4);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .blog-card:hover {
+            transform: translateY(-8px);
+            background: rgba(25, 75, 92, 0.95);
+            border-color: #47c8e0;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.3);
+        }
+        .blog-card-image {
+            position: relative;
+            height: 210px;
+            overflow: hidden;
+        }
+        .blog-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .blog-card:hover .blog-card-image img {
+            transform: scale(1.05);
+        }
+        .blog-category-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #47c8e0, #1a7a9f);
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            z-index: 2;
+        }
+        .blog-card-content {
+            padding: 1.4rem;
+        }
+        .blog-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.7rem;
+            color: #b0ddef;
+            margin-bottom: 10px;
+        }
+        .blog-meta i {
+            margin-left: 5px;
+            color: #47c8e0;
+        }
+        .blog-card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            color: #fff;
+        }
+        .blog-excerpt {
+            font-size: 0.85rem;
+            color: #cceef5;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .blog-side-section {
+            margin: 2rem 0;
+            background: rgba(8, 55, 68, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 1.5rem;
+        }
+        .section-header-blog {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+            border-right: 3px solid #47c8e0;
+            padding-right: 12px;
+        }
+        .section-header-blog h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .authors-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .author-card-vertical {
+            background: rgba(16, 55, 70, 0.7);
+            border-radius: 50px;
+            padding: 0.6rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(71, 200, 230, 0.3);
+            transition: all 0.3s;
+        }
+        .author-card-vertical:hover {
+            background: linear-gradient(135deg, #1a6e8a, #0e5570);
+            transform: translateX(-5px);
+        }
+        .author-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #47c8e0, #1a7a9f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .author-info h4 { font-size: 0.95rem; margin: 0; font-weight: 600; }
+        .author-info p { font-size: 0.7rem; margin: 0; color: #b0ddef; }
+        
+        .popular-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .popular-post-item-vertical {
+            background: rgba(16, 55, 70, 0.7);
+            border-radius: 18px;
+            padding: 0.8rem;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .popular-post-item-vertical:hover {
+            background: rgba(40, 100, 120, 0.85);
+            transform: translateX(-5px);
+        }
+        .popular-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            object-fit: cover;
+        }
+        .popular-info {
+            flex: 1;
+        }
+        .popular-info h4 { 
+            font-size: 0.9rem; 
+            margin: 0 0 5px; 
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        .popular-info .views { 
+            font-size: 0.7rem; 
+            color: #7bc8e0;
+        }
+                
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #47c8e0, #1a7a9f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .scroll-top-btn.show { opacity: 1; visibility: visible; }
+        
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 2rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .blog-grid { grid-template-columns: 1fr; gap: 20px; }
+            .blog-header h1 { font-size: 1.8rem; }
+            .two-columns { grid-template-columns: 1fr; gap: 20px; }
+        }
+        
+        .no-results-blog {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 40px;
+        }
+
+        .ocean-header {
+            background: linear-gradient(135deg, #1a6d8f, #0e5a7a, #07455e);
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1000;
+        }
+        .header-content {
+            padding: 1rem 1rem 1.2rem;
+        }
+        .main-navbar {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 80px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .desktop-logo-wrapper, .desktop-site-name {
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .desktop-logo-wrapper:hover, .desktop-site-name:hover {
+            transform: scale(1.02);
+        }
+        .brand-logo-img {
+            height: 44px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+            opacity: 1;
+            display: block;
+        }
+        .special-logo {
+            filter: drop-shadow(0 0 8px rgba(71, 200, 224, 0.6));
+            transition: all 0.3s ease;
+        }
+        .special-logo:hover {
+            filter: drop-shadow(0 0 15px rgba(71, 200, 224, 0.9));
+            transform: scale(1.03);
+        }
+        .brand-text-desktop {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.55rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .desktop-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-link-custom {
+            color: white !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: relative;
+            text-decoration: none;
+        }
+        .nav-link-custom::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #47c8e0, #aae0ff);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        .nav-link-custom:hover::after {
+            width: 70%;
+        }
+        .nav-link-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .cart-desktop {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-radius: 50px;
+            padding: 0.5rem 1rem !important;
+        }
+        .cart-desktop i {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .cart-desktop span {
+            display: none;
+        }
+        .cart-desktop:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.05);
+        }
+        .mobile-brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .mobile-brand-group .brand-text-mobile {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .mobile-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .mobile-menu-btn, .mobile-cart-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        .mobile-menu-btn {
+            padding: 0.55rem 1rem;
+            font-size: 1.3rem;
+        }
+        .mobile-cart-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+        }
+        .mobile-menu-btn:hover, .mobile-cart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.03);
+        }
+        @media (min-width: 993px) {
+            .mobile-brand-group, .mobile-buttons {
+                display: none !important;
+            }
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+                display: flex;
+            }
+        }
+        @media (max-width: 992px) {
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+                display: none !important;
+            }
+            .mobile-brand-group, .mobile-buttons {
+                display: flex !important;
+            }
+            .main-navbar {
+                padding: 0.5rem 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .mobile-brand-group .brand-text-mobile {
+                font-size: 1rem;
+            }
+            .mobile-brand-group .brand-logo-img {
+                height: 32px;
+                max-width: 42px;
+            }
+            .mobile-cart-btn {
+                width: 40px;
+                height: 40px;
+            }
+            .mobile-menu-btn {
+                padding: 0.45rem 0.8rem;
+            }
+        }
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+        }
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #043a4f, #0a5a78, #07455e);
+            z-index: 100000;
+            padding: 30px 20px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        .mobile-sidebar.open {
+            right: 0;
+        }
+        .mobile-sidebar .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.8rem;
+            padding: 5px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .mobile-sidebar .close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+        .mobile-sidebar .sidebar-brand {
+            margin-top: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .mobile-sidebar .sidebar-brand img {
+            height: 60px;
+            filter: drop-shadow(0 0 20px rgba(71,200,224,0.3));
+        }
+        .mobile-sidebar .sidebar-brand h2 {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #ffffff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .mobile-sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 16px;
+            transition: 0.3s;
+            margin: 6px 0;
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .mobile-sidebar .menu-item:last-child {
+            border-bottom: none;
+        }
+        .mobile-sidebar .menu-item:hover {
+            background: rgba(71,200,224,0.15);
+            transform: translateX(-5px);
+        }
+        .mobile-sidebar .menu-item i {
+            width: 28px;
+            color: #47c8e0;
+            font-size: 1.2rem;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ocean-header {
+            animation: fadeInDown 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<div class="ocean-bg"></div>
+<div class="sun-rays"></div>
+<canvas id="oceanCanvas"></canvas>
+<div class="bubbles" id="bubbleContainer"></div>
+
+<header class="ocean-header">
+    <div class="header-content">
+        <div class="main-navbar">
+            <div class="navbar-flex">
+                <div class="desktop-logo-wrapper" onclick="navigateTo('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                </div>
+                <div class="desktop-menu">
+                    <a href="#" class="nav-link-custom" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+                    <a href="#" class="nav-link-custom" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+                    <a href="#" class="nav-link-custom" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+                    <a href="#" class="nav-link-custom" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+                    <a href="#" class="nav-link-custom cart-desktop" id="cartDesktopBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>سبد خرید</span>
+                    </a>
+                </div>
+                <div class="desktop-site-name" onclick="navigateTo('home')">
+                    <span class="brand-text-desktop">ocean book</span>
+                </div>
+                <div class="mobile-brand-group" onclick="navigateTo('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                    <span class="brand-text-mobile">ocean book</span>
+                </div>
+                <div class="mobile-buttons">
+                    <div class="mobile-cart-btn" onclick="goToCart()" title="سبد خرید">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-sidebar" id="mobileSidebar">
+    <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+    <div class="sidebar-brand">
+        <img src="logo.png" alt="لوگو"
+             onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+        <h2>ocean book</h2>
+    </div>
+    <a href="#" class="menu-item" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+    <a href="#" class="menu-item" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+    <a href="#" class="menu-item" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+    <a href="#" class="menu-item" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+    <a href="#" class="menu-item" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+    <a href="#" class="menu-item" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+    <a href="#" class="menu-item" onclick="goToCart()"><i class="fas fa-shopping-cart"></i> سبد خرید</a>
+</div>
+
+<div class="container-blog">
+    <div class="blog-header">
+        <h1><i class="fas fa-feather-alt"></i> وبلاگ</h1>
+        <p>از دنیای کتاب و دانش، با جریان آرامش همراه شوید</p>
+        <div class="wave-decoration"></div>
+    </div>
+    
+    <div class="blog-categories" id="blogCategories">
+        <button class="category-btn active" data-cat="all">همه</button>
+        <button class="category-btn" data-cat="ادبیات">ادبیات</button>
+        <button class="category-btn" data-cat="روانشناسی">روانشناسی</button>
+        <button class="category-btn" data-cat="کتابخوانی">کتابخوانی</button>
+        <button class="category-btn" data-cat="پادکست">پادکست</button>
+        <button class="category-btn" data-cat="فلسفه">فلسفه</button>
+    </div>
+    
+    <div id="blogPostsGrid" class="blog-grid"></div>
+    
+    <div class="two-columns">
+        <div class="blog-side-section" style="margin:0;">
+            <div class="section-header-blog">
+                <h3><i class="fas fa-users"></i> نویسندگان دریاچه</h3>
+            </div>
+            <div class="authors-vertical" id="authorsList"></div>
+        </div>
+        
+        <div class="blog-side-section" style="margin:0;">
+            <div class="section-header-blog"> 
+                <h3><i class="fas fa-fire"></i> پربازدیدترین مطالب</h3>
+            </div>
+            <div class="popular-vertical" id="popularPostsList"></div>
+        </div>
+    </div>
+</div>
+
+<iframe src="footer.html" id="footerIframe" class="footer-iframe" scrolling="no"></iframe>
+
+<script>
+    function navigateTo(target, section) {
+        const pageMap = {
+            'home': 'index.html',
+            'all-products': 'all-products.html',
+            'meditation': 'meditation.html',
+            'dashboard': 'dashboard.html',
+            'faq': 'FAQ.html',
+            'rules': 'Rules.html',
+            'about': 'aboutUs.html'
+        };
+        let url = pageMap[target] || 'index.html';
+        if (target === 'all-products' && section) {
+            url = url + '#' + section;
+        }
+        if (window.parent !== window) {
+            window.parent.postMessage({ type: 'navigate', target: target, section: section }, '*');
+        }
+        window.location.href = url;
+    }
+
+    function goToCart() {
+        window.location.href = 'sabad.html';
+    }
+
+    function toggleMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        if (sidebar.classList.contains('open')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    }
+
+    function openMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        overlay.classList.add('active');
+        sidebar.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        overlay.classList.remove('active');
+        sidebar.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.desktop-menu .nav-link-custom').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navType = this.getAttribute('data-nav');
+                if (navType === 'dashboard') {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                if (this.id === 'cartDesktopBtn') {
+                    goToCart();
+                    return;
+                }
+                if (navType === 'home') navigateTo('home');
+                else if (navType === 'books') navigateTo('all-products', 'books');
+                else if (navType === 'podcasts') navigateTo('all-products', 'podcasts');
+                else if (navType === 'audiobooks') navigateTo('all-products', 'audiobooks');
+                else if (navType === 'meditation') navigateTo('meditation');
+            });
+        });
+
+        document.querySelectorAll('.mobile-sidebar .menu-item').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const navType = this.getAttribute('data-nav');
+                if (navType) {
+                    e.preventDefault();
+                    closeMobileMenu();
+                    if (navType === 'dashboard') {
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
+                        return;
+                    }
+                    setTimeout(() => {
+                        if (navType === 'home') navigateTo('home');
+                        else if (navType === 'books') navigateTo('all-products', 'books');
+                        else if (navType === 'podcasts') navigateTo('all-products', 'podcasts');
+                        else if (navType === 'audiobooks') navigateTo('all-products', 'audiobooks');
+                        else if (navType === 'meditation') navigateTo('meditation');
+                    }, 300);
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { closeMobileMenu(); }
+        });
+    });
+
+    const blogPosts = [
+        { id: 1, title: "چگونه مطالعه روزانه را به عادت تبدیل کنیم؟", category: "کتابخوانی", author: "مریم حسینی", authorAvatar: "م", date: "۱۴۰۳/۱۰/۱۲", views: 1240, excerpt: "۷ راهکار عملی برای علاقه‌مند شدن به مطالعه روزانه و تبدیل آن به بخشی از سبک زندگی. در این مطلب به بررسی روش‌های عملی برای علاقه‌مند شدن به مطالعه و تداوم آن می‌پردازیم. اولین قدم: کتاب‌هایی را انتخاب کنید که واقعاً به آنها علاقه دارید. قدم دوم: زمان مشخصی را هر روز به مطالعه اختصاص دهید.", content: "<p>مطالعه روزانه یکی از بهترین عادت‌هایی است که می‌توانید در زندگی خود ایجاد کنید. در این مطلب به بررسی روش‌های عملی برای علاقه‌مند شدن به مطالعه و تداوم آن می‌پردازیم.</p><p>اولین قدم: کتاب‌هایی را انتخاب کنید که واقعاً به آنها علاقه دارید. قدم دوم: زمان مشخصی را هر روز به مطالعه اختصاص دهید.</p><p>و در نهایت با ایجاد یک چالش کتابخوانی می‌توانید خودتان را متعهد کنید.</p>", cover: "blogCover/1.png" },
+        { id: 2, title: "معرفی ۵ کتاب برتر روانشناسی که زندگی شما را متحول می‌کنند", category: "روانشناسی", author: "دکتر احمد کریمی", authorAvatar: "ک", date: "۱۴۰۳/۱۱/۰۵", views: 2350, excerpt: "کتاب‌هایی که به شما در درک بهتر خود و دیگران کمک می‌کنند و مسیر رشد فردی را هموار می‌سازند. در این مقاله به معرفی پنج کتاب تاثیرگذار در حوزه روانشناسی می‌پردازیم: 'قدرت حال' اثر اکهارت تله، 'انسان در جستجوی معنا' ویکتور فرانکل و ...", content: "<p>در این مقاله به معرفی پنج کتاب تاثیرگذار در حوزه روانشناسی می‌پردازیم: ۱. 'قدرت حال' اثر اکهارت تله، ۲. 'انسان در جستجوی معنا' ویکتور فرانکل، ۳. 'هنر شفاف اندیشیدن' رولف دوبلی و ...</p><p>هر یک از این کتاب‌ها می‌توانند دریچه‌های جدیدی به سوی خودآگاهی باز کنند.</p>", cover: "blogCover/2.png" },
+        { id: 3, title: "۱۰ پادکست ادبی برتر که نباید از دست بدهید", category: "پادکست", author: "سارا نادری", authorAvatar: "س", date: "۱۴۰۳/۱۰/۲۸", views: 1890, excerpt: "اگر به دنبال پادکست‌های با کیفیت در زمینه ادبیات و داستان هستید، این مطلب مخصوص شماست. پادکست‌های ادبی می‌توانند همراهان خوبی در مسیرهای روزمره باشند.", content: "<p>پادکست‌های ادبی می‌توانند همراهان خوبی در مسیرهای روزمره باشند. از 'کتاب‌باز' تا 'لذت کتاب'، در این مقاله بهترین‌ها را معرفی کرده‌ایم.</p>", cover: "blogCover/3.png" },
+        { id: 4, title: "مروری بر رمان 'صد سال تنهایی' و نمادهای سوررئال آن", category: "ادبیات", author: "رضا محمدی", authorAvatar: "ر", date: "۱۴۰۳/۰۹/۱۵", views: 3120, excerpt: "تحلیل عمیق بر روی شخصیت‌ها و نمادهای رئالیسم جادویی در شاهکار گابریل گارسیا مارکز. 'صد سال تنهایی' روایت‌گر تاریخ خانواده بوئندیا و نمادی از تاریخ آمریکای لاتین است.", content: "<p>'صد سال تنهایی' روایت‌گر تاریخ خانواده بوئندیا و نمادی از تاریخ آمریکای لاتین است.</p><p>در این تحلیل به بررسی نمادهایی مانند باران زرد، پروانه‌های زرد و سفرهای سرهنگ آئورلیانو بوئندیا می‌پردازیم.</p>", cover: "blogCover/4.png" },
+        { id: 5, title: "چگونه خلاصه‌نویسی موثر را یاد بگیریم؟", category: "کتابخوانی", author: "مریم حسینی", authorAvatar: "م", date: "۱۴۰۳/۱۲/۰۱", views: 870, excerpt: "روش‌های نوین یادداشت‌برداری و خلاصه‌نویسی برای ماندگاری بیشتر مطالب مطالعه شده. روش کورنل، نقشه ذهنی و روش بولت ژورنال سه تکنیک کارآمد هستند.", content: "<p>روش کورنل، نقشه ذهنی و روش بولت ژورنال سه تکنیک کارآمد برای خلاصه نویسی هستند.</p>", cover: "blogCover/5.png" },
+        { id: 6, title: "فلسفه شادکامی از نگاه اپیکور و رواقیون", category: "فلسفه", author: "دکتر احمد کریمی", authorAvatar: "ک", date: "۱۴۰۳/۱۱/۲۰", views: 1450, excerpt: "مقایسه دیدگاه‌های فلسفی در مورد شادکامی و آرامش درونی، از اپیکوریسم تا رواقی‌گری. اپیکور لذت معقول را کلید خوشبختی می‌دانست.", content: "<p>اپیکور لذت معقول را کلید خوشبختی می‌دانست و رواقیون بر قناعت و پذیرش سرنوشت تاکید داشتند.</p>", cover: "blogCover/6.png" }
+    ];
+    
+    const authorsList = [
+        { name: "مریم حسینی", role: "نویسنده و منتقد", postsCount: 5, avatar: "م" },
+        { name: "دکتر احمد کریمی", role: "روانشناس و نویسنده", postsCount: 8, avatar: "ک" },
+        { name: "سارا نادری", role: "پادکستر و روزنامه‌نگار", postsCount: 4, avatar: "س" },
+        { name: "رضا محمدی", role: "پژوهشگر ادبیات", postsCount: 6, avatar: "ر" }
+    ];
+    
+    let currentCategory = "all";
+    
+    function goToPostPage(postId) {
+        window.location.href = `post.html?id=${postId}`;
+    }
+    
+    function renderBlogPosts(category = "all") {
+        const filtered = category === "all" ? blogPosts : blogPosts.filter(p => p.category === category);
+        const grid = document.getElementById('blogPostsGrid');
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div class="no-results-blog"><i class="fas fa-book-open fa-2x mb-3 d-block"></i><h3>نتیجه‌ای یافت نشد</h3><p>هیچ پستی در این دسته‌بندی وجود ندارد.</p></div>`;
+            return;
+        }
+        grid.innerHTML = filtered.map(post => `
+            <div class="blog-card" data-id="${post.id}">
+                <div class="blog-card-image">
+                    <img src="${post.cover}" alt="${post.title}" onerror="this.src='https://picsum.photos/id/42/600/400'">
+                    <span class="blog-category-badge">${post.category}</span>
+                </div>
+                <div class="blog-card-content">
+                    <div class="blog-meta">
+                        <span><i class="far fa-calendar-alt"></i> ${post.date}</span>
+                        <span><i class="far fa-eye"></i> ${post.views} بازدید</span>
+                        <span><i class="far fa-user"></i> ${post.author}</span>
+                    </div>
+                    <h3 class="blog-card-title">${post.title}</h3>
+                    <p class="blog-excerpt">${post.excerpt}</p>
+                </div>
+            </div>
+        `).join('');
+        
+        document.querySelectorAll('.blog-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const postId = parseInt(card.dataset.id);
+                goToPostPage(postId);
+            });
+        });
+    }
+    
+    function renderAuthors() {
+        const container = document.getElementById('authorsList');
+        container.innerHTML = authorsList.map(author => `
+            <div class="author-card-vertical">
+                <div class="author-avatar">${author.avatar}</div>
+                <div class="author-info">
+                    <h4>${author.name}</h4>
+                    <p>${author.role} | ${author.postsCount} مطلب</p>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function renderPopularPosts() {
+        const sorted = [...blogPosts].sort((a,b) => b.views - a.views).slice(0, 5);
+        const container = document.getElementById('popularPostsList');
+        container.innerHTML = sorted.map(post => `
+            <div class="popular-post-item-vertical" data-id="${post.id}">
+                <img src="${post.cover}" class="popular-img" onerror="this.src='https://picsum.photos/id/42/100/100'">
+                <div class="popular-info">
+                    <h4>${post.title.length > 45 ? post.title.slice(0,45)+'...' : post.title}</h4>
+                    <div class="views"><i class="far fa-eye"></i> ${post.views} بازدید | <i class="far fa-calendar-alt"></i> ${post.date}</div>
+                </div>
+            </div>
+        `).join('');
+        document.querySelectorAll('.popular-post-item-vertical').forEach(el => {
+            el.addEventListener('click', () => {
+                const id = parseInt(el.dataset.id);
+                goToPostPage(id);
+            });
+        });
+    }
+    
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = btn.dataset.cat;
+            renderBlogPosts(currentCategory);
+        });
+    });
+
+    function updateFooterHeight(height) {
+        const iframe = document.getElementById('footerIframe');
+        if (iframe && height) {
+            const finalHeight = Math.max(height, 200);
+            iframe.style.height = finalHeight + 'px';
+            iframe.style.minHeight = finalHeight + 'px';
+        }
+    }
+
+    window.addEventListener('message', function(e) {
+        const data = e.data;
+        if ((data.type === 'footerResize' || data.type === 'resize') && data.height) {
+            updateFooterHeight(data.height);
+        }
+        if (data.type === 'navigate') {
+            if (data.target === 'home') {
+                window.location.href = 'index.html';
+            } else if (data.target === 'all-products' || data.target === 'books' || data.target === 'podcasts' || data.target === 'audiobooks') {
+                const section = data.section || data.target;
+                if (section === 'all') {
+                    window.location.href = 'all-products.html';
+                } else {
+                    window.location.href = 'all-products.html#' + section;
+                }
+            } else if (data.target === 'meditation') {
+                window.location.href = 'meditation.html';
+            } else if (data.target === 'faq') {
+                window.location.href = 'FAQ.html';
+            } else if (data.target === 'rules') {
+                window.location.href = 'Rules.html';
+            } else if (data.target === 'about') {
+                window.location.href = 'aboutUs.html';
+            }
+        }
+        if (data.type === 'openMobileMenu') {
+            openMobileMenu();
+        }
+        if (data.type === 'closeMobileMenu') {
+            closeMobileMenu();
+        }
+    });
+
+    function requestFooterHeight() {
+        const iframe = document.getElementById('footerIframe');
+        if (iframe && iframe.contentWindow) {
+            try {
+                iframe.contentWindow.postMessage({ type: 'requestHeight' }, '*');
+            } catch(e) {}
+        }
+    }
+
+    let scrollBtnTop = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll',() => {
+        if (scrollBtnTop) scrollBtnTop.classList.toggle('show',window.scrollY>300);
+    });
+    
+    function createBubbles(){ let c=document.getElementById('bubbleContainer'); if(!c) return; c.innerHTML=''; let cnt=window.innerWidth<768?25:45; for(let i=0;i<cnt;i++){ let b=document.createElement('div'); b.classList.add('bubble'); let s=5+Math.random()*35; b.style.cssText=`width:${s}px;height:${s}px;left:${5+Math.random()*90}%;animation-duration:${6+Math.random()*16}s;animation-delay:${Math.random()*15}s;opacity:${0.3+Math.random()*0.5};`; c.appendChild(b); } }
+    
+    let canv=document.getElementById('oceanCanvas'), ctx=canv.getContext('2d'), w,h,to=0;
+    function resizeCanvas(){ w=window.innerWidth; h=160; canv.width=w; canv.height=h; drawWaves(); }
+    function drawWaves(){ if(!ctx)return; ctx.clearRect(0,0,w,h); ctx.beginPath(); for(let x=0;x<=w;x+=8){ let y=h*0.45+Math.sin(x*0.008+to)*14; if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.fillStyle='#0b5f7a'; ctx.fill(); ctx.beginPath(); for(let x=0;x<=w;x+=8){ let y=h*0.6+Math.sin(x*0.012+to*1.2)*10; if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.fillStyle='rgba(25,120,155,0.9)'; ctx.fill(); ctx.beginPath(); for(let x=0;x<=w;x+=10){ let y=h*0.72+Math.sin(x*0.018+to*1.8)*6; if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); } ctx.fillStyle='rgba(71,200,230,0.4)'; ctx.fill(); }
+    function animateWaves(){ to+=0.006; drawWaves(); requestAnimationFrame(animateWaves); }
+
+    window.addEventListener('load',()=>{
+        createBubbles();
+        resizeCanvas();
+        animateWaves();
+        renderBlogPosts();
+        renderAuthors();
+        renderPopularPosts();
+        setTimeout(requestFooterHeight, 500);
+        setTimeout(requestFooterHeight, 1500);
+        setTimeout(requestFooterHeight, 3000);
+    });
+    
+    window.addEventListener('resize',()=>{ createBubbles(); resizeCanvas(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>ارزیابی روزانه & مدیتیشن</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', 'Segoe UI', 'IranSans', system-ui, -apple-system, sans-serif; background: #0a2f3a; color: #eef4ff; line-height: 1.5; -webkit-tap-highlight-color: transparent; }
+
+        .ocean-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; background: radial-gradient(circle at 30% 20%, #136b8f, #07405c, #02161f); }
+        .sun-rays { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(ellipse at 30% 20%, rgba(130, 210, 240, 0.12) 0%, rgba(70, 150, 200, 0) 70%); pointer-events: none; animation: raysMove 22s infinite alternate; }
+        @keyframes raysMove { 0% { opacity: 0.2; transform: scale(1); } 100% { opacity: 0.45; transform: scale(1.08); } }
+        .bubbles { position: fixed; bottom: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; overflow: hidden; }
+        .bubble { position: absolute; bottom: -50px; background: radial-gradient(circle at 30% 30%, rgba(170, 225, 255, 0.7), rgba(60, 160, 210, 0.25)); border-radius: 50%; backdrop-filter: blur(0.5px); animation: bubbleUp linear infinite; box-shadow: 0 0 8px rgba(120, 200, 240, 0.6); }
+        @keyframes bubbleUp { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 20% { opacity: 0.6; } 80% { opacity: 0.7; } 100% { transform: translateY(-100vh) scale(1.2); opacity: 0; } }
+        #oceanCanvas { position: fixed; bottom: 0; left: 0; width: 100%; height: 30%; min-height: 140px; z-index: -1; pointer-events: none; display: block; opacity: 0.95; }
+
+        .footer-iframe {
+            width: 100%;
+            border: none;
+            display: block;
+            background: transparent;
+            min-height: 200px;
+            margin-top: 2rem;
+        }
+
+        .container-custom { max-width: 1200px; margin: 0 auto; padding: 0 12px; }
+        .assessment-container { margin-top: 70px; padding: 1rem; padding-bottom: 3rem; }
+        .glass-panel { background: rgba(5, 30, 40, 0.55); backdrop-filter: blur(16px); border-radius: 28px; border: 1px solid rgba(80, 190, 220, 0.3); box-shadow: 0 15px 35px -12px rgba(0, 0, 0, 0.4); overflow: hidden; }
+        
+        .meditation-card { background: linear-gradient(135deg, rgba(2, 35, 45, 0.92), rgba(1, 25, 32, 0.96)); border-radius: 28px; padding: 1.2rem 1.5rem; margin-bottom: 1.5rem; border-right: 5px solid #f5cd6e; backdrop-filter: blur(4px); }
+        .day-badge { background: #f5cd6e22; border-radius: 60px; padding: 5px 14px; font-size: 0.7rem; font-weight: 500; color: #ffe2a4; display: inline-flex; align-items: center; gap: 6px; }
+        .meditation-title { font-size: 1.3rem; font-weight: 800; color: #ffeaac; margin: 8px 0 6px; }
+        
+        .daily-question-card { background: rgba(10, 45, 55, 0.85); border-radius: 28px; padding: 1.5rem; backdrop-filter: blur(12px); border: 1px solid rgba(90, 200, 230, 0.4); margin-bottom: 1rem; }
+        .question-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; border-bottom: 1px dashed rgba(80, 180, 210, 0.4); padding-bottom: 12px; }
+        .daily-badge { background: #1f7e8c; border-radius: 50px; padding: 6px 14px; font-size: 0.75rem; font-weight: 600; color: white; }
+        .question-text { font-size: 1.05rem; font-weight: 500; line-height: 1.5; margin-bottom: 1rem; color: #f0fcff; }
+        .options-grid-daily { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; }
+        .option-daily-btn { background: rgba(255,255,245,0.08); border: 1px solid #429bb5; border-radius: 60px; padding: 10px 12px; text-align: center; cursor: pointer; transition: all 0.2s ease; font-size: 0.85rem; font-weight: 500; color: #eef4ff; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .option-daily-btn:active { transform: scale(0.97); background: #2b819b; }
+        .progress-track { background: rgba(0, 0, 0, 0.4); border-radius: 40px; height: 6px; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, #49c0e0, #f5cd6e); width: 0%; height: 6px; transition: width 0.3s ease; }
+        .btn-custom { border-radius: 60px; padding: 10px 24px; font-size: 0.9rem; transition: all 0.2s; border: none; font-weight: 500; }
+        .btn-outline-warning-custom { background: transparent; border: 1px solid #f5cd6e; color: #f5cd6e; }
+        .btn-outline-warning-custom:active { background: #f5cd6e; color: #030e12; transform: scale(0.97); }
+        .btn-outline-light-custom { background: transparent; border: 1px solid #7bc4e0; color: #7bc4e0; }
+        .btn-success-custom { background: #1f7e8c; border: none; color: white; }
+        .btn-success-custom:active { transform: scale(0.97); }
+        .toast-notification { position: fixed; bottom: 20px; left: 20px; right: 20px; z-index: 1050; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px); border-radius: 14px; padding: 12px 18px; border-right: 3px solid #f5cd6e; text-align: center; font-size: 0.9rem; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        @media (max-width: 576px) { 
+            .question-text { font-size: 0.95rem; }
+            .options-grid-daily { grid-template-columns: 1fr; gap: 8px; }
+        }
+        
+        .result-summary { background: linear-gradient(145deg, #04303b, #01181f); border-radius: 24px; padding: 1.2rem; margin-top: 1rem; }
+        .score-circle { width: 70px; height: 70px; background: #1f7e8c; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: bold; color: #ffeaac; margin: 0 auto 10px; }
+        
+        .meditation-stepper { background: rgba(2, 25, 35, 0.97); border-radius: 28px; padding: 1.5rem; margin-top: 1rem; border: 2px solid #f5cd6e; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .step-indicator { display: flex; justify-content: space-between; margin-bottom: 1.5rem; gap: 8px; flex-wrap: wrap; }
+        .step-circle { width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #7bc4e0; border: 2px solid #7bc4e0; transition: all 0.3s; }
+        .step-circle.active { background: #f5cd6e; color: #02161f; border-color: #f5cd6e; transform: scale(1.05); }
+        .step-circle.completed { background: #1f7e8c; color: white; border-color: #1f7e8c; }
+        .meditation-step-content { text-align: center; padding: 1rem; }
+        .timer-display { font-size: 3rem; font-weight: bold; color: #ffeaac; margin: 1rem 0; font-family: monospace; letter-spacing: 4px; }
+        .meditation-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+        
+        .meditation-start-btn { background: linear-gradient(135deg, #f5cd6e, #e6b422); color: #02161f; border: none; padding: 12px 28px; font-weight: bold; transition: all 0.3s; }
+        .meditation-start-btn:hover { transform: scale(1.02); box-shadow: 0 5px 20px rgba(245,205,110,0.3); }
+
+        .ocean-header {
+            background: linear-gradient(135deg, #1a6d8f, #0e5a7a, #07455e);
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1000;
+            flex-shrink: 0;
+        }
+        .header-content {
+            padding: 1rem 1rem 1.2rem;
+        }
+        .main-navbar {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 80px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .desktop-logo-wrapper, .desktop-site-name {
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .desktop-logo-wrapper:hover, .desktop-site-name:hover { transform: scale(1.02); }
+        .brand-logo-img {
+            height: 44px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+            display: block;
+        }
+        .special-logo {
+            filter: drop-shadow(0 0 8px rgba(71, 200, 224, 0.6));
+            transition: all 0.3s ease;
+        }
+        .special-logo:hover {
+            filter: drop-shadow(0 0 15px rgba(71, 200, 224, 0.9));
+            transform: scale(1.03);
+        }
+        .brand-text-desktop {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.55rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .desktop-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-wrap: nowrap;
+            justify-content: center;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0.2rem 0;
+        }
+        .nav-link-custom {
+            color: white !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: relative;
+            text-decoration: none !important;
+        }
+        .nav-link-custom::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #47c8e0, #aae0ff);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        .nav-link-custom:hover::after {
+            width: 70%;
+        }
+        .nav-link-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .nav-link-custom.active::after {
+            width: 70%;
+        }
+        .cart-desktop {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-radius: 50px;
+            padding: 0.5rem 1rem !important;
+        }
+        .cart-desktop i { margin: 0; font-size: 1rem; }
+        .cart-desktop span { display: none; }
+        .cart-desktop:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.05);
+        }
+        .mobile-brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .mobile-brand-group .brand-text-mobile {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .mobile-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .mobile-menu-btn, .mobile-cart-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        .mobile-menu-btn { padding: 0.55rem 1rem; font-size: 1.3rem; }
+        .mobile-cart-btn { width: 44px; height: 44px; font-size: 1.2rem; }
+        .mobile-menu-btn:hover, .mobile-cart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.03);
+        }
+        @media (min-width: 993px) {
+            .mobile-brand-group, .mobile-buttons { display: none !important; }
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu { display: flex; }
+        }
+        @media (max-width: 992px) {
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu { display: none !important; }
+            .mobile-brand-group, .mobile-buttons { display: flex !important; }
+            .main-navbar { padding: 0.5rem 1rem; }
+        }
+        @media (max-width: 1200px) {
+            .desktop-menu { gap: 0.1rem; }
+            .nav-link-custom { padding: 0.4rem 0.7rem !important; font-size: 0.8rem; }
+        }
+        @media (max-width: 480px) {
+            .mobile-brand-group .brand-text-mobile { font-size: 1rem; }
+            .mobile-brand-group .brand-logo-img { height: 32px; max-width: 42px; }
+            .mobile-cart-btn { width: 40px; height: 40px; }
+            .mobile-menu-btn { padding: 0.45rem 0.8rem; }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ocean-header { animation: fadeInDown 0.6s ease-out; }
+
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+        }
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #043a4f, #0a5a78, #07455e);
+            z-index: 100000;
+            padding: 30px 20px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        .mobile-sidebar.open {
+            right: 0;
+        }
+        .mobile-sidebar .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.8rem;
+            padding: 5px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .mobile-sidebar .close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+        .mobile-sidebar .sidebar-brand {
+            margin-top: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .mobile-sidebar .sidebar-brand img {
+            height: 60px;
+            filter: drop-shadow(0 0 20px rgba(71,200,224,0.3));
+        }
+        .mobile-sidebar .sidebar-brand h2 {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #ffffff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .mobile-sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 16px;
+            transition: 0.3s;
+            margin: 6px 0;
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .mobile-sidebar .menu-item:last-child {
+            border-bottom: none;
+        }
+        .mobile-sidebar .menu-item:hover {
+            background: rgba(71,200,224,0.15);
+            transform: translateX(-5px);
+        }
+        .mobile-sidebar .menu-item i {
+            width: 28px;
+            color: #47c8e0;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .footer-iframe { min-height: 300px; }
+        }
+        @media (max-width: 480px) {
+            .footer-iframe { min-height: 350px; }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" autoplay loop preload="auto">
+        <source src="sound/ludovico_einaudi_una_mattina.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="meditationAudio"></audio>
+
+    <div class="ocean-bg"></div>
+    <div class="sun-rays"></div>
+    <canvas id="oceanCanvas"></canvas>
+    <div class="bubbles" id="bubbleContainer"></div>
+
+    <header class="ocean-header">
+        <div class="header-content">
+            <div class="main-navbar">
+                <div class="navbar-flex">
+                    <div class="desktop-logo-wrapper" onclick="sendNavigation('home')">
+                        <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                             onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                    </div>
+                    <div class="desktop-menu">
+                        <a href="#" class="nav-link-custom" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+                        <a href="#" class="nav-link-custom" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+                        <a href="#" class="nav-link-custom" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+                        <a href="#" class="nav-link-custom" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+                        <a href="#" class="nav-link-custom" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+                        <a href="#" class="nav-link-custom" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+                        <a href="#" class="nav-link-custom cart-desktop" id="cartDesktopBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>سبد خرید</span>
+                        </a>
+                    </div>
+                    <div class="desktop-site-name" onclick="sendNavigation('home')">
+                        <span class="brand-text-desktop">ocean book</span>
+                    </div>
+                    <div class="mobile-brand-group" onclick="sendNavigation('home')">
+                        <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                             onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                        <span class="brand-text-mobile">ocean book</span>
+                    </div>
+                    <div class="mobile-buttons">
+                        <div class="mobile-cart-btn" onclick="goToCart()" title="سبد خرید">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                            <i class="fas fa-bars"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+        <div class="sidebar-brand">
+            <img src="logo.png" alt="لوگو"
+                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+            <h2>ocean book</h2>
+        </div>
+        <a href="#" class="menu-item" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+        <a href="#" class="menu-item" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+        <a href="#" class="menu-item" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+        <a href="#" class="menu-item" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+        <a href="#" class="menu-item" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+        <a href="#" class="menu-item" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+        <a href="#" class="menu-item" onclick="goToCart()"><i class="fas fa-shopping-cart"></i> سبد خرید</a>
+    </div>
+
+    <div class="container-custom assessment-container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-7">
+                <div class="glass-panel p-3 p-md-4 mb-4">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-heartbeat fa-2x text-info opacity-75"></i>
+                        <h1 class="h4 fw-semibold mt-2">ارزیابی روزانه سلامت روان</h1>
+                        <p class="small text-white-50 px-2">۳ سوال تخصصی • دریافت بازخورد بالینی</p>
+                        <div class="progress-wrapper mt-2">
+                            <div class="progress-track"><div class="progress-fill" id="dailyProgress"></div></div>
+                            <div class="small text-info mt-1" id="questionCounter"></div>
+                        </div>
+                    </div>
+                    <div id="dailyQuestionsContainer"></div>
+                    <div class="text-center mt-3" id="actionButtons" style="display: none;">
+                        <button class="btn btn-custom btn-outline-light-custom px-4" id="resetDailyAssessment"><i class="fas fa-sync-alt"></i> ثبت مجدد امروز</button>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-3 p-md-4" id="meditationSection">
+                    <div id="dailyMeditationContent"></div>
+                    
+                    <div class="text-center mt-3">
+                        <button id="startMeditationBtn" class="btn meditation-start-btn"><i class="fas fa-head-side-meditation"></i> 🧘 شروع مدیتیشن گام‌به‌گام (۴ مرحله)</button>
+                    </div>
+                    
+                    <div id="guidedMeditationContainer" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <iframe src="footer.html" id="footerIframe" class="footer-iframe" scrolling="no"></iframe>
+
+    <script>
+        function sendNavigation(target, section) {
+            const pageMap = {
+                'home': 'index.html',
+                'all-products': 'all-products.html',
+                'meditation': 'meditation.html',
+                'dashboard': 'dashboard.html',
+                'faq': 'FAQ.html',
+                'rules': 'Rules.html',
+                'about': 'aboutUs.html'
+            };
+            let url = pageMap[target] || 'index.html';
+            if (target === 'all-products' && section) {
+                url = url + '#' + section;
+            }
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'navigate', target: target, section: section }, '*');
+            }
+            window.location.href = url;
+        }
+
+        function goToCart() {
+            window.location.href = 'sabad.html';
+        }
+
+        function toggleMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const sidebar = document.getElementById('mobileSidebar');
+            if (sidebar.classList.contains('open')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        }
+
+        function openMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const sidebar = document.getElementById('mobileSidebar');
+            overlay.classList.add('active');
+            sidebar.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            const overlay = document.getElementById('mobileMenuOverlay');
+            const sidebar = document.getElementById('mobileSidebar');
+            overlay.classList.remove('active');
+            sidebar.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.desktop-menu .nav-link-custom').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const navType = this.getAttribute('data-nav');
+                    if (navType === 'dashboard') {
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                    if (this.id === 'cartDesktopBtn') {
+                        goToCart();
+                        return;
+                    }
+                    if (navType === 'home') sendNavigation('home');
+                    else if (navType === 'books') sendNavigation('all-products', 'books');
+                    else if (navType === 'podcasts') sendNavigation('all-products', 'podcasts');
+                    else if (navType === 'audiobooks') sendNavigation('all-products', 'audiobooks');
+                    else if (navType === 'meditation') sendNavigation('meditation');
+                });
+            });
+
+            document.querySelectorAll('.mobile-sidebar .menu-item').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    const navType = this.getAttribute('data-nav');
+                    if (navType) {
+                        e.preventDefault();
+                        closeMobileMenu();
+                        if (navType === 'dashboard') {
+                            setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
+                            return;
+                        }
+                        setTimeout(() => {
+                            if (navType === 'home') sendNavigation('home');
+                            else if (navType === 'books') sendNavigation('all-products', 'books');
+                            else if (navType === 'podcasts') sendNavigation('all-products', 'podcasts');
+                            else if (navType === 'audiobooks') sendNavigation('all-products', 'audiobooks');
+                            else if (navType === 'meditation') sendNavigation('meditation');
+                        }, 300);
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') { closeMobileMenu(); }
+            });
+        });
+
+        function createBubbles() { 
+            const container = document.getElementById('bubbleContainer'); 
+            if (!container) return; 
+            const isMobile = window.innerWidth <= 768; 
+            const bubbleCount = isMobile ? 20 : 40; 
+            container.innerHTML = ''; 
+            for (let i = 0; i < bubbleCount; i++) { 
+                const bubble = document.createElement('div'); 
+                bubble.classList.add('bubble'); 
+                const size = isMobile ? 4 + Math.random() * 20 : 6 + Math.random() * 32; 
+                bubble.style.width = size + 'px'; 
+                bubble.style.height = size + 'px'; 
+                bubble.style.left = Math.random() * 100 + '%'; 
+                bubble.style.animationDuration = (isMobile ? 6 + Math.random() * 12 : 5 + Math.random() * 12) + 's'; 
+                bubble.style.animationDelay = Math.random() * 15 + 's'; 
+                container.appendChild(bubble); 
+            } 
+        }
+        createBubbles(); 
+        window.addEventListener('resize', () => { createBubbles(); resizeCanvas(); });
+
+        const canvas = document.getElementById('oceanCanvas'); 
+        let ctx = canvas.getContext('2d'); 
+        let width, height, timeOffset = 0;
+        function resizeCanvas() { 
+            width = window.innerWidth; 
+            height = Math.max(130, window.innerHeight * 0.28); 
+            canvas.width = width; 
+            canvas.height = height; 
+            canvas.style.height = height + 'px'; 
+            drawWaves(); 
+        }
+        function drawWaves() { 
+            if (!ctx) return; 
+            ctx.clearRect(0, 0, width, height); 
+            ctx.beginPath(); 
+            for (let x = 0; x <= width; x += 15) { 
+                let y = height * 0.65 + Math.sin(x * 0.008 + timeOffset) * (height*0.14) + Math.sin(x * 0.012 + timeOffset * 0.6) * (height*0.056); 
+                if (x === 0) ctx.moveTo(x, y); 
+                else ctx.lineTo(x, y); 
+            } 
+            ctx.lineTo(width, height); ctx.lineTo(0, height); 
+            ctx.fillStyle = '#0a4f6e'; ctx.fill(); 
+            ctx.beginPath(); 
+            for (let x = 0; x <= width; x += 12) { 
+                let y = height * 0.78 + Math.sin(x * 0.014 + timeOffset * 1.3) * (height*0.1); 
+                if (x === 0) ctx.moveTo(x, y); 
+                else ctx.lineTo(x, y); 
+            } 
+            ctx.fillStyle = '#136f8f'; ctx.fill(); 
+            ctx.beginPath(); 
+            for (let x = 0; x <= width; x += 10) { 
+                let y = height * 0.88 + Math.sin(x * 0.022 + timeOffset * 1.8) * (height*0.06); 
+                if (x === 0) ctx.moveTo(x, y); 
+                else ctx.lineTo(x, y); 
+            } 
+            ctx.fillStyle = 'rgba(100, 195, 230, 0.35)'; ctx.fill(); 
+        }
+        function animateWaves() { timeOffset += 0.007; drawWaves(); requestAnimationFrame(animateWaves); }
+        resizeCanvas(); animateWaves();
+
+        function updateFooterHeight(height) {
+            const iframe = document.getElementById('footerIframe');
+            if (iframe && height) {
+                const finalHeight = Math.max(height, 200);
+                iframe.style.height = finalHeight + 'px';
+                iframe.style.minHeight = finalHeight + 'px';
+            }
+        }
+
+        window.addEventListener('message', function(event) {
+            if ((event.data.type === 'footerResize' || event.data.type === 'resize') && event.data.height) {
+                updateFooterHeight(event.data.height);
+            }
+            if (event.data.type === 'navigate') {
+                const target = event.data.target;
+                const section = event.data.section;
+                if (target === 'home') {
+                    window.location.href = 'index.html';
+                } else if (target === 'all-products' || target === 'books' || target === 'podcasts' || target === 'audiobooks') {
+                    let hash = '';
+                    if (section === 'books' || target === 'books') hash = '#books';
+                    else if (section === 'podcasts' || target === 'podcasts') hash = '#podcasts';
+                    else if (section === 'audiobooks' || target === 'audiobooks') hash = '#audiobooks';
+                    window.location.href = 'all-products.html' + hash;
+                } else if (target === 'meditation') {
+                    window.location.href = 'meditation.html';
+                } else if (target === 'dashboard') {
+                    window.location.href = 'dashboard.html';
+                } else if (target === 'faq') {
+                    window.location.href = 'FAQ.html';
+                } else if (target === 'rules') {
+                    window.location.href = 'Rules.html';
+                } else if (target === 'about') {
+                    window.location.href = 'aboutUs.html';
+                }
+            }
+            if (event.data.type === 'openMobileMenu') {
+                openMobileMenu();
+            }
+            if (event.data.type === 'closeMobileMenu') {
+                closeMobileMenu();
+            }
+        });
+
+        function requestFooterHeight() {
+            const iframe = document.getElementById('footerIframe');
+            if (iframe && iframe.contentWindow) {
+                try {
+                    iframe.contentWindow.postMessage({ type: 'requestHeight' }, '*');
+                } catch(e) {}
+            }
+        }
+
+        const meditationSchedule = {
+            0: { dayName: "یکشنبه", title: "نفس عمیق", description: "تمرین تنفس دیافراگمی: ۵ دقیقه دم ۴ ثانیه، بازدم ۶ ثانیه. کاهش سریع استرس.", tag: "🌬️ آرامش فوری" },
+            1: { dayName: "دوشنبه", title: "اسکن بدن", description: "آگاهی از تک تک اعضای بدن از پا تا سر، بدون قضاوت. کاهش تنش عضلانی.", tag: "🧘 آگاهی بدنی" },
+            2: { dayName: "سه‌شنبه", title: "مدیتیشن محبت", description: "ارسال آرزوهای خوب برای خود و دیگران. افزایش شفقت.", tag: "💖 مهربانی" },
+            3: { dayName: "چهارشنبه", title: "تمرکز بر صدا", description: "گوش دادن به صداهای محیط بدون برچسب زدن، تقویت حضور ذهن.", tag: "🎧 آگاهی شنیداری" },
+            4: { dayName: "پنجشنبه", title: "آرامش ذهن", description: "تماشای افکار مانند ابرها در آسمان ذهن. کاهش اضطراب.", tag: "🧠 سکوت درونی" },
+            5: { dayName: "جمعه", title: "شکرگزاری", description: "اندیشیدن به ۳ چیز که بابت آنها سپاسگزارید. افزایش رضایت.", tag: "🙏 قدردانی" },
+            6: { dayName: "شنبه", title: "تمدد اعصاب", description: "انقباض و رهاسازی عضلات از سر تا پا. بازتنظیم سیستم عصبی.", tag: "✨ رهایی از تنش" }
+        };
+        function getTodayMeditation() { 
+            const todayIndex = new Date().getDay(); 
+            const m = meditationSchedule[todayIndex]; 
+            const persianWeekdays = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"]; 
+            return { ...m, weekdayPersian: persianWeekdays[todayIndex], fullDate: new Date().toLocaleDateString('fa-IR') }; 
+        }
+        function renderDailyMeditation() { 
+            const med = getTodayMeditation(); 
+            document.getElementById('dailyMeditationContent').innerHTML = `<div class="meditation-card"><div class="d-flex justify-content-between flex-wrap gap-2 mb-2"><div class="day-badge"><i class="far fa-calendar-alt"></i> ${med.fullDate} - ${med.weekdayPersian}</div><div class="day-badge"><i class="fas fa-dharmachakra"></i> پیشنهاد مدیتیشن روز</div></div><div class="meditation-title"><i class="fas fa-water"></i> ${med.title}</div><p class="mt-2 opacity-75">${med.description}</p><div class="mt-2"><span class="badge bg-warning text-dark px-3 py-2"><i class="fas fa-brain"></i> ${med.tag}</span></div></div>`; 
+        }
+
+        let meditationActive = false;
+        let currentStep = 0;
+        let timerInterval = null;
+        let timeLeft = 0;
+        
+        const meditationSteps = [
+            { name: "آماده‌سازی", duration: 18, instruction: "در جای راحت بنشینید. ستون فقرات صاف اما نه خشک. دست‌ها را روی زانوها بگذارید. چشمان خود را ببندید. چند نفس عمیق بکشید.", icon: "fas fa-chair", tip: "محیط ساکت و بدون مزاحمت" },
+            { name: "تمرکز بر تنفس", duration: 15, instruction: "تمام توجه خود را به جریان دم و بازدم بیاورید. دم از بینی، بازدم از دهان. اگر ذهن پرت شد، بدون قضاوت به تنفس برگردید.", icon: "fas fa-lungs", tip: "به حس ورود و خروج هوا توجه کنید" },
+            { name: "آگاهی از بدن", duration: 18, instruction: "حالا توجه خود را به تک تک اعضای بدن ببرید. از انگشتان پا شروع کنید تا بالای سر. هر جا احساس تنش دارید، با بازدم آن را رها کنید.", icon: "fas fa-hand-peace", tip: "بدن خود را اسکن کنید" },
+            { name: "آرامش نهایی", duration: 20, instruction: "اجازه دهید تنفس به حالت طبیعی برگردد. احساس آرامش و سبکی را در سراسر بدن پخش کنید. به آرامی چشمان خود را باز کنید و چند لحظه سکوت را حفظ کنید.", icon: "fas fa-peace", tip: "حس شکرگزاری از این زمان برای خود" }
+        ];
+        
+        function showGuidedMeditation() {
+            if (meditationActive) {
+                showToast("همین الان یک جلسه مدیتیشن در حال اجراست! لطفاً صبر کنید.", "info");
+                return;
+            }
+            document.getElementById('guidedMeditationContainer').style.display = 'block';
+            meditationActive = true;
+            currentStep = 0;
+            startStep(currentStep);
+        }
+        
+        function startStep(stepIndex) {
+            if (!meditationActive) return;
+            playStepAudio(stepIndex);
+            if (stepIndex >= meditationSteps.length) {
+                finishMeditation();
+                return;
+            }
+            const step = meditationSteps[stepIndex];
+            timeLeft = step.duration;
+            updateStepDisplay(stepIndex);
+            
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (!meditationActive) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    return;
+                }
+                if (timeLeft <= 1) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    currentStep++;
+                    if (currentStep < meditationSteps.length) {
+                        startStep(currentStep);
+                    } else {
+                        finishMeditation();
+                    }
+                } else {
+                    timeLeft--;
+                    const timerElem = document.getElementById('stepTimer');
+                    if (timerElem) timerElem.textContent = timeLeft;
+                    updateProgressBar();
+                }
+            }, 1000);
+        }
+        
+        function updateProgressBar() {
+            const step = meditationSteps[currentStep];
+            if (!step) return;
+            const progressPercent = ((step.duration - timeLeft) / step.duration) * 100;
+            const progElem = document.getElementById('stepProgress');
+            if (progElem) progElem.style.width = progressPercent + '%';
+        }
+        
+        function updateStepDisplay(stepIndex) {
+            const step = meditationSteps[stepIndex];
+            const container = document.getElementById('guidedMeditationContainer');
+            if (!container) return;
+            
+            let stepsHtml = '';
+            meditationSteps.forEach((s, idx) => {
+                let statusClass = '';
+                if (idx === stepIndex) statusClass = 'active';
+                else if (idx < stepIndex) statusClass = 'completed';
+                stepsHtml += `<div class="step-circle ${statusClass}">${idx+1}</div>`;
+            });
+            
+            container.innerHTML = `
+                <div class="meditation-stepper">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0"><i class="fas fa-head-side-meditation"></i> مدیتیشن گام‌به‌گام</h5>
+                        <button class="btn btn-sm btn-outline-light-custom" id="cancelMeditationBtn"><i class="fas fa-times"></i> انصراف</button>
+                    </div>
+                    <div class="step-indicator">${stepsHtml}</div>
+                    <div class="meditation-step-content">
+                        <div class="meditation-icon"><i class="${step.icon}"></i></div>
+                        <h4 class="h5">مرحله ${stepIndex+1} از ${meditationSteps.length}: ${step.name}</h4>
+                        <p class="mt-3" style="font-size:1rem; line-height:1.6;">${step.instruction}</p>
+                        <div class="small text-info mt-2"><i class="fas fa-lightbulb"></i> نکته: ${step.tip}</div>
+                        <div class="timer-display" id="stepTimer">${step.duration}</div>
+                        <div class="progress-track mt-2"><div class="progress-fill" id="stepProgress" style="width:0%"></div></div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('cancelMeditationBtn')?.addEventListener('click', () => {
+                cancelMeditation();
+            });
+        }
+        
+        function finishMeditation() {
+            if (timerInterval) clearInterval(timerInterval);
+            meditationActive = false;
+            stopMeditationAudio();
+            const container = document.getElementById('guidedMeditationContainer');
+            container.innerHTML = `
+                <div class="meditation-stepper text-center">
+                    <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                    <h5 class="h5">مدیتیشن با موفقیت به پایان رسید!</h5>
+                    <p class="mt-2">احساس آرامش و تمرکز را در طول روز با خود همراه کنید.<br>ذهن شما اکنون آرام‌تر و متمرکزتر است.</p>
+                    <button class="btn btn-custom btn-outline-warning-custom mt-3" id="closeMeditationBtn"><i class="fas fa-check"></i> بستن</button>
+                </div>
+            `;
+            document.getElementById('closeMeditationBtn')?.addEventListener('click', () => {
+                container.style.display = 'none';
+                container.innerHTML = '';
+            });
+            showToast("✨ مدیتیشن شما کامل شد. امیدواریم احساس آرامش بیشتری داشته باشید.", "success");
+            setTimeout(() => { meditationActive = false; }, 500);
+        }
+        
+        function cancelMeditation() {
+            meditationActive = false;
+            currentStep = 0;
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            stopMeditationAudio();
+            const container = document.getElementById('guidedMeditationContainer');
+            if (container) {
+                container.style.display = 'none';
+                container.innerHTML = '';
+            }
+            showToast("مدیتیشن لغو شد. هر زمان که آماده بودید می‌توانید دوباره شروع کنید.", "info");
+        }
+
+        const meditationAudio = document.getElementById('meditationAudio');
+
+        function playStepAudio(stepIndex) {
+            const audioMap = [
+                "sound/1.mp3",
+                "sound/2.mp3",
+                "sound/3.mp3",
+                "sound/4.mp3"
+            ];
+            if (!meditationAudio) return;
+            meditationAudio.pause();
+            meditationAudio.currentTime = 0;
+            meditationAudio.src = audioMap[stepIndex];
+            meditationAudio.volume = 1.0;
+            meditationAudio.play().catch(err => {
+                console.log("Voice blocked:", err);
+            });
+        }
+
+        function stopMeditationAudio() {
+            if (meditationAudio) {
+                meditationAudio.pause();
+                meditationAudio.currentTime = 0;
+                meditationAudio.src = "";
+            }
+        }
+
+        const clinicalQuestionsBank = [
+            { id: 1, text: "امروز چقدر احساس آرامش درونی و دوری از استرس داشتید؟", options: ["خیلی کم، مضطرب بودم", "کمی، اما قابل کنترل", "متوسط، گاهی تنش داشتم", "بیشتر اوقات آرام بودم", "آرامش کامل"], scores: [1,2,3,4,5], insight: "سطوح پایین آرامش نیاز به تمرینات تنفس عمیق دارد." },
+            { id: 2, text: "انرژی روانی و انگیزه شما برای انجام کارهای روزمره چقدر بوده؟", options: ["تقریباً صفر", "کم، سخت بود", "متوسط، با زور", "نسبتاً خوب", "بسیار عالی"], scores: [1,2,3,4,5], insight: "کمبود انگیزه می‌تواند با استرس مرتبط باشد." },
+            { id: 3, text: "کیفیت خواب شب گذشته را چگونه ارزیابی می‌کنید؟", options: ["خیلی ضعیف", "نسبتاً بد", "متوسط", "خوب و ترمیمی", "عالی"], scores: [1,2,3,4,5], insight: "خواب ناکافی بر خلق و خو تأثیر مستقیم دارد." },
+            { id: 4, text: "چقدر احساس تنهایی یا جدایی از دیگران داشتید؟", options: ["بسیار شدید", "اغلب", "گاهی", "کم", "احساس ارتباط عمیق"], scores: [5,4,3,2,1], insight: "ارتباط اجتماعی حتی کوتاه می‌تواند مفید باشد." },
+            { id: 5, text: "امروز چقدر توانستید افکار منفی را مدیریت کنید؟", options: ["نه، غرق شدم", "کم، نشخوار داشتم", "تا حدی", "خوب", "بسیار عالی"], scores: [1,2,3,4,5], insight: "مدیریت افکار منفی با تمرین مدیتیشن بهبود می‌یابد." },
+            { id: 6, text: "آیا به نیازهای پایه بدنی (تغذیه، آب، حرکت) توجه کردید؟", options: ["اصلاً نه", "خیلی کم", "متوسط", "بیشتر موارد", "کاملاً"], scores: [1,2,3,4,5], insight: "مراقبت از بدن پایه سلامت روان است." }
+        ];
+
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = [];
+        let hasCompletedToday = false;
+
+        function getDailyQuestions() {
+            const today = new Date();
+            const daySeed = today.getDate() + today.getMonth() * 31;
+            const shuffled = [...clinicalQuestionsBank];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = (daySeed + i) % (i + 1);
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled.slice(0, 3);
+        }
+
+        function loadDailyAssessment() {
+            const stored = localStorage.getItem("darya_daily_3answers");
+            const todayKey = new Date().toLocaleDateString('fa-IR');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    if (parsed.date === todayKey && parsed.completed === true) {
+                        hasCompletedToday = true;
+                        currentQuestions = parsed.questions;
+                        userAnswers = parsed.answers;
+                        showResultsReport(parsed.totalScore);
+                        return;
+                    }
+                } catch(e) {}
+            }
+            hasCompletedToday = false;
+            currentQuestions = getDailyQuestions();
+            userAnswers = [];
+            currentIndex = 0;
+            renderCurrentQuestion();
+        }
+
+        function renderCurrentQuestion() {
+            if (currentIndex >= currentQuestions.length) {
+                finalizeAssessment();
+                return;
+            }
+            const q = currentQuestions[currentIndex];
+            const container = document.getElementById('dailyQuestionsContainer');
+            const optsHtml = q.options.map((opt, idx) => `<div class="option-daily-btn" data-opt-index="${idx}" data-score="${q.scores[idx]}"><i class="fas fa-${['frown','meh','smile','laugh-beam','star'][idx%5]}"></i> ${opt}</div>`).join('');
+            container.innerHTML = `<div class="daily-question-card"><div class="question-header"><span class="daily-badge"><i class="fas fa-question-circle"></i> سوال ${currentIndex+1} از ${currentQuestions.length}</span></div><div class="question-text">${q.text}</div><div class="options-grid-daily" id="optionsGrid">${optsHtml}</div></div>`;
+            document.querySelectorAll('.option-daily-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (hasCompletedToday) { showToast("شما امروز ارزیابی را کامل کرده‌اید!", "info"); return; }
+                    const idx = parseInt(btn.getAttribute('data-opt-index'));
+                    const score = parseInt(btn.getAttribute('data-score'));
+                    const selectedText = currentQuestions[currentIndex].options[idx];
+                    userAnswers.push({ question: currentQuestions[currentIndex].text, selectedIndex: idx, selectedText: selectedText, score: score, insight: currentQuestions[currentIndex].insight });
+                    currentIndex++;
+                    const percent = (currentIndex / currentQuestions.length) * 100;
+                    document.getElementById('dailyProgress').style.width = percent + "%";
+                    document.getElementById('questionCounter').innerHTML = `<i class="fas fa-clipboard-list"></i> ${currentIndex} از ${currentQuestions.length}`;
+                    if (currentIndex < currentQuestions.length) renderCurrentQuestion();
+                    else finalizeAssessment();
+                });
+            });
+            document.getElementById('dailyProgress').style.width = ((currentIndex)/currentQuestions.length)*100 + "%";
+            document.getElementById('questionCounter').innerHTML = `<i class="fas fa-clipboard-list"></i> ${currentIndex} از ${currentQuestions.length}`;
+        }
+
+        function finalizeAssessment() {
+            const totalScore = userAnswers.reduce((sum, a) => sum + a.score, 0);
+            const maxScore = currentQuestions.length * 5;
+            const percentScore = Math.round((totalScore / maxScore) * 100);
+            const todayKey = new Date().toLocaleDateString('fa-IR');
+            const report = { date: todayKey, completed: true, questions: currentQuestions, answers: userAnswers, totalScore: percentScore };
+            localStorage.setItem("darya_daily_3answers", JSON.stringify(report));
+            hasCompletedToday = true;
+            showResultsReport(percentScore);
+            showToast("ارزیابی امروز ثبت شد!", "success");
+            
+            if (percentScore < 50) {
+                showToast(" بر اساس ارزیابی امروز، پیشنهاد می‌کنیم یک جلسه مدیتیشن آرامش‌بخش انجام دهید.", "info");
+            }
+        }
+
+        function showResultsReport(percentScore) {
+            let statusText = "", recommendationSummary = "";
+            if (percentScore >= 80) { statusText = "وضعیت عالی • سلامت روان مطلوب"; recommendationSummary = "تعادل خود را با تمرینات روزانه مدیتیشن حفظ کنید."; }
+            else if (percentScore >= 60) { statusText = "وضعیت خوب • نیاز به مراقبت روزانه"; recommendationSummary = "تمرینات تنفس عمیق را در اولویت قرار دهید."; }
+            else if (percentScore >= 40) { statusText = "وضعیت متوسط • نیاز به توجه بیشتر"; recommendationSummary = "مدیتیشن روزانه می‌تواند به بهبود وضعیت شما کمک کند."; }
+            else { statusText = "وضعیت نیازمند حمایت • پیشنهاد مدیتیشن فوری"; recommendationSummary = "یک جلسه مدیتیشن گام‌به‌گام می‌تواند به کاهش استرس شما کمک کند."; }
+            
+            const container = document.getElementById('dailyQuestionsContainer');
+            let insightsHtml = userAnswers.map((a) => {
+                let customInsight = "";
+                if (a.score === 1) {
+                    customInsight = "این پاسخ نشان می‌دهد که این بخش امروز برای شما چالش‌برانگیز بوده و نیاز به توجه بیشتری دارد.";
+                } 
+                else if (a.score === 2) {
+                    customInsight = "در این بخش کمی فشار یا ناپایداری احساس می‌شود. بهتر است به آن توجه بیشتری شود.";
+                } 
+                else if (a.score === 3) {
+                    customInsight = "وضعیت این بخش متوسط است؛ نه نگران‌کننده و نه کاملاً پایدار.";
+                } 
+                else if (a.score === 4) {
+                    customInsight = "وضعیت این بخش خوب است و نشان‌دهنده عملکرد نسبتاً مناسب شماست.";
+                } 
+                else if (a.score === 5) {
+                    customInsight = "این بخش در وضعیت بسیار مطلوب قرار دارد و نشان‌دهنده ثبات و عملکرد مثبت است.";
+                }
+                return `
+                    <div class="small mt-2 p-2" style="background:rgba(255,255,255,0.05); border-radius:12px;">
+                        <i class="fas fa-star-of-life text-warning"></i>
+                        <strong>${a.question}</strong><br>
+                        <div>پاسخ: ${a.selectedText}</div>
+                        <div class="text-info-50 mt-2">${customInsight}</div>
+                    </div>
+                `;
+            }).join('');
+            container.innerHTML = `
+                <div class="result-summary">
+                    <div class="text-center"><div class="score-circle">${percentScore}%</div><h3 class="h6 fw-bold">${statusText}</h3></div>
+                    <div class="mt-3"><strong><i class="fas fa-chart-line"></i> امتیاز کلی سلامت روان امروز:</strong> ${percentScore} از ۱۰۰</div>
+                    <div class="progress-track mt-2 mb-3"><div class="progress-fill" style="width:${percentScore}%;"></div></div>
+                    <div class="alert alert-info alert-sm bg-transparent border-info text-white-50 small"><i class="fas fa-lightbulb"></i> ${recommendationSummary}</div>
+                    ${percentScore < 50 ? '<div class="text-center mt-2"><button id="quickMeditationBtn" class="btn btn-sm btn-success-custom"><i class="fas fa-head-side-meditation"></i> شروع مدیتیشن توصیه شده</button></div>' : ''}
+                    <details class="mt-2"><summary class="text-info">مشاهده تحلیل دقیق سوالات</summary>${insightsHtml}</details>
+                </div>
+            `;
+            document.getElementById('quickMeditationBtn')?.addEventListener('click', () => showGuidedMeditation());
+            document.getElementById('actionButtons').style.display = "block";
+            document.getElementById('resetDailyAssessment')?.addEventListener('click', () => resetDailyAssessment());
+        }
+
+        function resetDailyAssessment() { 
+            if (confirm("آیا می‌خواهید ارزیابی امروز را دوباره انجام دهید؟")) {
+                localStorage.removeItem("darya_daily_3answers");
+                hasCompletedToday = false;
+                currentQuestions = getDailyQuestions();
+                userAnswers = [];
+                currentIndex = 0;
+                renderCurrentQuestion();
+                document.getElementById('actionButtons').style.display = "none";
+                showToast("ارزیابی امروز بازنشانی شد.", "info");
+            }
+        }
+
+        function showToast(msg, type) {
+            const toast = document.createElement('div'); toast.className = 'toast-notification'; toast.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'info-circle'} me-2"></i> ${msg}`;
+            document.body.appendChild(toast); setTimeout(() => toast.remove(), 3000);
+        }
+
+        window.onload = () => { 
+            renderDailyMeditation(); 
+            loadDailyAssessment();
+            document.getElementById('startMeditationBtn')?.addEventListener('click', () => showGuidedMeditation());
+            const bgMusic = document.getElementById('bgMusic');
+            bgMusic.volume = 1.0;
+            bgMusic.play().catch(() => {
+                document.body.addEventListener('click', () => {
+                    bgMusic.play();
+                }, { once: true });
+            });
+            setTimeout(requestFooterHeight, 500);
+            setTimeout(requestFooterHeight, 1500);
+            setTimeout(requestFooterHeight, 3000);
+        };
+    </script>
+</body>
+</html>

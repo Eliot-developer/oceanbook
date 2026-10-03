@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>درباره ما</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body{
+    font-family:'Vazirmatn',sans-serif;
+    background:linear-gradient(180deg,#052634,#0b4f67,#073a4f);
+    color:#fff;
+    overflow-x:hidden;
+}
+.ocean-bg{
+    position:fixed;
+    inset:0;
+    background:
+    radial-gradient(circle at 20% 20%,rgba(71,200,230,.25),transparent 40%),
+    radial-gradient(circle at 80% 80%,rgba(71,200,230,.15),transparent 40%);
+    z-index:-1;
+}
+.container{
+    max-width:1100px;
+    margin:auto;
+    padding:30px 15px;
+    position:relative;
+    z-index:1;
+}
+.hero{
+    text-align:center;
+    padding:80px 20px;
+}
+.hero h1{
+    font-size:3rem;
+    margin-bottom:15px;
+    color:#e8fbff;
+}
+.hero p{
+    max-width:700px;
+    margin:auto;
+    line-height:2;
+    color:#c8eefa;
+}
+.glass-card{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:30px;
+    padding:30px;
+    margin:25px 0;
+    transition:.4s;
+}
+.glass-card:hover{
+    transform:translateY(-6px);
+    border-color:#47c8e0;
+}
+.section-title{
+    color:#47c8e0;
+    margin-bottom:15px;
+    font-size:1.4rem;
+}
+.features{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+    margin-top:20px;
+}
+.feature{
+    text-align:center;
+    padding:25px;
+}
+.feature i{
+    font-size:2rem;
+    color:#47c8e0;
+    margin-bottom:15px;
+}
+.quote-section{
+    text-align:center;
+    padding:40px 25px;
+}
+.quote-section blockquote{
+    font-size:1.4rem;
+    line-height:2.2;
+    font-weight:700;
+    color:#e8f9ff;
+    margin:15px 0;
+}
+.quote-author{
+    color:#8fd8f3;
+    font-size:0.95rem;
+}
+.contact-box{
+    text-align:center;
+    padding:40px 30px;
+}
+.contact-box a{
+    color:#08323a;
+    text-decoration:none;
+}
+.contact-box p{
+    margin:12px 0;
+    line-height:2;
+}
+.back-home{
+    display:inline-block;
+    margin-top:25px;
+    background:linear-gradient(135deg,#47c8e0,#1a7a9f);
+    color:#052634;
+    padding:12px 30px;
+    border-radius:40px;
+    text-decoration:none;
+    transition:.3s;
+}
+.back-home:hover{
+    transform:translateY(-3px);
+}
+.ocean-header {
+    background: linear-gradient(135deg, #1a6d8f, #0e5a7a, #07455e);
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    position: relative;
+    z-index: 1000;
+}
+.header-content {
+    padding: 1rem 1rem 1.2rem;
+}
+.main-navbar {
+    backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 80px;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+.navbar-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.desktop-logo-wrapper, .desktop-site-name {
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.desktop-logo-wrapper:hover, .desktop-site-name:hover {
+    transform: scale(1.02);
+}
+.brand-logo-img {
+    height: 44px;
+    width: auto;
+    max-width: 60px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    opacity: 1;
+    display: block;
+}
+.special-logo {
+    filter: drop-shadow(0 0 8px rgba(71, 200, 224, 0.6));
+    transition: all 0.3s ease;
+}
+.special-logo:hover {
+    filter: drop-shadow(0 0 15px rgba(71, 200, 224, 0.9));
+    transform: scale(1.03);
+}
+.brand-text-desktop {
+    font-family: 'Vazirmatn', sans-serif;
+    font-weight: 800;
+    font-size: 1.55rem;
+    background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+}
+.desktop-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.nav-link-custom {
+    color: white !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    border-radius: 50px;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    position: relative;
+    text-decoration: none;
+}
+.nav-link-custom::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    right: 50%;
+    transform: translateX(50%);
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #47c8e0, #aae0ff);
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+.nav-link-custom:hover::after {
+    width: 70%;
+}
+.nav-link-custom:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+.cart-desktop {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 50px;
+    padding: 0.5rem 1rem !important;
+}
+.cart-desktop i {
+    margin: 0;
+    font-size: 1rem;
+}
+.cart-desktop span {
+    display: none;
+}
+.cart-desktop:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    transform: scale(1.05);
+}
+.mobile-brand-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.mobile-brand-group .brand-text-mobile {
+    font-family: 'Vazirmatn', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+}
+.mobile-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+.mobile-menu-btn, .mobile-cart-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: white;
+}
+.mobile-menu-btn {
+    padding: 0.55rem 1rem;
+    font-size: 1.3rem;
+}
+.mobile-cart-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+}
+.mobile-menu-btn:hover, .mobile-cart-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.03);
+}
+@media (min-width: 993px) {
+    .mobile-brand-group, .mobile-buttons {
+        display: none !important;
+    }
+    .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+        display: flex;
+    }
+}
+@media (max-width: 992px) {
+    .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+        display: none !important;
+    }
+    .mobile-brand-group, .mobile-buttons {
+        display: flex !important;
+    }
+    .main-navbar {
+        padding: 0.5rem 1rem;
+    }
+}
+@media (max-width: 480px) {
+    .mobile-brand-group .brand-text-mobile {
+        font-size: 1rem;
+    }
+    .mobile-brand-group .brand-logo-img {
+        height: 32px;
+        max-width: 42px;
+    }
+    .mobile-cart-btn {
+        width: 40px;
+        height: 40px;
+    }
+    .mobile-menu-btn {
+        padding: 0.45rem 0.8rem;
+    }
+}
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 99999;
+    backdrop-filter: blur(8px);
+}
+.mobile-menu-overlay.active {
+    display: block;
+}
+.mobile-sidebar {
+    position: fixed;
+    top: 0;
+    right: -340px;
+    width: 320px;
+    height: 100vh;
+    background: linear-gradient(180deg, #043a4f, #0a5a78, #07455e);
+    z-index: 100000;
+    padding: 30px 20px;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+    overflow-y: auto;
+}
+.mobile-sidebar.open {
+    right: 0;
+}
+.mobile-sidebar .close-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    color: white;
+    font-size: 1.8rem;
+    padding: 5px 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.mobile-sidebar .close-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: rotate(90deg);
+}
+.mobile-sidebar .sidebar-brand {
+    margin-top: 40px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+.mobile-sidebar .sidebar-brand img {
+    height: 60px;
+    filter: drop-shadow(0 0 20px rgba(71,200,224,0.3));
+}
+.mobile-sidebar .sidebar-brand h2 {
+    color: white;
+    font-size: 1.5rem;
+    margin-top: 10px;
+    background: linear-gradient(135deg, #ffffff, #a3e4ff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+.mobile-sidebar .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 20px;
+    color: white;
+    text-decoration: none;
+    border-radius: 16px;
+    transition: 0.3s;
+    margin: 6px 0;
+    font-size: 1.05rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.mobile-sidebar .menu-item:last-child {
+    border-bottom: none;
+}
+.mobile-sidebar .menu-item:hover {
+    background: rgba(71,200,224,0.15);
+    transform: translateX(-5px);
+}
+.mobile-sidebar .menu-item i {
+    width: 28px;
+    color: #47c8e0;
+    font-size: 1.2rem;
+}
+.footer-iframe {
+    width: 100%;
+    border: none;
+    display: block;
+    background: transparent;
+    min-height: 200px;
+    margin-top: 2rem;
+    position: relative;
+    z-index: 1;
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.ocean-header {
+    animation: fadeInDown 0.6s ease-out;
+}
+</style>
+</head>
+<body>
+<div class="ocean-bg"></div>
+<header class="ocean-header">
+    <div class="header-content">
+        <div class="main-navbar">
+            <div class="navbar-flex">
+                <div class="desktop-logo-wrapper" onclick="navigateTo('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                </div>
+                <div class="desktop-menu">
+                    <a href="#" class="nav-link-custom" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+                    <a href="#" class="nav-link-custom" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+                    <a href="#" class="nav-link-custom" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+                    <a href="#" class="nav-link-custom" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+                    <a href="#" class="nav-link-custom cart-desktop" id="cartDesktopBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>سبد خرید</span>
+                    </a>
+                </div>
+                <div class="desktop-site-name" onclick="navigateTo('home')">
+                    <span class="brand-text-desktop">ocean book</span>
+                </div>
+                <div class="mobile-brand-group" onclick="navigateTo('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                    <span class="brand-text-mobile">ocean book</span>
+                </div>
+                <div class="mobile-buttons">
+                    <div class="mobile-cart-btn" onclick="goToCart()" title="سبد خرید">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-sidebar" id="mobileSidebar">
+    <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+    <div class="sidebar-brand">
+        <img src="logo.png" alt="لوگو"
+             onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+        <h2>ocean book</h2>
+    </div>
+    <a href="#" class="menu-item" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+    <a href="#" class="menu-item" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+    <a href="#" class="menu-item" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+    <a href="#" class="menu-item" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+    <a href="#" class="menu-item" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+    <a href="#" class="menu-item" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+    <a href="#" class="menu-item" onclick="goToCart()"><i class="fas fa-shopping-cart"></i> سبد خرید</a>
+</div>
+<div class="container">
+    <section class="hero">
+        <h1>درباره ما</h1>
+        <p>دریاچه کتاب فضایی برای علاقه‌مندان به مطالعه، کتاب‌های صوتی، پادکست و رشد فردی است. <br> ما تلاش می‌کنیم بهترین محتوای آموزشی و سرگرم‌کننده را در محیطی زیبا و آرام در اختیار کاربران قرار دهیم.</p>
+    </section>
+    <div class="glass-card">
+        <h2 class="section-title">ماموریت ما</h2>
+        <p>دریاچه کتاب پناهگاهی برای عاشقان دانایی است؛ جایی که هر کتاب مانند موجی تازه، فکری نو و داستانی متفاوت را به ساحل ذهن می‌رساند. مأموریت ما این است که فضایی ایجاد کنیم تا هر فرد بتواند در میان این دریاچه، مسیر خود را پیدا کند، بیاموزد، رشد کند و از سفر بی‌پایان مطالعه لذت ببرد.</p>
+    </div>
+    <div class="glass-card">
+        <h2 class="section-title">چرا دریاچه کتاب؟</h2>
+        <div class="features">
+            <div class="feature"><i class="fas fa-book-open"></i><h3>مجموعه متنوع</h3><p>دسترسی به صدها کتاب و محتوای ارزشمند.</p></div>
+            <div class="feature"><i class="fas fa-headphones"></i><h3>کتاب صوتی</h3><p>تجربه شنیداری حرفه‌ای و لذت‌بخش.</p></div>
+            <div class="feature"><i class="fas fa-podcast"></i><h3>پادکست‌ها</h3><p>موضوعات متنوع برای یادگیری و سرگرمی.</p></div>
+        </div>
+    </div>
+    <div class="glass-card">
+        <section class="about-section quote-section">
+            <i class="fas fa-quote-right"></i>
+            <blockquote>«فقط با قلب است که می‌توان درست دید؛ آنچه اصل است از چشم پنهان است.»</blockquote>
+            <p class="quote-author">— شازده کوچولو، آنتوان دو سنت‌اگزوپری</p>
+        </section>
+    </div>
+    <div class="glass-card contact-box">
+        <h2 class="section-title">ارتباط با ما</h2>
+        <p>ایمیل: OceanBook@gmail.com</p>
+        <p>تلفن: 09122537290</p>
+        <a href="index.html" class="back-home">بازگشت به صفحه اصلی</a>
+    </div>
+</div>
+<iframe src="footer.html" id="footerIframe" class="footer-iframe" scrolling="no"></iframe>
+<script>
+function navigateTo(target, section) {
+    const pageMap = {
+        'home': 'index.html',
+        'all-products': 'all-products.html',
+        'meditation': 'meditation.html',
+        'dashboard': 'dashboard.html',
+        'faq': 'FAQ.html',
+        'rules': 'Rules.html',
+        'about': 'aboutUs.html'
+    };
+    let url = pageMap[target] || 'index.html';
+    if (target === 'all-products' && section) {
+        url = url + '#' + section;
+    }
+    if (window.parent !== window) {
+        window.parent.postMessage({ type: 'navigate', target: target, section: section }, '*');
+    }
+    window.location.href = url;
+}
+function goToCart() {
+    window.location.href = 'sabad.html';
+}
+function toggleMobileMenu() {
+    const overlay = document.getElementById('mobileMenuOverlay');
+    const sidebar = document.getElementById('mobileSidebar');
+    if (sidebar.classList.contains('open')) {
+        closeMobileMenu();
+    } else {
+        openMobileMenu();
+    }
+}
+function openMobileMenu() {
+    const overlay = document.getElementById('mobileMenuOverlay');
+    const sidebar = document.getElementById('mobileSidebar');
+    overlay.classList.add('active');
+    sidebar.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeMobileMenu() {
+    const overlay = document.getElementById('mobileMenuOverlay');
+    const sidebar = document.getElementById('mobileSidebar');
+    overlay.classList.remove('active');
+    sidebar.classList.remove('open');
+    document.body.style.overflow = '';
+}
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.desktop-menu .nav-link-custom').forEach(el => {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            const navType = this.getAttribute('data-nav');
+            if (navType === 'dashboard') {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+            if (this.id === 'cartDesktopBtn') {
+                goToCart();
+                return;
+            }
+            if (navType === 'home') navigateTo('home');
+            else if (navType === 'books') navigateTo('all-products', 'books');
+            else if (navType === 'podcasts') navigateTo('all-products', 'podcasts');
+            else if (navType === 'audiobooks') navigateTo('all-products', 'audiobooks');
+            else if (navType === 'meditation') navigateTo('meditation');
+        });
+    });
+    document.querySelectorAll('.mobile-sidebar .menu-item').forEach(el => {
+        el.addEventListener('click', function(e) {
+            const navType = this.getAttribute('data-nav');
+            if (navType) {
+                e.preventDefault();
+                closeMobileMenu();
+                if (navType === 'dashboard') {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                setTimeout(() => {
+                    if (navType === 'home') navigateTo('home');
+                    else if (navType === 'books') navigateTo('all-products', 'books');
+                    else if (navType === 'podcasts') navigateTo('all-products', 'podcasts');
+                    else if (navType === 'audiobooks') navigateTo('all-products', 'audiobooks');
+                    else if (navType === 'meditation') navigateTo('meditation');
+                }, 300);
+            }
+        });
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeMobileMenu();
+        }
+    });
+});
+function updateFooterHeight(height) {
+    const iframe = document.getElementById('footerIframe');
+    if (iframe && height) {
+        const finalHeight = Math.max(height, 200);
+        iframe.style.height = finalHeight + 'px';
+        iframe.style.minHeight = finalHeight + 'px';
+    }
+}
+window.addEventListener('message', function(e) {
+    const data = e.data;
+    if ((data.type === 'footerResize' || data.type === 'resize') && data.height) {
+        updateFooterHeight(data.height);
+    }
+    if (data.type === 'navigate') {
+        navigateTo(data.target, data.section);
+    }
+    if (data.type === 'openMobileMenu') {
+        openMobileMenu();
+    }
+    if (data.type === 'closeMobileMenu') {
+        closeMobileMenu();
+    }
+});
+function requestFooterHeight() {
+    const iframe = document.getElementById('footerIframe');
+    if (iframe && iframe.contentWindow) {
+        try {
+            iframe.contentWindow.postMessage({ type: 'requestHeight' }, '*');
+        } catch(e) {}
+    }
+}
+window.addEventListener('load', function() {
+    setTimeout(requestFooterHeight, 500);
+    setTimeout(requestFooterHeight, 1500);
+});
+let resizeTimer;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(requestFooterHeight, 300);
+});
+</script>
+</body>
+</html>

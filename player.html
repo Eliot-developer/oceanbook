@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+    <title>پلیر </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, 'IranSans', system-ui, sans-serif;
+            background: #071e28;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        .dream-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+            background: radial-gradient(circle at 40% 50%, #0a3b4b, #021e2c, #001017);
+        }
+        .wave-texture {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: repeating-linear-gradient(transparent 0px, transparent 2px, rgba(120, 190, 230, 0.08) 2px, rgba(120, 190, 230, 0.08) 6px);
+            pointer-events: none;
+        }
+        .glow-mist {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at 30% 70%, rgba(70, 180, 220, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            animation: mistMove 18s infinite alternate;
+        }
+        @keyframes mistMove {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 0.6; transform: scale(1.1); }
+        }
+
+        .top-bar {
+            background: rgba(0, 20, 30, 0.7);
+            backdrop-filter: blur(20px);
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid rgba(90, 200, 230, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .back-btn {
+            color: #bbe4f0;
+            text-decoration: none;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .back-btn:hover {
+            color: #ffe6aa;
+        }
+
+        .glass-card {
+            background: rgba(25, 65, 80, 0.55);
+            backdrop-filter: blur(18px);
+            border-radius: 56px;
+            border: 1px solid rgba(110, 210, 240, 0.5);
+            box-shadow: 0 30px 45px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .cover-img {
+            width: 100%;
+            max-width: 220px;
+            border-radius: 42px;
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(140, 220, 250, 0.8);
+            margin-bottom: 1rem;
+            background: #0a2a38;
+            min-height: 200px;
+            object-fit: cover;
+        }
+        .cover-img.error {
+            display: none !important;
+        }
+        .cover-placeholder {
+            width: 100%;
+            max-width: 220px;
+            aspect-ratio: 1 / 1;
+            border-radius: 42px;
+            background: linear-gradient(135deg, #0a3b4b, #021e2c);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(140, 220, 250, 0.3);
+            margin-bottom: 1rem;
+            gap: 6px;
+        }
+        .cover-placeholder i {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.25);
+        }
+        .cover-placeholder span {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .track-title {
+            font-size: clamp(1.2rem, 5vw, 1.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #b3e4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .track-author {
+            color: #7fd3ff !important;
+            letter-spacing: 0.5px;
+        }
+
+        .waveform-section {
+            background: rgba(0, 15, 25, 0.55);
+            border-radius: 48px;
+            padding: 1rem;
+            box-shadow: 0 0 15px rgba(70, 180, 220, 0.2);
+        }
+        canvas#dreamVisualizer {
+            width: 100%;
+            height: 170px;
+            display: block;
+            border-radius: 40px;
+            background: #021822;
+            cursor: pointer;
+            filter: drop-shadow(0 0 6px rgba(80, 200, 240, 0.4));
+        }
+
+        .progress-bar-wrap {
+            padding: 0.25rem 0.5rem 0 0.5rem;
+            direction: ltr; 
+        }
+        .progress-bar-wrap input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #4ab5d4 0%, #4ab5d4 0%, #2a5f74 0%);
+            outline: none;
+            transition: background 0.1s;
+            cursor: pointer;
+        }
+        .progress-bar-wrap input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ffefb0;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(100, 200, 255, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: 0.15s;
+        }
+        .progress-bar-wrap input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        .progress-bar-wrap input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ffefb0;
+            cursor: pointer;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .ctrl-btn {
+            background: rgba(255, 255, 245, 0.12);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(100, 200, 230, 0.6);
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            transition: 0.2s;
+        }
+        .ctrl-btn:hover {
+            background: #2d8db0;
+            border-color: #ffeaac;
+            transform: scale(1.02);
+        }
+        @media (max-width: 576px) {
+            .ctrl-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 1.2rem;
+            }
+        }
+        .time-info {
+            font-family: monospace;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            color: #cef0ff;
+        }
+
+        .volume-wrap {
+            direction: ltr;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .volume-wrap input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 120px;
+            height: 4px;
+            border-radius: 4px;
+            background: #4ab5d4;
+            outline: none;
+        }
+        .volume-wrap input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ffefb0;
+            cursor: pointer;
+            box-shadow: 0 0 4px cyan;
+        }
+        .volume-wrap input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ffefb0;
+            cursor: pointer;
+            border: none;
+        }
+        .volume-wrap i {
+            font-size: 1.1rem;
+            color: #9fd9ff;
+        }
+        .volume-percent {
+            min-width: 38px;
+            font-size: 0.8rem;
+            color: #b0dfff;
+        }
+
+        .notes-box,
+        .ambient-box {
+            background: rgba(0, 20, 30, 0.7);
+            border-radius: 36px;
+            padding: 1.2rem;
+            backdrop-filter: blur(4px);
+            height: 100%;
+        }
+        .notes-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .note-item {
+            background: rgba(200, 240, 255, 0.1);
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 32px;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .note-time {
+            color: #ffe2a4;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .ambient-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .ambient-item i {
+            width: 32px;
+            font-size: 1.1rem;
+        }
+        .ambient-item .ambient-slider {
+            flex: 1;
+            min-width: 100px;
+            direction: ltr;
+        }
+        .group-btn {
+            background: linear-gradient(105deg, #1b7c9e, #0b5a77);
+            width: 100%;
+            border: none;
+            border-radius: 48px;
+            padding: 10px;
+            color: white;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .group-btn:hover {
+            background: #2c9ec2;
+        }
+
+        .modal-content {
+            background: #0b526b;
+            border-radius: 40px;
+            color: white;
+        }
+        .btn-copy {
+            background: #2c8eb0;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 30px;
+            color: white;
+        }
+        select.form-select {
+            background-color: rgba(10, 40, 55, 0.6) !important;
+            color: #dff6ff !important;
+            border-radius: 20px;
+            border: 1px solid rgba(120, 200, 240, 0.4) !important;
+            backdrop-filter: blur(10px);
+        }
+        select.form-select option {
+            background-color: #0b3b4b;
+            color: white;
+        }
+        .form-control.bg-transparent {
+            background: rgba(255, 255, 255, 0.06) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+        .form-control.bg-transparent::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        .form-control.bg-transparent:focus {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-color: #4ab5d4;
+            box-shadow: 0 0 0 2px rgba(74, 181, 212, 0.3);
+        }
+        .btn-primary.rounded-pill {
+            background: #2a8aaa;
+            border: none;
+        }
+        .btn-primary.rounded-pill:hover {
+            background: #3da3c7;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dream-bg"></div>
+    <div class="wave-texture"></div>
+    <div class="glow-mist"></div>
+
+    <div class="top-bar">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-4">
+                    <a href="index.html" class="back-btn"><i class="fas fa-arrow-right"></i> <span class="d-none d-sm-inline">بازگشت</span></a>
+                </div>
+                <div class="col-4 text-center"></div>
+                <div class="col-4 text-start"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-4 my-md-5">
+        <div class="glass-card p-3 p-md-4">
+            <div class="row g-4">
+                <div class="col-md-5 col-lg-4 text-center text-md-start">
+                    <div class="cover-area d-flex flex-column align-items-center">
+                        <img class="cover-img img-fluid" id="coverImage" src="cover voice/8.jpg" alt="کاور" />
+                        <div class="track-title" id="trackTitle">تنگنا</div>
+                        <div class="track-author" id="trackAuthor">لئانیدآندریف | هوتن شکیبا</div>
+                        <div class="action-buttons mt-3 d-flex gap-2 flex-wrap justify-content-center"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-7 col-lg-8">
+                    <div class="waveform-section mb-2">
+                        <canvas id="dreamVisualizer" width="800" height="170" style="width:100%; height:170px"></canvas>
+                    </div>
+
+                    <div class="progress-bar-wrap mb-2">
+                        <input type="range" id="progressSlider" min="0" max="100" value="0" />
+                    </div>
+
+                    <div class="time-info text-center mb-2">
+                        <span id="currentTime">00:00</span> / <span id="duration">00:00</span>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3 gap-sm-4 my-2">
+                        <button class="ctrl-btn" id="rewindBtn"><i class="fas fa-backward-step"></i></button>
+                        <button class="ctrl-btn" id="playPauseBtn"><i class="fas fa-play"></i></button>
+                        <button class="ctrl-btn" id="forwardBtn"><i class="fas fa-forward-step"></i></button>
+                    </div>
+
+                    <div class="d-flex flex-wrap justify-content-center gap-3 mb-4 mt-2">
+                        <div class="d-flex align-items-center gap-2 bg-dark bg-opacity-50 rounded-pill px-3 py-1">
+                            <i class="fas fa-gauge-high"></i>
+                            <select id="speedSelect" class="form-select form-select-sm bg-transparent text-white border-0" style="width: auto;">
+                                <option value="0.75">0.75x</option>
+                                <option value="1" selected>1x</option>
+                                <option value="1.25">1.25x</option>
+                                <option value="1.5">1.5x</option>
+                                <option value="2">2x</option>
+                            </select>
+                        </div>
+                        <div class="volume-wrap bg-dark bg-opacity-50 rounded-pill px-3 py-1">
+                            <i class="fas fa-volume-up"></i>
+                            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.8" />
+                            <span class="volume-percent" id="volumePercent">80%</span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <div class="notes-box">
+                                <i class="fas fa-feather-alt"></i> <strong>یادداشت‌های رویایی</strong>
+                                <div class="notes-list mt-2" id="notesList">
+                                    <div class="note-item"><span>آرامش موج‌ها</span><span class="note-time" data-time="32">00:32</span></div>
+                                    <div class="note-item"><span>نفس عمیق با صدا</span><span class="note-time" data-time="78">01:18</span></div>
+                                </div>
+                                <div class="add-note d-flex gap-2 mt-2">
+                                    <input type="text" id="noteText" class="form-control form-control-sm bg-transparent text-white" placeholder="حس خود را بنویس..." />
+                                    <button id="addNoteBtn" class="btn btn-sm btn-primary rounded-pill">➕</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="ambient-box">
+                                <i class="fas fa-water"></i> <strong>صدای دریا و طبیعت</strong>
+                                <div class="ambient-list mt-2">
+                                    <div class="ambient-item"><i class="fas fa-tree"></i> طبیعت <input type="range" min="0" max="1" step="0.01" value="0" class="ambient-slider form-range" data-sound="fire" /><span class="ambient-val small">0%</span></div>
+                                    <div class="ambient-item"><i class="fas fa-music"></i> پیانو <input type="range" min="0" max="1" step="0.01" value="0" class="ambient-slider form-range" data-sound="piano" /><span class="ambient-val small">0%</span></div>
+                                    <div class="ambient-item"><i class="fas fa-drum"></i> هنگ درام <input type="range" min="0" max="1" step="0.01" value="0" class="ambient-slider form-range" data-sound="hang" /><span class="ambient-val small">0%</span></div>
+                                </div>
+                                <button id="createGroupBtn" class="group-btn mt-3"><i class="fas fa-users"></i> اتاق شنیداری گروهی</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="groupModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="fas fa-link"></i> لینک گروه</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="بستن"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>لینک دعوت: <span id="groupLink" class="fw-bold">darya.com/room/abc123</span></p>
+                    <button id="copyLinkBtn" class="btn-copy mt-2">کپی لینک</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script>
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const getParam = (key, def) => {
+            const v = urlParams.get(key);
+            return (v && v.trim() !== '') ? v : def;
+        };
+        const audioSrc = getParam('audio', 'voice book/tangna.mp3');
+        const coverSrc = getParam('cover', 'cover voice/8.jpg');
+        const title = getParam('title', 'تنگنا');
+        const author = getParam('author', 'لئانیدآندریف | هوتن شکیبا');
+
+        const coverImg = document.getElementById('coverImage');
+        const trackTitle = document.getElementById('trackTitle');
+        const trackAuthor = document.getElementById('trackAuthor');
+
+        const playBtn = document.getElementById('playPauseBtn');
+        const rewindBtn = document.getElementById('rewindBtn');
+        const forwardBtn = document.getElementById('forwardBtn');
+        const currentSpan = document.getElementById('currentTime');
+        const durationSpan = document.getElementById('duration');
+        const speedSelect = document.getElementById('speedSelect');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumePercent = document.getElementById('volumePercent');
+        const progressSlider = document.getElementById('progressSlider');
+        const canvas = document.getElementById('dreamVisualizer');
+        const ctx = canvas.getContext('2d');
+
+        function showCoverFallback() {
+            coverImg.classList.add('error');
+            let ph = coverImg.parentElement.querySelector('.cover-placeholder');
+            if (!ph) {
+                ph = document.createElement('div');
+                ph.className = 'cover-placeholder';
+                ph.innerHTML = '<i class="fas fa-music"></i><span>کاور</span>';
+                coverImg.parentElement.insertBefore(ph, coverImg);
+            }
+            ph.style.display = 'flex';
+        }
+
+        try {
+            coverImg.src = coverSrc;
+            coverImg.onerror = function() {
+                showCoverFallback();
+            };
+            if (coverImg.complete && coverImg.naturalWidth === 0) {
+                showCoverFallback();
+            }
+        } catch (e) {
+            showCoverFallback();
+        }
+
+        trackTitle.textContent = title;
+        trackAuthor.textContent = author;
+
+        const audio = new Audio();
+        audio.src = audioSrc;
+        audio.load();
+        audio.crossOrigin = 'Anonymous';
+        audio.volume = 0.8;
+
+        let audioCtx = null;
+        let sourceNode = null;
+        let analyser = null;
+        let animationId = null;
+        let isPlaying = false;
+        let isDraggingProgress = false;
+
+        const ambientAudios = {
+            fire: new Audio('sound/river.mp3'),
+            piano: new Audio('sound/piano.mp3'),
+            hang: new Audio('sound/hangderam.mp3')
+        };
+        Object.values(ambientAudios).forEach(a => {
+            a.loop = true;
+            a.volume = 0;
+            a.play().catch(() => {});
+        });
+
+        document.querySelectorAll('.ambient-slider').forEach(slider => {
+            const span = slider.parentElement.querySelector('.ambient-val');
+            const key = slider.dataset.sound;
+            const obj = ambientAudios[key];
+            if (!obj) return;
+            slider.addEventListener('input', () => {
+                const val = parseFloat(slider.value);
+                span.textContent = Math.round(val * 100) + '%';
+                obj.volume = val;
+                if (val > 0 && obj.paused) obj.play().catch(() => {});
+                else if (val === 0) obj.pause();
+            });
+        });
+
+        function initAudioContext() {
+            if (audioCtx) return;
+            try {
+                audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 512;
+                const bufferLength = analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+
+                sourceNode = audioCtx.createMediaElementSource(audio);
+                sourceNode.connect(analyser);
+                analyser.connect(audioCtx.destination);
+                sourceNode.connect(audioCtx.destination);
+
+                function draw() {
+                    if (!analyser) return;
+                    const w = canvas.width,
+                        h = canvas.height;
+                    analyser.getByteFrequencyData(dataArray);
+                    ctx.clearRect(0, 0, w, h);
+
+                    const barW = w / bufferLength * 0.8;
+                    const gap = w / bufferLength * 0.2;
+
+                    for (let i = 0; i < bufferLength; i++) {
+                        const val = dataArray[i] / 255;
+                        const bh = val * h * 0.9;
+                        const x = i * (barW + gap) + gap / 2;
+                        const y = h - bh;
+                        const hue = 180 + (val * 60);
+                        const grad = ctx.createLinearGradient(x, y, x, h);
+                        grad.addColorStop(0, `hsla(${hue}, 100%, 80%, ${0.8 + val * 0.2})`);
+                        grad.addColorStop(0.5, `hsla(${hue + 20}, 100%, 60%, ${0.6 + val * 0.3})`);
+                        grad.addColorStop(1, `hsla(${hue + 40}, 100%, 40%, ${0.4 + val * 0.4})`);
+                        ctx.shadowBlur = 10 + val * 15;
+                        ctx.shadowColor = `hsla(${hue + 20}, 100%, 60%, ${0.3 + val * 0.3})`;
+                        ctx.beginPath();
+                        const r = 4 + val * 6;
+                        ctx.roundRect(x, y, barW, bh, r);
+                        ctx.fillStyle = grad;
+                        ctx.fill();
+                    }
+                    ctx.shadowBlur = 0;
+                    animationId = requestAnimationFrame(draw);
+                }
+                draw();
+            } catch (e) {
+                console.warn('AudioContext error:', e);
+            }
+        }
+
+        function togglePlay() {
+            if (!audioCtx) initAudioContext();
+            if (isPlaying) {
+                audio.pause();
+                if (audioCtx) audioCtx.suspend();
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                audio.play().catch(e => console.warn('play error:', e));
+                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        playBtn.addEventListener('click', togglePlay);
+
+        rewindBtn.addEventListener('click', () => {
+            audio.currentTime = Math.max(0, audio.currentTime - 10);
+        });
+        forwardBtn.addEventListener('click', () => {
+            audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 10);
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            if (!isNaN(audio.currentTime)) {
+                const m = Math.floor(audio.currentTime / 60);
+                const s = Math.floor(audio.currentTime % 60);
+                currentSpan.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+                if (!isDraggingProgress && audio.duration) {
+                    const pct = (audio.currentTime / audio.duration) * 100;
+                    progressSlider.value = pct;
+                    progressSlider.style.background =
+                        `linear-gradient(90deg, #4ab5d4 0%, #4ab5d4 ${pct}%, #2a5f74 ${pct}%, #2a5f74 100%)`;
+                }
+            }
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            if (!isNaN(audio.duration)) {
+                const m = Math.floor(audio.duration / 60);
+                const s = Math.floor(audio.duration % 60);
+                durationSpan.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            }
+        });
+
+        progressSlider.addEventListener('input', function() {
+            isDraggingProgress = true;
+            const pct = parseFloat(this.value);
+            if (audio.duration) {
+                audio.currentTime = (pct / 100) * audio.duration;
+            }
+            this.style.background =
+                `linear-gradient(90deg, #4ab5d4 0%, #4ab5d4 ${pct}%, #2a5f74 ${pct}%, #2a5f74 100%)`;
+        });
+        progressSlider.addEventListener('change', function() {
+            isDraggingProgress = false;
+        });
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const pct = x / rect.width;
+            if (audio.duration) {
+                audio.currentTime = pct * audio.duration;
+                progressSlider.value = pct * 100;
+                progressSlider.style.background =
+                    `linear-gradient(90deg, #4ab5d4 0%, #4ab5d4 ${pct*100}%, #2a5f74 ${pct*100}%, #2a5f74 100%)`;
+            }
+        });
+
+        speedSelect.addEventListener('change', () => {
+            audio.playbackRate = parseFloat(speedSelect.value);
+        });
+
+        volumeSlider.addEventListener('input', function() {
+            const val = parseFloat(this.value);
+            audio.volume = val;
+            volumePercent.textContent = Math.round(val * 100) + '%';
+        });
+
+        const notesList = document.getElementById('notesList');
+        const noteInput = document.getElementById('noteText');
+        const addNoteBtn = document.getElementById('addNoteBtn');
+
+        function addNote(text, timeSec) {
+            const div = document.createElement('div');
+            div.className = 'note-item';
+            const m = Math.floor(timeSec / 60);
+            const s = Math.floor(timeSec % 60);
+            const ts = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            div.innerHTML = `<span>${text}</span><span class="note-time" data-time="${timeSec}">${ts}</span>`;
+            notesList.appendChild(div);
+            div.querySelector('.note-time').addEventListener('click', (e) => {
+                const t = parseFloat(e.currentTarget.dataset.time);
+                if (!isNaN(t)) audio.currentTime = t;
+            });
+        }
+
+        addNoteBtn.addEventListener('click', () => {
+            const txt = noteInput.value.trim();
+            if (!txt) return;
+            addNote(txt, audio.currentTime || 0);
+            noteInput.value = '';
+        });
+        document.querySelectorAll('.note-time').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const t = parseFloat(e.currentTarget.dataset.time);
+                if (!isNaN(t)) audio.currentTime = t;
+            });
+        });
+
+        const groupModal = new bootstrap.Modal(document.getElementById('groupModal'));
+        document.getElementById('createGroupBtn').addEventListener('click', () => {
+            document.getElementById('groupLink').textContent = `darya.com/room/${Math.random().toString(36).substr(2, 8)}`;
+            groupModal.show();
+        });
+        document.getElementById('copyLinkBtn').addEventListener('click', () => {
+            const link = document.getElementById('groupLink').textContent;
+            navigator.clipboard.writeText(link).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = link;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            });
+            alert('لینک کپی شد ');
+        });
+
+        Object.values(ambientAudios).forEach(a => {
+            a.volume = 0;
+            a.loop = true;
+            a.play().catch(() => {});
+        });
+
+        console.log('🎵 پلیر راه‌اندازی شد.');
+        console.log('📁 فایل صوتی:', audioSrc);
+        console.log('🖼️ کاور:', coverSrc);
+    </script>
+</body>
+</html>

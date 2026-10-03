@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>404</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,700;14..32,900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(160deg, #d9eef7 0%, #518bab 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Vazirmatn', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .ocean-header {
+            background: linear-gradient(135deg, #1a6d8f, #0e5a7a, #07455e);
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1000;
+            flex-shrink: 0;
+        }
+        .header-content {
+            padding: 1rem 1rem 1.2rem;
+        }
+        .main-navbar {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 80px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .desktop-logo-wrapper, .desktop-site-name {
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .desktop-logo-wrapper:hover, .desktop-site-name:hover { transform: scale(1.02); }
+        .brand-logo-img {
+            height: 44px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+            display: block;
+        }
+        .special-logo {
+            filter: drop-shadow(0 0 8px rgba(71, 200, 224, 0.6));
+            transition: all 0.3s ease;
+        }
+        .special-logo:hover {
+            filter: drop-shadow(0 0 15px rgba(71, 200, 224, 0.9));
+            transform: scale(1.03);
+        }
+        .brand-text-desktop {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.55rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .desktop-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-wrap: nowrap;
+            justify-content: center;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0.2rem 0;
+        }
+        .nav-link-custom {
+            color: white !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: relative;
+            text-decoration: none !important;
+        }
+        .nav-link-custom::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #47c8e0, #aae0ff);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        .nav-link-custom:hover::after { width: 70%; }
+        .nav-link-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .nav-link-custom.active::after { width: 70%; }
+        .cart-desktop {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-radius: 50px;
+            padding: 0.5rem 1rem !important;
+        }
+        .cart-desktop i { margin: 0; font-size: 1rem; }
+        .cart-desktop span { display: none; }
+        .cart-desktop:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.05);
+        }
+        .mobile-brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .mobile-brand-group .brand-text-mobile {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .mobile-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .mobile-menu-btn, .mobile-cart-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        .mobile-menu-btn { padding: 0.55rem 1rem; font-size: 1.3rem; }
+        .mobile-cart-btn { width: 44px; height: 44px; font-size: 1.2rem; }
+        .mobile-menu-btn:hover, .mobile-cart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.03);
+        }
+        @media (min-width: 993px) {
+            .mobile-brand-group, .mobile-buttons { display: none !important; }
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu { display: flex; }
+        }
+        @media (max-width: 992px) {
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu { display: none !important; }
+            .mobile-brand-group, .mobile-buttons { display: flex !important; }
+            .main-navbar { padding: 0.5rem 1rem; }
+        }
+        @media (max-width: 1200px) {
+            .desktop-menu { gap: 0.1rem; }
+            .nav-link-custom { padding: 0.4rem 0.7rem !important; font-size: 0.8rem; }
+        }
+        @media (max-width: 480px) {
+            .mobile-brand-group .brand-text-mobile { font-size: 1rem; }
+            .mobile-brand-group .brand-logo-img { height: 32px; max-width: 42px; }
+            .mobile-cart-btn { width: 40px; height: 40px; }
+            .mobile-menu-btn { padding: 0.45rem 0.8rem; }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ocean-header { animation: fadeInDown 0.6s ease-out; }
+
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+        }
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #043a4f, #0a5a78, #07455e);
+            z-index: 100000;
+            padding: 30px 20px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        .mobile-sidebar.open {
+            right: 0;
+        }
+        .mobile-sidebar .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.8rem;
+            padding: 5px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .mobile-sidebar .close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+        .mobile-sidebar .sidebar-brand {
+            margin-top: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .mobile-sidebar .sidebar-brand img {
+            height: 60px;
+            filter: drop-shadow(0 0 20px rgba(71,200,224,0.3));
+        }
+        .mobile-sidebar .sidebar-brand h2 {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #ffffff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .mobile-sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 16px;
+            transition: 0.3s;
+            margin: 6px 0;
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .mobile-sidebar .menu-item:last-child {
+            border-bottom: none;
+        }
+        .mobile-sidebar .menu-item:hover {
+            background: rgba(71,200,224,0.15);
+            transform: translateX(-5px);
+        }
+        .mobile-sidebar .menu-item i {
+            width: 28px;
+            color: #47c8e0;
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 56px;
+            padding: 40px 30px 45px;
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.2s;
+        }
+
+        .fish-area {
+            margin: 20px 0 10px;
+            position: relative;
+            height: 130px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pufferfish {
+            font-size: 90px;
+            display: inline-block;
+            animation: gentleBounce 1.2s ease-in-out infinite;
+            cursor: default;
+            filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.1));
+        }
+
+        @keyframes gentleBounce {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(135, 206, 250, 0.5);
+            border-radius: 50%;
+            animation: floatUp 3s infinite ease-in;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .error-404 {
+            font-family: 'Inter', 'Poppins', 'Segoe UI', sans-serif;
+            font-size: 130px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #0b4f6c, #2c7da0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            margin: 10px 0 5px;
+            letter-spacing: -3px;
+            text-shadow: none;
+        }
+
+        .message {
+            font-size: 22px;
+            font-weight: 600;
+            color: #155e7e;
+            margin-bottom: 12px;
+        }
+
+        .desc {
+            color: #2c5a74;
+            font-size: 15px;
+            margin-bottom: 30px;
+            padding: 0 10px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #2c7da0;
+            color: white;
+            text-decoration: none;
+            padding: 12px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background: #1f5e7a;
+            transform: translateY(-2px);
+        }
+
+        .home-link {
+            margin-top: 20px;
+            display: inline-block;
+            color: #2c7da0;
+            font-size: 14px;
+            text-decoration: none;
+            border-bottom: 1px dashed #90c8e0;
+        }
+
+        hr {
+            width: 50px;
+            margin: 20px auto;
+            border: 1px solid #cde6f0;
+        }
+
+        .wave-footer {
+            background: linear-gradient(135deg, #022b3a, #1f6d8c);
+            margin-top: 0;
+            padding: 2.5rem 0 1.2rem 0;
+            border-radius: 30px 30px 0 0;
+            box-shadow: 0 -10px 40px rgba(0, 119, 182, 0.2);
+            flex-shrink: 0;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 2rem 1.8rem;
+            padding: 0.5rem 0 1.5rem 0;
+        }
+        .footer-col h4 {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            font-weight: 600;
+            border-right: 4px solid #ffffff;
+            padding-right: 12px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .footer-col ul { list-style: none; padding: 0; margin: 0; }
+        .footer-col ul li { margin-bottom: 8px; }
+        .footer-col ul li a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            display: inline-block;
+            padding: 2px 0;
+            border-bottom: 1px solid transparent;
+        }
+        .footer-col ul li a:hover {
+            color: #ffffff;
+            padding-right: 6px;
+            border-bottom-color: #ffffff;
+            font-weight: 500;
+            transform: translateX(-3px);
+        }
+        .footer-col p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .footer-col p i { color: #ffffff; width: 22px; text-align: center; }
+        .footer-logo-link {
+            cursor: pointer;
+            font-size: 1.4rem;
+            color: #ffffff;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.3s;
+        }
+        .footer-logo-link:hover {
+            color: #ffffff;
+            transform: scale(1.02);
+            text-shadow: 0 0 30px rgba(255,255,255,0.3);
+        }
+        .footer-social {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .footer-social a {
+            color: #ffffff;
+            font-size: 1.2rem;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            text-decoration: none;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .footer-social a:hover {
+            color: #0077b6;
+            background: #ffffff;
+            border-color: #ffffff;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(255,255,255,0.3);
+        }
+        .copyright {
+            text-align: center;
+            padding: 1rem 0 0.8rem 0;
+            margin-top: 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 50px;
+        }
+        .copyright i { color: #ffffff; margin: 0 4px; }
+        .container-custom { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .error-404 {
+                font-size: 85px;
+                letter-spacing: -2px;
+            }
+            .pufferfish {
+                font-size: 70px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.8rem 1rem; }
+            .footer-col h4 { font-size: 0.85rem; }
+            .footer-col ul li a { font-size: 0.7rem; }
+            .footer-social a { width: 34px; height: 34px; font-size: 1rem; }
+            .wave-footer { padding: 2rem 0 0.8rem 0; border-radius: 20px 20px 0 0; }
+        }
+        @media (max-width: 480px) {
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .footer-col h4 {
+                border-right: none;
+                border-bottom: 2px solid #ffffff;
+                padding-right: 0;
+                padding-bottom: 8px;
+                display: inline-block;
+            }
+            .footer-col p { justify-content: center; }
+            .footer-social { justify-content: center; }
+            .footer-col ul li a:hover { padding-right: 0; transform: none; }
+            .wave-footer { border-radius: 15px 15px 0 0; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="ocean-header">
+    <div class="header-content">
+        <div class="main-navbar">
+            <div class="navbar-flex">
+                <div class="desktop-logo-wrapper" onclick="sendNavigation('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                </div>
+                <div class="desktop-menu">
+                    <a href="#" class="nav-link-custom" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+                    <a href="#" class="nav-link-custom" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+                    <a href="#" class="nav-link-custom" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+                    <a href="#" class="nav-link-custom" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+                    <a href="#" class="nav-link-custom cart-desktop" id="cartDesktopBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>سبد خرید</span>
+                    </a>
+                </div>
+                <div class="desktop-site-name" onclick="sendNavigation('home')">
+                    <span class="brand-text-desktop">ocean book</span>
+                </div>
+                <div class="mobile-brand-group" onclick="sendNavigation('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                    <span class="brand-text-mobile">ocean book</span>
+                </div>
+                <div class="mobile-buttons">
+                    <div class="mobile-cart-btn" onclick="goToCart()" title="سبد خرید">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-sidebar" id="mobileSidebar">
+    <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+    <div class="sidebar-brand">
+        <img src="logo.png" alt="لوگو"
+             onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+        <h2>ocean book</h2>
+    </div>
+    <a href="#" class="menu-item" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+    <a href="#" class="menu-item" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+    <a href="#" class="menu-item" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+    <a href="#" class="menu-item" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+    <a href="#" class="menu-item" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+    <a href="#" class="menu-item" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+    <a href="#" class="menu-item" onclick="goToCart()"><i class="fas fa-shopping-cart"></i> سبد خرید</a>
+</div>
+
+<div class="main-content">
+    <div class="container">
+        <div class="fish-area" id="fishArea">
+            <div class="pufferfish" id="pufferEmoji">📖</div>
+        </div>
+
+        <div class="error-404">404</div>
+
+        <div class="message">صفحه گم شده!</div>
+        <p class="desc">موج ها گفتن اینجا خبری از صفحه مورد نظر نیست.<br> شاید آدرس رو اشتباه تایپ کردی.</p>
+
+        <a href="index.html" class="btn">برگشت به خانه</a>
+        <hr>
+        <a href="dashboard.html" class="home-link">رفتن به صفحه داشبورد کاربری</a>
+    </div>
+</div>
+
+<footer class="wave-footer">
+    <div class="container-custom">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4 class="footer-logo-link" onclick="sendNavigation('home')">OCEAN BOOK</h4>
+                <div class="footer-social">
+                    <a href="#" class="social-link" data-social="instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link" data-social="telegram"><i class="fab fa-telegram"></i></a>
+                    <a href="#" class="social-link" data-social="spotify"><i class="fab fa-spotify"></i></a>
+                    <a href="#" class="social-link" data-social="youtube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>دسترسی سریع</h4>
+                <ul>
+                    <li><a class="footer-nav-link" data-nav="home">خانه</a></li>
+                    <li><a class="footer-nav-link" data-nav="books">کتاب‌ها</a></li>
+                    <li><a class="footer-nav-link" data-nav="podcasts">پادکست‌ها</a></li>
+                    <li><a class="footer-nav-link" data-nav="audiobooks">کتاب صوتی</a></li>
+                    <li><a class="footer-nav-link" data-nav="meditation">مدیتیشن</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>خدمات</h4>
+                <ul>
+                    <li><a class="footer-nav-link" data-nav="faq">سوالات متداول</a></li>
+                    <li><a class="footer-nav-link" data-nav="rules">قوانین</a></li>
+                    <li><a href="aboutUs.html" target="_top">درباره ما</a></li>
+                    <li><a href="login.html" target="_top">ورود به حساب</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col contact-info">
+                <h4>تماس با ما</h4>
+                <p><i class="fas fa-envelope"></i> OceanBook@gmail.com</p>
+                <p><i class="fas fa-phone-alt"></i> 09122537290</p>
+                <p><i class="fas fa-map-marker-alt"></i> قم، خیابان کتاب</p>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <i class="fas fa-book-open"></i> © 2026 OCEAN BOOK | تمامی حقوق محفوظ است
+            <i class="fas fa-water" style="margin-right:8px;"></i>
+        </div>
+    </div>
+</footer>
+
+<script>
+    function sendNavigation(target, section) {
+        const pageMap = {
+            'home': 'index.html',
+            'all-products': 'all-products.html',
+            'meditation': 'meditation.html',
+            'dashboard': 'dashboard.html',
+            'faq': 'FAQ.html',
+            'rules': 'Rules.html',
+            'about': 'aboutUs.html'
+        };
+        let url = pageMap[target] || 'index.html';
+        if (target === 'all-products' && section) {
+            url = url + '#' + section;
+        }
+        if (window.parent !== window) {
+            window.parent.postMessage({ type: 'navigate', target: target, section: section }, '*');
+        }
+        window.location.href = url;
+    }
+
+    function goToCart() {
+        window.location.href = 'sabad.html';
+    }
+
+    function toggleMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        if (sidebar.classList.contains('open')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    }
+
+    function openMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        overlay.classList.add('active');
+        sidebar.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        overlay.classList.remove('active');
+        sidebar.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.desktop-menu .nav-link-custom').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navType = this.getAttribute('data-nav');
+                if (navType === 'dashboard') {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                if (this.id === 'cartDesktopBtn') {
+                    goToCart();
+                    return;
+                }
+                if (navType === 'home') sendNavigation('home');
+                else if (navType === 'books') sendNavigation('all-products', 'books');
+                else if (navType === 'podcasts') sendNavigation('all-products', 'podcasts');
+                else if (navType === 'audiobooks') sendNavigation('all-products', 'audiobooks');
+                else if (navType === 'meditation') sendNavigation('meditation');
+            });
+        });
+
+        document.querySelectorAll('.mobile-sidebar .menu-item').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const navType = this.getAttribute('data-nav');
+                if (navType) {
+                    e.preventDefault();
+                    closeMobileMenu();
+                    if (navType === 'dashboard') {
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
+                        return;
+                    }
+                    setTimeout(() => {
+                        if (navType === 'home') sendNavigation('home');
+                        else if (navType === 'books') sendNavigation('all-products', 'books');
+                        else if (navType === 'podcasts') sendNavigation('all-products', 'podcasts');
+                        else if (navType === 'audiobooks') sendNavigation('all-products', 'audiobooks');
+                        else if (navType === 'meditation') sendNavigation('meditation');
+                    }, 300);
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { closeMobileMenu(); }
+        });
+    });
+
+    document.querySelectorAll('.footer-nav-link').forEach(el => {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            const navType = this.getAttribute('data-nav');
+            if (navType === 'home') sendNavigation('home');
+            else if (navType === 'books') sendNavigation('all-products', 'books');
+            else if (navType === 'podcasts') sendNavigation('all-products', 'podcasts');
+            else if (navType === 'audiobooks') sendNavigation('all-products', 'audiobooks');
+            else if (navType === 'meditation') sendNavigation('meditation');
+            else if (navType === 'faq') sendNavigation('faq');
+            else if (navType === 'rules') sendNavigation('rules');
+            else sendNavigation(navType);
+        });
+    });
+
+    document.querySelectorAll('.social-link').forEach(el => {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            const social = this.getAttribute('data-social');
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'socialLink', social: social }, '*');
+            }
+        });
+    });
+
+    const fishArea = document.getElementById('fishArea');
+    
+    function createBubble() {
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        const size = Math.random() * 18 + 6;
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        bubble.style.left = Math.random() * 90 + 5 + '%'; 
+        bubble.style.bottom = '10px';
+        bubble.style.animationDuration = Math.random() * 2 + 2 + 's'; 
+        bubble.style.animationDelay = Math.random() * 2 + 's';
+        fishArea.appendChild(bubble);
+        
+        setTimeout(() => {
+            bubble.remove();
+        }, 4000);
+    }
+    
+    setInterval(() => {
+        if (document.hasFocus()) { 
+            createBubble();
+        }
+    }, 1000);
+    
+    setTimeout(() => {
+        for(let i=0;i<4;i++){
+            setTimeout(createBubble, i*300);
+        }
+    }, 200);
+    
+    const fishEmoji = document.getElementById('pufferEmoji');
+    fishEmoji.addEventListener('click', () => {
+        fishEmoji.style.animation = 'none';
+        setTimeout(() => {
+            fishEmoji.style.animation = 'gentleBounce 0.6s ease-in-out';
+        }, 5);
+        setTimeout(() => {
+            fishEmoji.style.animation = 'gentleBounce 1.2s ease-in-out infinite';
+        }, 600);
+        createBubble();
+    });
+
+    function sendHeight() {
+        try {
+            const height = document.body.scrollHeight + 20;
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'footerResize', height: height }, '*');
+            }
+        } catch (e) {}
+    }
+
+    window.addEventListener('load', () => {
+        setTimeout(sendHeight, 100);
+        setTimeout(sendHeight, 300);
+        setTimeout(sendHeight, 600);
+    });
+    window.addEventListener('resize', sendHeight);
+    new MutationObserver(sendHeight).observe(document.body, { childList: true, subtree: true, attributes: true });
+</script>
+</body>
+</html>

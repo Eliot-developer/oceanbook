@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>داشبورد کاربری</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, 'IranSans', system-ui, sans-serif;
+            background: #0c5e70;
+            color: #fff;
+            overflow-x: hidden;
+            padding-top: 0;
+        }
+        body.sidebar-open { overflow: hidden; }
+        
+        .footer-iframe {
+            width: 100%;
+            border: none;
+            display: block;
+            background: transparent;
+            min-height: 200px;
+            margin-top: 2rem;
+        }
+        
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 1rem auto;
+            padding: 0 12px;
+        }
+        .sidebar {
+            background: rgba(20, 55, 70, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid rgba(80, 200, 230, 0.5);
+            padding: 1rem;
+        }
+        .sidebar .nav-link {
+            color: #e0f2fe;
+            border-radius: 50px;
+            margin-bottom: 0.3rem;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar .nav-link.active {
+            background: rgba(50, 130, 160, 0.6);
+            color: #ffeaac;
+        }
+        .sidebar .nav-link:hover:not(.active) {
+            background: rgba(100, 180, 210, 0.3);
+        }
+        .main-content {
+            background: rgba(20, 55, 70, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            border: 1px solid rgba(80, 200, 230, 0.5);
+            padding: 1.5rem;
+            min-height: 500px;
+        }
+        
+        .genre-badge-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 1rem 0.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+            height: 100%;
+            min-height: 250px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .genre-badge-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.18);
+            border-color: rgba(255,215,0,0.4);
+        }
+        .medal-img {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+            transition: transform 0.2s;
+        }
+        .genre-badge-card:hover .medal-img { transform: scale(1.05); }
+        .genre-name { font-weight: bold; font-size: 1rem; margin: 8px 0 4px; color: #fffaec; }
+        .medal-level {
+            font-size: 0.75rem;
+            background: rgba(0,0,0,0.55);
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+        .medal-level.gold { background: linear-gradient(135deg, #b8860b, #ffd700); color: #2c1e00; }
+        .medal-level.silver { background: linear-gradient(135deg, #8a8a8a, #c0c0c0); color: #1a1a1a; }
+        .medal-level.bronze { background: linear-gradient(135deg, #8b4513, #cd7f32); color: #2c1400; }
+        .book-count { font-size: 0.75rem; margin-top: 8px; color: #bbdef0; }
+        
+        .next-badge-item {
+            background: rgba(0,0,0,0.35);
+            border-radius: 20px;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.2s;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+        .next-badge-item:hover {
+            background: rgba(0,0,0,0.5);
+            border-color: rgba(255,215,0,0.5);
+        }
+        .progress-custom {
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            height: 8px;
+        }
+        .progress-custom .progress-bar {
+            background: linear-gradient(90deg, #ffd700, #ffb347);
+            border-radius: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar .nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+            .sidebar .nav-link { width: auto; padding: 0.4rem 0.8rem; font-size: 0.75rem; }
+            .medal-img { width: 65px; height: 65px; }
+            .genre-badge-card { min-height: 220px; }
+            .footer-iframe { min-height: 300px; }
+        }
+        @media (max-width: 480px) {
+            .footer-iframe { min-height: 350px; }
+        }
+        
+        .library-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .badge-progress {
+            background: #1f8ead;
+            border-radius: 30px;
+            padding: 3px 10px;
+            font-size: 0.7rem;
+        }
+        .meditation-track {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            transition: 0.2s;
+        }
+        .meditation-track.today { border: 2px solid #ffd700; background: rgba(0,0,0,0.5); }
+        .meditation-track.future { opacity: 0.7; background: rgba(0,0,0,0.15); }
+        .meditation-track.completed { background: rgba(0,100,80,0.4); border-right: 3px solid #ffd700; }
+        .info-badge { background: #1e7e8c; padding: 5px 12px; border-radius: 40px; font-size: 0.7rem; }
+        .avatar-upload {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #3fa7c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .tab-pane { transition: none; }
+        .row.g-3 { display: flex; flex-wrap: wrap; }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+        }
+        
+        .mental-score-card {
+            background: linear-gradient(135deg, #1f7e8c, #0a5c6e);
+            border-radius: 20px;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .score-big { font-size: 2rem; font-weight: bold; color: #ffeaac; }
+        .progress-track { background: rgba(0,0,0,0.3); border-radius: 20px; height: 8px; overflow: hidden; }
+        .result-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; }
+        .result-high { background: #2e7d64; color: #fff; }
+        .result-medium { background: #b8860b; color: #fff; }
+        .result-low { background: #8b3a3a; color: #fff; }
+        
+        .current-day-box {
+            background: rgba(0, 255, 213, 0.144);
+            border-radius: 16px;
+            padding: 8px 15px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .date-badge {
+            background: #1f7e8c;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-right: 10px;
+        }
+        .day-date-label {
+            font-size: 0.6rem;
+            color: #8abfd0;
+            margin-right: 8px;
+        }
+
+        .meditation-btn-dash {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: #47c8e0;
+            padding: 10px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Vazirmatn', sans-serif;
+            transition: all 0.3s ease;
+            border: 2px solid #47c8e0;
+        }
+
+        .meditation-btn-dash:hover {
+            background: #47c8e0;
+            color: #0c5e70;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 20px rgba(71, 200, 230, 0.3);
+            text-decoration: none;
+        }
+
+        .meditation-btn-dash:active {
+            transform: translateY(0);
+        }
+
+        .meditation-btn-dash .meditation-icon {
+            font-size: 1rem;
+        }
+
+        .meditation-btn-dash span {
+            letter-spacing: 0.3px;
+        }
+
+        @media (max-width: 480px) {
+            .meditation-btn-dash {
+                padding: 8px 20px;
+                font-size: 0.8rem;
+                gap: 8px;
+            }
+        }
+
+        .ocean-header {
+            background: linear-gradient(135deg, #1a6d8f, #0e5a7a, #07455e);
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            position: relative;
+            z-index: 1000;
+        }
+        .header-content {
+            padding: 1rem 1rem 1.2rem;
+        }
+        .main-navbar {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 80px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .desktop-logo-wrapper, .desktop-site-name {
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .desktop-logo-wrapper:hover, .desktop-site-name:hover {
+            transform: scale(1.02);
+        }
+        .brand-logo-img {
+            height: 44px;
+            width: auto;
+            max-width: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+            opacity: 1;
+            display: block;
+        }
+        .special-logo {
+            filter: drop-shadow(0 0 8px rgba(71, 200, 224, 0.6));
+            transition: all 0.3s ease;
+        }
+        .special-logo:hover {
+            filter: drop-shadow(0 0 15px rgba(71, 200, 224, 0.9));
+            transform: scale(1.03);
+        }
+        .brand-text-desktop {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.55rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .desktop-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .nav-link-custom {
+            color: white !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: relative;
+            text-decoration: none;
+        }
+        .nav-link-custom::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #47c8e0, #aae0ff);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        .nav-link-custom:hover::after {
+            width: 70%;
+        }
+        .nav-link-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .cart-desktop {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-radius: 50px;
+            padding: 0.5rem 1rem !important;
+        }
+        .cart-desktop i {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .cart-desktop span {
+            display: none;
+        }
+        .cart-desktop:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+            transform: scale(1.05);
+        }
+        .mobile-brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .mobile-brand-group .brand-text-mobile {
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 800;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #ffffff, #d4f1ff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+        .mobile-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .mobile-menu-btn, .mobile-cart-btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+        .mobile-menu-btn {
+            padding: 0.55rem 1rem;
+            font-size: 1.3rem;
+        }
+        .mobile-cart-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+        }
+        .mobile-menu-btn:hover, .mobile-cart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.03);
+        }
+        @media (min-width: 993px) {
+            .mobile-brand-group, .mobile-buttons {
+                display: none !important;
+            }
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+                display: flex;
+            }
+        }
+        @media (max-width: 992px) {
+            .desktop-logo-wrapper, .desktop-site-name, .desktop-menu {
+                display: none !important;
+            }
+            .mobile-brand-group, .mobile-buttons {
+                display: flex !important;
+            }
+            .main-navbar {
+                padding: 0.5rem 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .mobile-brand-group .brand-text-mobile {
+                font-size: 1rem;
+            }
+            .mobile-brand-group .brand-logo-img {
+                height: 32px;
+                max-width: 42px;
+            }
+            .mobile-cart-btn {
+                width: 40px;
+                height: 40px;
+            }
+            .mobile-menu-btn {
+                padding: 0.45rem 0.8rem;
+            }
+        }
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 99999;
+            backdrop-filter: blur(8px);
+        }
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #043a4f, #0a5a78, #07455e);
+            z-index: 100000;
+            padding: 30px 20px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -8px 0 40px rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        .mobile-sidebar.open {
+            right: 0;
+        }
+        .mobile-sidebar .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.8rem;
+            padding: 5px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .mobile-sidebar .close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+        .mobile-sidebar .sidebar-brand {
+            margin-top: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .mobile-sidebar .sidebar-brand img {
+            height: 60px;
+            filter: drop-shadow(0 0 20px rgba(71,200,224,0.3));
+        }
+        .mobile-sidebar .sidebar-brand h2 {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #ffffff, #a3e4ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .mobile-sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 16px;
+            transition: 0.3s;
+            margin: 6px 0;
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .mobile-sidebar .menu-item:last-child {
+            border-bottom: none;
+        }
+        .mobile-sidebar .menu-item:hover {
+            background: rgba(71,200,224,0.15);
+            transform: translateX(-5px);
+        }
+        .mobile-sidebar .menu-item i {
+            width: 28px;
+            color: #47c8e0;
+            font-size: 1.2rem;
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ocean-header {
+            animation: fadeInDown 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<header class="ocean-header">
+    <div class="header-content">
+        <div class="main-navbar">
+            <div class="navbar-flex">
+                <div class="desktop-logo-wrapper" onclick="navigateTo('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                </div>
+                <div class="desktop-menu">
+                    <a href="#" class="nav-link-custom" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+                    <a href="#" class="nav-link-custom" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+                    <a href="#" class="nav-link-custom" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+                    <a href="#" class="nav-link-custom" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+                    <a href="#" class="nav-link-custom" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+                    <a href="#" class="nav-link-custom cart-desktop" id="cartDesktopBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>سبد خرید</span>
+                    </a>
+                </div>
+                <div class="desktop-site-name" onclick="navigateTo('home')">
+                    <span class="brand-text-desktop">ocean book</span>
+                </div>
+                <div class="mobile-brand-group" onclick="navigateTo('home')">
+                    <img class="brand-logo-img special-logo" src="logo.png" alt="لوگو"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+                    <span class="brand-text-mobile">ocean book</span>
+                </div>
+                <div class="mobile-buttons">
+                    <div class="mobile-cart-btn" onclick="goToCart()" title="سبد خرید">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-sidebar" id="mobileSidebar">
+    <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+    <div class="sidebar-brand">
+        <img src="logo.png" alt="لوگو"
+             onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 120 120\'%3E%3Cdefs%3E%3ClinearGradient id=\'grad\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' stop-color=\'%2347c8e0\'/%3E%3Cstop offset=\'100%25\' stop-color=\'%231a6d8f\'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=\'60\' cy=\'60\' r=\'50\' fill=\'url(%23grad)\' stroke=\'%23ffffff\' stroke-width=\'3\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M40 40h40v8H40zM40 54h40v8H40zM40 68h25v8H40z\'/%3E%3Cpath fill=\'%23ffffff\' d=\'M80 45l12-8v30l-12-8z\' opacity=\'0.9\'/%3E%3C/svg%3E';">
+        <h2>ocean book</h2>
+    </div>
+    <a href="#" class="menu-item" data-nav="home"><i class="fas fa-home"></i> خانه</a>
+    <a href="#" class="menu-item" data-nav="books"><i class="fas fa-book"></i> کتاب‌ها</a>
+    <a href="#" class="menu-item" data-nav="podcasts"><i class="fas fa-podcast"></i> پادکست‌ها</a>
+    <a href="#" class="menu-item" data-nav="audiobooks"><i class="fas fa-headphones"></i> کتاب صوتی</a>
+    <a href="#" class="menu-item" data-nav="meditation"><i class="fas fa-hand-sparkles"></i> مدیتیشن</a>
+    <a href="#" class="menu-item" data-nav="dashboard"><i class="fas fa-chart-line"></i> داشبورد</a>
+    <a href="#" class="menu-item" onclick="goToCart()"><i class="fas fa-shopping-cart"></i> سبد خرید</a>
+</div>
+
+<div class="dashboard-container">
+    <div class="row g-4">
+        <div class="col-md-4 col-lg-3 order-md-2">
+            <div class="sidebar">
+                <div class="nav flex-column nav-pills" id="dashboardTab" role="tablist">
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#library" type="button"><i class="fas fa-book-open"></i> کتابخانه من</button>
+                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#badges" type="button"><i class="fas fa-medal"></i> نشان‌ها و سطح</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#stats" type="button"><i class="fas fa-chart-line"></i> آمار مطالعه</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#mood" type="button"><i class="fa-hand-sparkles"></i> گزارش سلامت روان</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#settings" type="button"><i class="fas fa-cog"></i> تنظیمات حساب</button>
+                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#saved" type="button"><i class="fas fa-bookmark"></i> نشانه‌گذاری شده‌ها</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-lg-9 order-md-1">
+            <div class="main-content">
+                <div class="tab-content">
+                    <div class="tab-pane fade" id="library">
+                        <h4><i class="fas fa-book-open"></i> کتابخانه من</h4>
+                        <div class="mt-3">
+                            <div class="d-flex gap-2 mb-3">
+                                <button class="btn btn-sm btn-outline-info active" data-filter="all">همه</button>
+                                <button class="btn btn-sm btn-outline-info" data-filter="reading">در حال مطالعه</button>
+                                <button class="btn btn-sm btn-outline-info" data-filter="completed">تمام شده</button>
+                            </div>
+                            <div id="libraryItems">
+                                <div class="library-card" data-status="reading" data-genre="روانشناسی">
+                                    <img src="Cover/qodrat-adat.jpeg" alt="cover" style="width:60px; height:80px; object-fit:cover; border-radius:8px;">
+                                    <div><strong>قدرت عادت</strong><br><span class="small">چارلز داهیگ</span><br><span class="badge bg-secondary">روانشناسی</span></div>
+                                    <div><span class="badge-progress">در حال مطالعه - 65%</span></div>
+                                    <button class="btn btn-sm btn-primary">ادامه</button>
+                                </div>
+                                <div class="library-card" data-status="completed" data-genre="عاشقانه">
+                                    <img src="Cover/melat_eshgh.jpeg" alt="cover" style="width:60px; height:80px; object-fit:cover; border-radius:8px;">
+                                    <div><strong>ملت عشق</strong><br><span class="small">الیف شافاک</span><br><span class="badge bg-secondary">عاشقانه</span></div>
+                                    <div><span class="badge-progress">تکمیل شده</span></div>
+                                </div>
+                                <div class="library-card" data-status="reading" data-genre="روانشناسی">
+                                    <img src="Cover/zwhn_agahi.jpg" alt="cover" style="width:60px; height:80px; object-fit:cover; border-radius:8px;">
+                                    <div><strong>ذهن آگاهی</strong><br><span class="small">مارک ویلیامز</span><br><span class="badge bg-secondary">روانشناسی</span></div>
+                                    <div><span class="badge-progress">در حال مطالعه - 30%</span></div>
+                                    <button class="btn btn-sm btn-primary">ادامه</button>
+                                </div>
+                                <div class="library-card" data-status="completed" data-genre="ادبیات">
+                                    <img src="Cover/dastan_do shahr.jpg" alt="cover" style="width:60px; height:80px; object-fit:cover; border-radius:8px;">
+                                    <div><strong>داستان دو شهر</strong><br><span class="small">دیکنز</span><br><span class="badge bg-secondary">ادبیات</span></div>
+                                    <div><span class="badge-progress">تکمیل شده</span></div>
+                                </div>
+                                <div class="library-card" data-status="completed" data-genre="تاریخ">
+                                    <img src="https://picsum.photos/id/96/60/80" alt="cover" style="width:60px; height:80px; object-fit:cover; border-radius:8px;">
+                                    <div><strong>ایران بین دو انقلاب</strong><br><span class="small">یرواند آبراهامیان</span><br><span class="badge bg-secondary">تاریخ</span></div>
+                                    <div><span class="badge-progress">تکمیل شده</span></div>
+                                </div>
+                                <div class="library-card" data-status="completed" data-genre="علمی تخیلی">
+                                    <img src="https://picsum.photos/id/0/60/80" alt="cover" style="width:60px; height:80px; object-fit:cover; border-radius:8px;">
+                                    <div><strong>بنیاد</strong><br><span class="small">آسیموف</span><br><span class="badge bg-secondary">علمی تخیلی</span></div>
+                                    <div><span class="badge-progress">تکمیل شده</span></div>
+                                </div>
+                                <div class="library-card" data-status="completed" data-genre="جنایی">
+                                    <img src="Cover/ghatarsari.jpg" alt="cover" style="width:60px; height:80px; object-fit:cover; border-radius:8px;">
+                                    <div><strong>قتل در قطار سریع‌السیر</strong><br><span class="small">کریستی</span><br><span class="badge bg-secondary">جنایی</span></div>
+                                    <div><span class="badge-progress">تکمیل شده</span></div>
+                                </div>
+                                <div class="library-card" data-status="completed" data-genre="فلسفی">
+                                    <img src="Cover/donyaisofi.jpg" alt="cover" style="width:60px; height:80px; object-fit:cover; border-radius:8px;">
+                                    <div><strong>دنیای سوفی</strong><br><span class="small">یوستین گوردر</span><br><span class="badge bg-secondary">فلسفی</span></div>
+                                    <div><span class="badge-progress">تکمیل شده</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade show active" id="badges">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                            <h4><i class="fas fa-medal"></i> مدال‌های ژانری من</h4>
+                            <span class="info-badge"><i class="fas fa-star-of-life"></i> طلا: ۶+ کتاب | نقره: ۳+ | برنز: ۱+</span>
+                        </div>
+                        <p class="small text-info mb-3"><i class="fas fa-chart-simple"></i> مدال‌هایی که تا الان موفق به دریافت آنها شده‌اید.</p>
+                        <div class="row g-3" id="genreMedalsContainer"></div>
+                        <hr class="my-4" style="border-color: rgba(255,255,255,0.2);">
+                        <h5><i class="fas fa-arrow-trend-up"></i> مدال‌های بعدی (نزدیک‌ترین پیشرفت)</h5>
+                        <div id="nextBadgesList" class="mt-3"></div>
+                    </div>
+
+                    <div class="tab-pane fade" id="stats">
+                        <h4><i class="fas fa-chart-line"></i> آمار مطالعه</h4>
+                        <div class="row mt-3">
+                            <div class="col-12 mb-3"><canvas id="studyChart" width="400" height="200"></canvas></div>
+                            <div class="col-md-6"><div class="alert alert-info bg-transparent border-info">⏱️ مجموع گوش دادن: ۴۲ ساعت</div></div>
+                            <div class="col-md-6"><div class="alert alert-info bg-transparent border-info">📝 تعداد یادداشت‌ها: ۳۲</div></div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="tab-pane fade" id="mood">
+                        <h4><i class="fas fa-chart-simple"></i> گزارش هفتگی سلامت روان</h4>
+                        
+                        <div class="text-center mb-3">
+                            <div class="current-day-box">
+                                <i class="fas fa-calendar-day"></i> <strong id="currentDayDisplay"></strong>
+                                <span class="date-badge" id="gregorianDate"></span>
+                            </div>
+                        </div>
+                        
+                        <p class="small text-info mb-3">نتایج ارزیابی‌های روزانه شما (امتیاز و تحلیل) - برگرفته از صفحه مدیتیشن</p>
+                        
+                        <div class="mental-score-card" id="mentalScoreCard">
+                            <div class="score-big" id="todayScore">--</div>
+                            <div class="small">امتیاز سلامت روان امروز</div>
+                            <div class="progress-track mt-2">
+                                <div id="scoreProgressBar" style="width:0%; height:8px; background:#ffd700; border-radius:20px;"></div>
+                            </div>
+                            <div class="small text-info mt-2" id="scoreMessage"></div>
+                        </div>
+                        
+                        <h6 class="mt-4">📋 گزارش روزانه (شنبه تا جمعه)</h6>
+                        <div id="weeklyAssessmentReport"></div>
+                        
+                        <div class="mt-4 text-center">
+                            <a href="meditation.html" class="meditation-btn-dash">
+                                <i class="fas fa-hand-sparkles meditation-icon"></i>
+                                <span>صفحه مدیتیشن</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="settings">
+                        <h4><i class="fas fa-cog"></i> تنظیمات حساب</h4>
+                        <div class="row mt-3"><div class="col-md-4 text-center"><div class="avatar-upload mx-auto" id="avatarUpload"><i class="fas fa-camera fa-2x"></i></div><p class="small mt-2">آپلود آواتار</p></div><div class="col-md-8"><div class="mb-3"><label class="form-label">نام کاربری</label><input type="text" class="form-control bg-transparent text-white" value="darya_user"></div><div class="mb-3"><label class="form-label">ایمیل</label><input type="email" class="form-control bg-transparent text-white" value="user@darya.com"></div><button class="btn btn-primary">ذخیره تغییرات</button></div></div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="saved">
+                        <h4><i class="fas fa-bookmark"></i> نشانه‌گذاری شده‌ها</h4>
+                        <div class="list-group list-group-flush bg-transparent mt-3"><div class="list-group-item bg-transparent text-white d-flex justify-content-between align-items-center"><span>قدرت عادت - فصل ۳</span><button class="btn btn-sm btn-outline-danger">حذف</button></div><div class="list-group-item bg-transparent text-white d-flex justify-content-between align-items-center"><span>پادکست «ذهن آگاهی» - دقیقه ۲۲</span><button class="btn btn-sm btn-outline-danger">حذف</button></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<iframe src="footer.html" id="footerIframe" class="footer-iframe" scrolling="no"></iframe>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function navigateTo(target, section) {
+        const pageMap = {
+            'home': 'index.html',
+            'all-products': 'all-products.html',
+            'meditation': 'meditation.html',
+            'dashboard': 'dashboard.html',
+            'faq': 'FAQ.html',
+            'rules': 'Rules.html',
+            'about': 'aboutUs.html'
+        };
+        let url = pageMap[target] || 'index.html';
+        if (target === 'all-products' && section) {
+            url = url + '#' + section;
+        }
+        if (window.parent !== window) {
+            window.parent.postMessage({ type: 'navigate', target: target, section: section }, '*');
+        }
+        window.location.href = url;
+    }
+
+    function goToCart() {
+        window.location.href = 'sabad.html';
+    }
+
+    function toggleMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        if (sidebar.classList.contains('open')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    }
+
+    function openMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        overlay.classList.add('active');
+        sidebar.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        const overlay = document.getElementById('mobileMenuOverlay');
+        const sidebar = document.getElementById('mobileSidebar');
+        overlay.classList.remove('active');
+        sidebar.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.desktop-menu .nav-link-custom').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                const navType = this.getAttribute('data-nav');
+                if (navType === 'dashboard') {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                if (this.id === 'cartDesktopBtn') {
+                    goToCart();
+                    return;
+                }
+                if (navType === 'home') navigateTo('home');
+                else if (navType === 'books') navigateTo('all-products', 'books');
+                else if (navType === 'podcasts') navigateTo('all-products', 'podcasts');
+                else if (navType === 'audiobooks') navigateTo('all-products', 'audiobooks');
+                else if (navType === 'meditation') navigateTo('meditation');
+            });
+        });
+
+        document.querySelectorAll('.mobile-sidebar .menu-item').forEach(el => {
+            el.addEventListener('click', function(e) {
+                const navType = this.getAttribute('data-nav');
+                if (navType) {
+                    e.preventDefault();
+                    closeMobileMenu();
+                    if (navType === 'dashboard') {
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 300);
+                        return;
+                    }
+                    setTimeout(() => {
+                        if (navType === 'home') navigateTo('home');
+                        else if (navType === 'books') navigateTo('all-products', 'books');
+                        else if (navType === 'podcasts') navigateTo('all-products', 'podcasts');
+                        else if (navType === 'audiobooks') navigateTo('all-products', 'audiobooks');
+                        else if (navType === 'meditation') navigateTo('meditation');
+                    }, 300);
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { closeMobileMenu(); }
+        });
+    });
+
+    function getCurrentPersianDayIndex() {
+        const jsDay = new Date().getDay(); 
+        if (jsDay === 6) return 0; 
+        if (jsDay === 0) return 1; 
+        if (jsDay === 1) return 2; 
+        if (jsDay === 2) return 3; 
+        if (jsDay === 3) return 4; 
+        if (jsDay === 4) return 5; 
+        if (jsDay === 5) return 6; 
+        return 0;
+    }
+
+    function getCurrentPersianDayName() {
+        const persianDays = ["شنبه", "یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه"];
+        const index = getCurrentPersianDayIndex();
+        return persianDays[index];
+    }
+
+    function getPersianDate(date) {
+        return date.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function getWeekDaysWithDates() {
+        const today = new Date();
+        const currentDay = today.getDay(); 
+        
+        let daysUntilSaturday;
+        if (currentDay === 6) { 
+            daysUntilSaturday = 0; 
+        } else if (currentDay === 0) { 
+            daysUntilSaturday = 1; 
+        } else if (currentDay === 1) { 
+            daysUntilSaturday = 2;
+        } else if (currentDay === 2) { 
+            daysUntilSaturday = 3;
+        } else if (currentDay === 3) { 
+            daysUntilSaturday = 4;
+        } else if (currentDay === 4) { 
+            daysUntilSaturday = 5;
+        } else if (currentDay === 5) { 
+            daysUntilSaturday = 6;
+        }
+        
+        const saturday = new Date(today);
+        saturday.setDate(today.getDate() - daysUntilSaturday);
+        
+        const weekDays = [];
+        const dayNames = ["شنبه", "یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه"];
+        const meditationTitles = ["نفس عمیق", "اسکن بدن", "مدیتیشن محبت", "تمرکز بر صدا", "آرامش ذهن", "شکرگزاری", "تمدد اعصاب"];
+        
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(saturday);
+            date.setDate(saturday.getDate() + i);
+            const isToday = date.toDateString() === today.toDateString();
+            weekDays.push({
+                name: dayNames[i],
+                date: date,
+                persianDate: getPersianDate(date),
+                isToday: isToday,
+                isPast: date < today && !isToday,
+                isFuture: date > today,
+                meditationTitle: meditationTitles[i]
+            });
+        }
+        return weekDays;
+    }
+
+    const MEDAL_FOLDER = "medal/";
+    const genresList = ["عاشقانه", "مذهبی", "روانشناسی", "علمی تخیلی", "جنایی", "نوجوان", "ترسناک", "فلسفی", "هنر", "تاریخ", "ادبیات"];
+
+    function getMedalImageUrl(genre, levelName) {
+        const genreCode = { "عاشقانه":"a","مذهبی":"m","روانشناسی":"r","علمی تخیلی":"s","جنایی":"g","نوجوان":"n","ترسناک":"t","فلسفی":"f","هنر":"h","تاریخ":"hi","ادبیات":"l" };
+        const levelNumber = { "طلا":"1","نقره":"2","برنز":"3" };
+        return `${MEDAL_FOLDER}${genreCode[genre]}${levelNumber[levelName]}.png`;
+    }
+
+    let userGenreStats = { "عاشقانه":6,"مذهبی":0,"روانشناسی":3,"علمی تخیلی":1,"جنایی":7,"نوجوان":5,"ترسناک":0,"فلسفی":9,"هنر":0,"تاریخ":1,"ادبیات":1 };
+    
+    function getMedalLevel(count) { if(count>=6) return {name:"طلا",className:"gold"}; if(count>=3) return {name:"نقره",className:"silver"}; if(count>=1) return {name:"برنز",className:"bronze"}; return null; }
+    
+    function renderGenreMedals() {
+        const container = document.getElementById("genreMedalsContainer");
+        if(!container) return;
+        container.innerHTML = "";
+        const genresWithMedal = genresList.filter(g => (userGenreStats[g]||0)>=1);
+        if(genresWithMedal.length===0){ container.innerHTML=`<div class="col-12"><div class="empty-state"><i class="fas fa-medal fa-3x mb-3"></i><h5>هنوز مدالی دریافت نکرده‌اید!</h5></div></div>`; return; }
+        for(let genre of genresWithMedal){
+            const count = userGenreStats[genre]||0;
+            const medal = getMedalLevel(count);
+            if(!medal) continue;
+            const imgUrl = getMedalImageUrl(genre, medal.name);
+            const col = document.createElement("div"); col.className = "col-6 col-md-4 col-lg-3";
+            col.innerHTML = `<div class="genre-badge-card"><img src="${imgUrl}" class="medal-img" onerror="this.src='${MEDAL_FOLDER}empty.png'"><div class="genre-name">${genre}</div><div class="medal-level ${medal.className}">مدال ${medal.name}</div><div class="book-count"><i class="fas fa-book-open"></i> ${count} کتاب</div></div>`;
+            container.appendChild(col);
+        }
+    }
+    
+    function getNextMilestoneInfo(genre, currentCount) {
+        if(currentCount>=6) return null;
+        if(currentCount===0) return { needed:1, nextMedal:"برنز", targetCount:1, currentCount:0 };
+        else if(currentCount<3) return { needed:3-currentCount, nextMedal:"نقره", targetCount:3, currentCount:currentCount };
+        else return { needed:6-currentCount, nextMedal:"طلا", targetCount:6, currentCount:currentCount };
+    }
+    
+    function renderNextBadges() {
+        const container = document.getElementById("nextBadgesList");
+        if(!container) return;
+        let nextItems = [];
+        for(let genre of genresList){
+            const count = userGenreStats[genre]||0;
+            const info = getNextMilestoneInfo(genre, count);
+            if(info && info.needed>0) nextItems.push({ genre, needed:info.needed, nextMedal:info.nextMedal, currentCount:info.currentCount, targetCount:info.targetCount });
+        }
+        nextItems.sort((a,b)=>a.needed-b.needed);
+        const topNext = nextItems.slice(0,4);
+        if(topNext.length===0){ container.innerHTML=`<div class="alert alert-success bg-transparent text-center">🎉 تبریک! در تمام ژانرها به مدال طلا رسیدید!</div>`; return; }
+        container.innerHTML = "";
+        for(let item of topNext){
+            const progressPercent = (item.currentCount/item.targetCount)*100;
+            const persianMedal = item.nextMedal==="طلا"?"طلا 🥇":(item.nextMedal==="نقره"?"نقره 🥈":"برنز 🥉");
+            const div = document.createElement("div"); div.className = "next-badge-item";
+            div.innerHTML = `<div class="flex-grow-1"><div class="d-flex justify-content-between"><strong>${item.genre}</strong><span class="badge bg-warning text-dark">${item.currentCount}/${item.targetCount}</span></div><div class="progress progress-custom mt-2"><div class="progress-bar" style="width:${progressPercent}%;"></div></div><div class="small text-info mt-1">${item.needed} کتاب تا ${persianMedal}</div></div>`;
+            container.appendChild(div);
+        }
+    }
+    
+    const filterBtns = document.querySelectorAll('[data-filter]');
+    const libraryCards = document.querySelectorAll('.library-card');
+    if(filterBtns.length){
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.getAttribute('data-filter');
+                libraryCards.forEach(card => {
+                    if(filter === 'all') card.style.display = 'flex';
+                    else if(card.getAttribute('data-status') === filter) card.style.display = 'flex';
+                    else card.style.display = 'none';
+                });
+            });
+        });
+    }
+    
+    const canvas = document.getElementById('studyChart');
+    if(canvas){
+        new Chart(canvas.getContext('2d'), {
+            type: 'bar',
+            data: { labels: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'], 
+                    datasets: [{ label: 'دقایق مطالعه', data: [45, 60, 30, 90, 70, 110, 80], backgroundColor: '#3fa7c7', borderRadius: 8 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#fff' } } }, 
+                       scales: { y: { ticks: { color: '#fff' } }, x: { ticks: { color: '#fff' } } } }
+        });
+    }
+    
+    document.getElementById('avatarUpload')?.addEventListener('click', () => alert('آپلود آواتار (در نسخه نهایی فعال می‌شود)'));
+    
+    renderGenreMedals();
+    renderNextBadges();
+    
+    function getAllAssessmentResults() {
+        const results = [];
+        const weekDays = getWeekDaysWithDates();
+        
+        for (let i = 0; i < weekDays.length; i++) {
+            const day = weekDays[i];
+            const key = `darya_assessment_${day.name}`;
+            const stored = localStorage.getItem(key);
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    results.push({
+                        ...parsed,
+                        dayName: day.name,
+                        dayDate: day.date,
+                        displayDate: day.persianDate,
+                        isToday: day.isToday,
+                        isPast: day.isPast,
+                        isFuture: day.isFuture,
+                        meditationTitle: day.meditationTitle
+                    });
+                } catch(e) {}
+            }
+        }
+        
+        const todayName = getCurrentPersianDayName();
+        const dailyStore = localStorage.getItem("darya_daily_3answers");
+        if (dailyStore) {
+            try {
+                const daily = JSON.parse(dailyStore);
+                const todayData = weekDays.find(d => d.name === todayName);
+                const exists = results.find(r => r.dayName === todayName);
+                if (!exists && daily.totalScore && todayData) {
+                    results.push({
+                        dayName: todayName,
+                        score: daily.totalScore,
+                        analysis: daily.analysis || "ارزیابی روزانه",
+                        date: daily.date || new Date().toLocaleDateString('fa-IR'),
+                        timestamp: Date.now(),
+                        dayDate: todayData.date,
+                        displayDate: todayData.persianDate,
+                        isToday: true,
+                        isPast: false,
+                        isFuture: false,
+                        meditationTitle: todayData.meditationTitle
+                    });
+                }
+            } catch(e) {}
+        }
+        
+        return results;
+    }
+    
+    function getTodayMentalScore() {
+        const stored = localStorage.getItem("darya_daily_3answers");
+        if (stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                const todayKey = new Date().toLocaleDateString('fa-IR');
+                if (parsed.date === todayKey && parsed.totalScore) return parsed.totalScore;
+            } catch(e) {}
+        }
+        return null;
+    }
+    
+    function updateMentalScoreCard() {
+        const score = getTodayMentalScore();
+        const scoreElem = document.getElementById("todayScore");
+        const progressBar = document.getElementById("scoreProgressBar");
+        const messageElem = document.getElementById("scoreMessage");
+        
+        if (score !== null) {
+            scoreElem.innerText = score + "%";
+            progressBar.style.width = score + "%";
+            if (score >= 80) {
+                messageElem.innerText = " وضعیت عالی! سلامت روان شما در سطح مطلوب است.";
+            } else if (score >= 60) {
+                messageElem.innerText = " وضعیت خوب. با تمرینات مدیتیشن می‌توانید بهبود پیدا کنید.";
+            } else if (score >= 40) {
+                messageElem.innerText = " وضعیت متوسط. پیشنهاد می‌کنیم مدیتیشن روزانه را شروع کنید.";
+            } else {
+                messageElem.innerText = " وضعیت نیازمند توجه. مدیتیشن و خودمراقبتی می‌تواند کمک کننده باشد.";
+            }
+        } else {
+            scoreElem.innerText = "ثبت نشده";
+            progressBar.style.width = "0%";
+            messageElem.innerText = "لطفاً صفحه ارزیابی روزانه را تکمیل کنید تا امتیاز سلامت روان شما محاسبه شود.";
+        }
+    }
+    
+    function renderWeeklyAssessmentReport() {
+        const container = document.getElementById("weeklyAssessmentReport");
+        if (!container) return;
+        
+        const weekDays = getWeekDaysWithDates();
+        const todayName = getCurrentPersianDayName();
+        const savedResults = getAllAssessmentResults();
+        
+        let html = `<div class="alert alert-info bg-transparent border-info mb-3">
+            <i class="fas fa-info-circle"></i> امروز <strong class="text-warning">${todayName}</strong> 
+            (${weekDays.find(d => d.name === todayName)?.persianDate || ''})
+        </div>`;
+        
+        html += `<div class="row g-2">`;
+        
+        for (let i = 0; i < weekDays.length; i++) {
+            const day = weekDays[i];
+            const isToday = day.isToday;
+            const isPast = day.isPast;
+            const isFuture = day.isFuture;
+            
+            const result = savedResults.find(r => r.dayName === day.name);
+            
+            let statusHtml = "";
+            let resultHtml = "";
+            let trackClass = "";
+            
+            if (isToday) trackClass = "today";
+            else if (isFuture) trackClass = "future";
+            
+            const dateLabel = `<span class="day-date-label">${day.persianDate}</span>`;
+            
+            if (result) {
+                const score = result.score;
+                let scoreClass = "";
+                if (score >= 70) scoreClass = "result-high";
+                else if (score >= 40) scoreClass = "result-medium";
+                else scoreClass = "result-low";
+                
+                resultHtml = `<div class="mt-1">
+                    <span class="result-badge ${scoreClass}"><i class="fas fa-chart-line"></i> امتیاز: ${score}%</span>
+                    <div class="small text-info mt-1">${result.analysis || "تحلیل: وضعیت ثبت شده"}</div>
+                </div>`;
+                statusHtml = `<span class="badge bg-success"><i class="fas fa-check-circle"></i> ارزیابی انجام شد</span>`;
+            } else if (isPast && !isToday) {
+                resultHtml = `<div class="small text-danger mt-1"><i class="fas fa-exclamation-triangle"></i> ارزیابی این روز انجام نشده است</div>`;
+                statusHtml = `<span class="badge bg-secondary"><i class="fas fa-clock"></i> ثبت نشده</span>`;
+            } else if (isToday && !result) {
+                resultHtml = `<div class="small text-warning mt-1"><i class="fas fa-hourglass-half"></i> امروز هنوز ارزیابی ثبت نشده است</div>`;
+                statusHtml = `<span class="badge bg-warning text-dark"><i class="fas fa-clock"></i> در انتظار</span>`;
+            } else {
+                resultHtml = `<div class="small text-muted mt-1"><i class="fas fa-calendar-day"></i> روزهای آینده - به زودی</div>`;
+                statusHtml = `<span class="badge bg-secondary"><i class="fas fa-calendar"></i> روز آینده</span>`;
+            }
+            
+            html += `
+                <div class="col-12">
+                    <div class="meditation-track ${trackClass}">
+                        <div style="flex:1">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <div>
+                                    <strong>${day.name}</strong> ${dateLabel}
+                                    <div class="small text-muted">${day.meditationTitle}</div>
+                                </div>
+                                ${statusHtml}
+                            </div>
+                            ${resultHtml}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        html += `</div>`;
+        
+        html += `<div class="text-center mt-3">
+            <button class="btn btn-sm btn-outline-danger" id="clearHistoryBtn" onclick="clearAssessmentHistory()">
+                <i class="fas fa-trash-alt"></i> پاک کردن تاریخچه ارزیابی‌ها
+            </button>
+        </div>`;
+        
+        container.innerHTML = html;
+    }
+    
+    window.clearAssessmentHistory = function() {
+        if (confirm("آیا می‌خواهید تمام تاریخچه ارزیابی‌های روزانه را پاک کنید؟")) {
+            const weekDays = ["شنبه", "یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه"];
+            for (let i = 0; i < weekDays.length; i++) {
+                localStorage.removeItem(`darya_assessment_${weekDays[i]}`);
+            }
+            localStorage.removeItem("darya_daily_3answers");
+            localStorage.removeItem("darya_meditation_progress");
+            alert("تاریخچه ارزیابی‌ها پاک شد. صفحه دوباره بارگذاری می‌شود.");
+            location.reload();
+        }
+    };
+    
+    const currentDaySpan = document.getElementById("currentDayDisplay");
+    if (currentDaySpan) {
+        const todayName = getCurrentPersianDayName();
+        currentDaySpan.innerHTML = `${todayName} <i class="fas fa-calendar-alt"></i>`;
+    }
+    
+    const gregorianSpan = document.getElementById("gregorianDate");
+    if (gregorianSpan) {
+        const weekDays = getWeekDaysWithDates();
+        const todayData = weekDays.find(d => d.isToday);
+        gregorianSpan.innerHTML = todayData ? todayData.persianDate : getPersianDate(new Date());
+    }
+    
+    updateMentalScoreCard();
+    renderWeeklyAssessmentReport();
+    
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'darya_daily_3answers' || e.key?.startsWith('darya_assessment_')) {
+            updateMentalScoreCard();
+            renderWeeklyAssessmentReport();
+        }
+    });
+
+    function updateFooterHeight(height) {
+        const iframe = document.getElementById('footerIframe');
+        if (iframe && height) {
+            const finalHeight = Math.max(height, 200);
+            iframe.style.height = finalHeight + 'px';
+            iframe.style.minHeight = finalHeight + 'px';
+        }
+    }
+
+    window.addEventListener('message', function(e) {
+        const data = e.data;
+        if ((data.type === 'footerResize' || data.type === 'resize') && data.height) {
+            updateFooterHeight(data.height);
+        }
+        if (data.type === 'navigate') {
+            if (data.target === 'home') {
+                window.location.href = 'index.html';
+            } else if (data.target === 'all-products' || data.target === 'books' || data.target === 'podcasts' || data.target === 'audiobooks') {
+                const section = data.section || data.target;
+                if (section === 'all') {
+                    window.location.href = 'all-products.html';
+                } else {
+                    window.location.href = 'all-products.html#' + section;
+                }
+            } else if (data.target === 'meditation') {
+                window.location.href = 'meditation.html';
+            } else if (data.target === 'faq') {
+                window.location.href = 'FAQ.html';
+            } else if (data.target === 'rules') {
+                window.location.href = 'Rules.html';
+            } else if (data.target === 'about') {
+                window.location.href = 'aboutUs.html';
+            }
+        }
+        if (data.type === 'openMobileMenu') {
+            openMobileMenu();
+        }
+        if (data.type === 'closeMobileMenu') {
+            closeMobileMenu();
+        }
+    });
+
+    function requestFooterHeight() {
+        const iframe = document.getElementById('footerIframe');
+        if (iframe && iframe.contentWindow) {
+            try {
+                iframe.contentWindow.postMessage({ type: 'requestHeight' }, '*');
+            } catch(e) {}
+        }
+    }
+
+    window.addEventListener('load', function() {
+        setTimeout(requestFooterHeight, 500);
+        setTimeout(requestFooterHeight, 1500);
+        setTimeout(requestFooterHeight, 3000);
+    });
+</script>
+</body>
+</html>

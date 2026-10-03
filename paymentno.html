@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرداخت ناموفق</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #7b92be 0%, #183972 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+        }
+
+        .failed-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .blue-header {
+            background: linear-gradient(120deg, #1e3c72, #2a5298);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .failed-icon {
+            font-size: 60px;
+            background: rgb(255, 0, 0);
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blue-header h3 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .blue-header p {
+            font-size: 13px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .content-body {
+            padding: 25px;
+        }
+
+        .error-msg {
+            background: #e8f4ff;
+            border-right: 3px solid #982a2a;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .error-msg i {
+            color: #2a5298;
+            margin-left: 8px;
+        }
+
+        .error-msg strong {
+            color: #1e3c72;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 14px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #6c757d;
+        }
+
+        .info-value {
+            color: #1e3c72;
+            font-weight: 600;
+        }
+
+        .info-value.amount {
+            color: #dc3545;
+        }
+
+        .btn-retry {
+            background: linear-gradient(120deg, #1e3c72, #2a5298);
+            border: none;
+            padding: 12px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-retry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30,60,114,0.3);
+        }
+
+        .btn-home {
+            background: transparent;
+            border: 1.5px solid #dee2e6;
+            padding: 10px;
+            border-radius: 50px;
+            color: #6c757d;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-home:hover {
+            border-color: #2a5298;
+            color: #2a5298;
+        }
+
+        @media (max-width: 480px) {
+            .content-body {
+                padding: 20px;
+            }
+            
+            .blue-header {
+                padding: 25px 20px;
+            }
+            
+            .failed-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="failed-card">
+        <div class="blue-header">
+            <div class="failed-icon">
+                <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <h3>پرداخت ناموفق</h3>
+            <p>متأسفانه تراکنش تکمیل نشد</p>
+        </div>
+
+        <div class="content-body">
+            <div class="error-msg">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>خطا:</strong> موجودی کافی نمی‌باشد
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">مبلغ:</span>
+                <span class="info-value amount">۱,۲۵۰,۰۰۰ تومان</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">شماره پیگیری:</span>
+                <span class="info-value">TRX-8942</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">کد خطا:</span>
+                <span class="info-value">ERR-001</span>
+            </div>
+
+            <button class="btn-retry" onclick="retryPayment()">
+                <i class="bi bi-arrow-repeat"></i> تلاش مجدد
+            </button>
+            <a href="index.html" class="btn-home">
+                <i class="bi bi-house-door"></i> صفحه اصلی
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function retryPayment() {
+            const btn = event.target.closest('.btn-retry');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-hourglass-split"></i> در حال پردازش...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                window.location.href = 'payment.html';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
